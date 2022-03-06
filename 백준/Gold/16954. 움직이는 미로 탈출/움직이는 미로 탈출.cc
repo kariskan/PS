@@ -5,6 +5,7 @@ using namespace std;
 char board[9][9];
 int x[9] = { 0,0,0,1,1,1,-1,-1,-1 };
 int y[9] = { 0,1,-1,1,0,-1,1,0,-1 };
+int visit[8][8][9];
 
 int main() {
 	for (int i = 0; i < 8; i++) {
@@ -14,6 +15,7 @@ int main() {
 	}
 	queue<tuple<int, int, int>> q;
 	q.push({ 7,0,0 });
+	visit[0][0][0] = 1;
 	while (!q.empty()) {
 		int a = get<0>(q.front());
 		int b = get<1>(q.front());
@@ -29,7 +31,9 @@ int main() {
 			if (nx - c >= 0 && board[nx - c][ny] == '#')continue;
 			if (nx - c - 1 >= 0 && board[nx - c - 1][ny] == '#')continue;
 			if (!(nx >= 0 && nx < 8 && ny >= 0 && ny < 8)) continue;
+			if (visit[nx][ny][c])continue;
 			q.push({ nx,ny,c + 1 });
+			visit[nx][ny][c] = 1;
 		}
 	}
 	cout << 0;
