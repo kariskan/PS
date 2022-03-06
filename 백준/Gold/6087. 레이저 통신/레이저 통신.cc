@@ -1,6 +1,5 @@
 #include <iostream>
 #include <queue>
-#include <tuple>
 using namespace std;
 int n, m;
 char board[101][101];
@@ -42,14 +41,10 @@ int main() {
 			int nx = a + x[i];
 			int ny = b + y[i];
 			while (nx >= 0 && nx < n && ny >= 0 && ny < m && board[nx][ny] != '*') {
-				if (!visit[nx][ny])visit[nx][ny] = visit[a][b] + 1;
-				else {
-					if (visit[nx][ny] < visit[a][b] + 1) {
-						break;
-					}
+				if (!visit[nx][ny]) {
 					visit[nx][ny] = visit[a][b] + 1;
+					q.push({ nx,ny });
 				}
-				q.push({ nx,ny });
 				nx += x[i];
 				ny += y[i];
 			}
