@@ -5,7 +5,6 @@ using namespace std;
 int n, q;
 vector<vector<pair<int, int>>> v;
 bool visit[5001];
-int map[5001][5001];
 int ans = 0;
 void run(int k, int b, int idx, int sum) {
 	if (b != idx && sum >= k) {
