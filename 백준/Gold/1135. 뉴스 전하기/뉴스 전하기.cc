@@ -4,33 +4,33 @@
 using namespace std;
 
 int n;
-int map[50];
-vector<int> v[50];
-int dp[50];
+vector<vector<int>> tree;
 
-int go(int n) {
-	int ret = 0;
-	vector<int> temp;
-	int cnt = v[n].size() - 1;
-	for (int i = 0; i < v[n].size(); i++) {
-		temp.push_back(go(v[n][i]));
-	}
-	sort(temp.begin(), temp.end());
-	for (int i = 0; i < temp.size(); i++) {
-		ret = max(ret, temp[i] + cnt);
-		cnt--;
-	}
-	return ret + 1;
+int dfs(int root) {
+
+    int ret = 0;
+    vector<int> v;
+
+    for (int i = 0; i < tree[root].size(); i++) {
+        v.push_back(dfs(tree[root][i]));
+    }
+
+    sort(v.begin(), v.end());
+    int subSize = v.size();
+
+    for (int i = 0; i < v.size(); i++) {
+        ret = max(ret, v[i] + subSize - i);
+    }
+    return ret;
 }
-bool compare(int a, int b) {
-	return a > b;
-}
+
 int main() {
-	cin >> n;
-	for (int i = 0; i < n; i++) {
-		cin >> map[i];
-		v[map[i]].push_back(i);
-	}
-	cout << go(0) - 1;
-	return 0;
+    cin >> n;
+    tree.resize(n);
+    for (int i = 0; i < n; i++) {
+        int a; cin >> a;
+        if (!i)continue;
+        tree[a].push_back(i);
+    }
+    cout << dfs(0);
 }
