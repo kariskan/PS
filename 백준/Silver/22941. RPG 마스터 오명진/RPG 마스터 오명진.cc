@@ -11,8 +11,7 @@ int main() {
 	else yDeadCnt = hpY / atkM + 1;
 
 	long long temp = hpM - ((hpM / atkY) * atkY);
-	if ((temp >= 1 && temp <= p) || (temp + atkY >= 1 && temp + atkY <= p) || (temp - atkY >= 1 && temp - atkY <= p)
-		|| (temp + 2 * atkY >= 1 && temp + 2 * atkY <= p) || (temp - 2 * atkY >= 1 && temp - 2 * atkY <= p)) {
+	if ((temp >= 1 && temp <= p) || (temp + atkY >= 1 && temp + atkY <= p)) {
 		hpM += s;
 	}
 
