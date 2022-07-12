@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 3376 KB, 시간: 80 ms
+메모리: 3420 KB, 시간: 76 ms
 
 ### 분류
 
@@ -16,7 +16,7 @@
 
 <p>방향 그래프의 SCC는 우선 정점의 최대 부분집합이며, 그 부분집합에 들어있는 서로 다른 임의의 두 정점 u, v에 대해서 u에서 v로 가는 경로와 v에서 u로 가는 경로가 모두 존재하는 경우를 말한다.</p>
 
-<p style="text-align: center;"><img alt="" height="150" src="https://www.acmicpc.net/JudgeOnline/upload/201008/scco.PNG" width="386"></p>
+<p style="text-align: center;"><img alt="" height="150" src="" width="386"></p>
 
 <p>예를 들어 위와 같은 그림을 보자. 이 그래프에서 SCC들은 {a, b, e}, {c, d}, {f, g}, {h} 가 있다. 물론 h에서 h로 가는 간선이 없는 경우에도 {h}는 SCC를 이룬다.</p>
 

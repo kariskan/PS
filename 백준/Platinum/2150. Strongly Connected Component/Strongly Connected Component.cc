@@ -47,9 +47,6 @@ int main() {
 		edge[a].push_back(b);
 	}
 	for (int i = 1; i <= v; i++) {
-		sort(edge[i].begin(), edge[i].end());
-	}
-	for (int i = 1; i <= v; i++) {
 		if(!visit[i]) dfs(i);
 	}
 	sort(ans.begin(), ans.end());
