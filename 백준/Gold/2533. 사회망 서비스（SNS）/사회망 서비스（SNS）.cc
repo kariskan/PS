@@ -4,10 +4,9 @@ using namespace std;
 
 int n;
 vector<vector<int>> v;
-int dp[1000001], visit[1000001]; //최소 얼리어답터 개수
+int visit[1000001]; //최소 얼리어답터 개수
 int ans;
 bool go(int node) {
-	if (dp[node])return dp[node];
 	
 	bool ret = 0;
 	visit[node] = 1;
@@ -20,10 +19,12 @@ bool go(int node) {
 		}
 	}
 	if (ret)ans++;
-	return dp[node] = ret;
+	return ret;
 }
 
 int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
 	cin >> n;
 	v.resize(n + 1);
 	for (int i = 1; i < n; i++) {
