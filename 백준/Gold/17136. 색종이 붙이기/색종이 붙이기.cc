@@ -24,7 +24,7 @@ void go(int x, int y, int cnt) {
 		return;
 	}
 
-	for (int s = 5; s >= 1; s--) {
+	for (int s = 1; s <= 5; s++) {
 		if (x + s > 10 || y + s > 10 || p[s] == 0)continue;
 
 		bool ok = true;
