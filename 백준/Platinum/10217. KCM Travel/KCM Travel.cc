@@ -1,90 +1,51 @@
 #include <iostream>
-#include <vector>
 #include <queue>
-#define INF 987654321
-
+#include <vector>
+#include <cstring>
 using namespace std;
-
-int T, N, M, K;
-
-// distance, cost, location
-vector<vector<pair<pair<int, int>, int>>> board;
-//distance
-vector<vector<int>> dist;
-
-int dijkstra(int start) {
-    // distance, cost, location
-    priority_queue<pair<pair<int, int>, int>> pq;
-    dist[start][0] = 0;
-    pq.push({{0, 0}, start});
-
-    while(!pq.empty()) {
-        int cur = pq.top().second;
-        int curDist = -pq.top().first.first;
-        int curCost = -pq.top().first.second;
-        pq.pop();
-
-        if(dist[cur][curCost] < curDist) continue;
-        if(curCost > M) continue;
-
-        if(cur == N) return curDist;
-        // cout << curCost << '\n';
-
-
-
-        for(int i = 0; i < board[cur].size(); i++) {
-            int next = board[cur][i].second;
-            int nextDist = board[cur][i].first.first + curDist;
-            int nextCost = board[cur][i].first.second + curCost;
-            // cout << nextCost << '\n';
-            if(nextCost > M) continue;
-            if(nextDist < dist[next][nextCost]) {
-                dist[next][nextCost] = nextDist;
-                pq.push({{-nextDist, -nextCost}, next});
-            }
-
-        }
-
-    }
-
-    return -1;
-}
-
-
 int main() {
-    ios_base :: sync_with_stdio(false); 
-    cin.tie(NULL); cout.tie(NULL);
-    cin >> T;
-    for(int tCase = 0; tCase < T; tCase++) {
-        cin >> N >> M >> K;
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+	int t; cin >> t;
+	while (t--) {
+		int n, m, k;
+		cin >> n >> m >> k;
+		vector<vector<pair<pair<int, int>, int>>> info(n + 1);
+		vector<vector<int>> dp(n + 1, vector<int>(m + 1, 987654321));
+		for (int i = 0; i < k; i++) {
+			int u, v, c, d;
+			cin >> u >> v >> c >> d;
+			info[u].push_back({ {c,d},v });
+		}
+		priority_queue<pair<pair<int, int>, int>> q;
+		q.push({ {0,0},1 });
+		dp[1][0] = 0;
+		int ok = 0;
+		while (!q.empty()) {
+			int now = q.top().second;
+			int cost = -q.top().first.second;
+			int Time = -q.top().first.first;
+			q.pop();
 
-        if(N == 1) {
-            cout << "0\n";
-        } else if(K == 0) {
-            cout << "Poor KCM\n";
-        }
+			if (dp[now][cost] < Time || cost > m) continue;
+			if (now == n) {
+				cout << Time << '\n';
+				ok = 1;
+				break;
+			}
 
-        
-        // {pos, {cost, distance}}
-        board.assign(N + 1, vector<pair<pair<int, int>, int>>());
-        dist.assign(N + 1, vector<int>(M + 1, INF));
+			for (auto& i : info[now]) {
+				int nxNode = i.second;
+				int nxCost = i.first.first + cost;
+				int nxTime = i.first.second + Time;
 
-        int u, v, c, d;
-        for(int i = 0; i < K; i++) {
-            cin >> u >> v >> c >> d;
-            board[u].push_back({{d, c}, v});
-        }
-
-        int temp = dijkstra(1);
-        if(temp == -1) {
-            cout << "Poor KCM\n";
-        } else {
-            cout << temp << '\n';
-        }
-        
-
-    }
-
-
-    return 0;
+				if (nxCost > m) continue;
+				if (dp[nxNode][nxCost] <= nxTime)continue;
+				dp[nxNode][nxCost] = nxTime;
+				q.push({ {-nxTime,-nxCost},nxNode });
+			}
+		}
+		if (!ok)cout << "Poor KCM\n";
+	}
 }
