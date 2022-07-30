@@ -42,6 +42,12 @@ int main() {
 
 				if (nxCost > m) continue;
 				if (dp[nxNode][nxCost] <= nxTime)continue;
+
+				for (int j = nxCost + 1; j <= m; j++) {
+					if (dp[nxNode][j] <= nxTime)break;
+					dp[nxNode][j] = nxTime;
+				}
+
 				dp[nxNode][nxCost] = nxTime;
 				q.push({ {-nxTime,-nxCost},nxNode });
 			}
