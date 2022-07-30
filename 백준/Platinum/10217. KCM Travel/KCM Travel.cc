@@ -51,7 +51,7 @@ int main() {
 			for (auto& i : info[now]) {
 				int nxNode = i.des;
 				int nxCost = i.cost + cost;
-				int nxTime = i.time + dp[now][cost];
+				int nxTime = i.time + Time;
 
 				if (nxCost > m) continue;
 				if (dp[nxNode][nxCost] <= nxTime)continue;
