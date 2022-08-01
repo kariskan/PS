@@ -27,8 +27,6 @@ void dijk(vector<vector<pair<int, int>>>& v) {
 			int nxNode = i.first;
 			int nxCost = i.second + cost;
 
-			if (i.second == -1)continue;
-
 			if (nxCost < dis[nxNode]) {
 				dis[nxNode] = nxCost;
 				q.push({ -nxCost,nxNode });
@@ -80,7 +78,7 @@ int main() {
 
 				for (auto& j : v[nxNode]) {
 					if (j.first == node) {
-						j.second = -1;
+						j.second = 987654321;
 					}
 				}
 
