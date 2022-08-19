@@ -9,10 +9,9 @@ int x[4] = { 0,0,1,-1 };
 int y[4] = { 1,-1,0,0 };
 string t;
 
-int go(int i, int j, int l, string s) {
+int go(int i, int j, int l) {
 	
-	if (s == t)return 1;
-	if (s.length() > t.length())return 0;
+	if (l == t.length())return 1;
 	if (dp[i][j][l] != -1)return dp[i][j][l];
 
 	int ret = 0;
@@ -21,9 +20,8 @@ int go(int i, int j, int l, string s) {
 		for (int cnt = 1; cnt <= c; cnt++) {
 			int nx = i + x[k] * cnt;
 			int ny = j + y[k] * cnt;
-			string temp = s + map[nx][ny];
-			if (nx >= 0 && nx < n && ny >= 0 && ny < m && map[nx][ny] == t[s.length()]) {
-				ret += go(nx, ny, l + 1, temp);
+			if (nx >= 0 && nx < n && ny >= 0 && ny < m && map[nx][ny] == t[l]) {
+				ret += go(nx, ny, l + 1);
 			}
 		}
 	}
@@ -32,6 +30,9 @@ int go(int i, int j, int l, string s) {
 }
 
 int main() {
+
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
 
 	cin >> n >> m >> c;
 
@@ -49,8 +50,7 @@ int main() {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
 			if (t[0] == map[i][j]) {
-				string temp(1, map[i][j]);
-				ans += go(i, j, 1, temp);
+				ans += go(i, j, 1);
 			}
 		}
 	}
