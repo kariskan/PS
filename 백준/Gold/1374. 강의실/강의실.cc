@@ -1,36 +1,36 @@
 #include <iostream>
-#include <algorithm>
 #include <queue>
+#include <algorithm>
 using namespace std;
 
-int n, check[100001];
-pair<int, int> m[100001];
+pair<int, int> arr[100001];
 
 int main() {
 
-	cin >> n;
-	priority_queue<int, vector<int>, greater<int>> pq;
+    int n;
+    cin >> n;
 
-	for (int i = 1; i <= n; i++) {
-		int a, b, c;
-		cin >> a >> b >> c;
+    for (int i = 0; i < n; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        arr[a] = { b,c };
+    }
 
-		m[a] = { b,c };
-	}
+    sort(arr + 1, arr + n + 1);
 
-	sort(m + 1, m + 1 + n);
+    priority_queue<int, vector<int>, greater<int>> q; //하고 있는 강의
 
-	int ans = 0;
+    int ans = 0;
 
-	for (int i = 1; i <= n; i++) {
-		
-		while (!pq.empty() && pq.top() <= m[i].first) {
-			pq.pop();
-		}
+    for (int i = 1; i <= n; i++) {
 
-		pq.push(m[i].second);
-		ans = max(ans, (int)pq.size());
-	}
+        while (!q.empty() && q.top() <= arr[i].first) {
+            q.pop();
+        }
 
-	cout << ans;
+        q.push(arr[i].second);
+        ans = max(ans, (int)q.size());
+    }
+
+    cout << ans;
 }
