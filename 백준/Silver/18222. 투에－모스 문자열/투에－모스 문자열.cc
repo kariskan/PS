@@ -15,7 +15,7 @@ void go(long long n, int cnt) {
 		else cout << 0;
 		return;
 	}
-	for (long long i = 60; i >= 1; i--) {
+	for (long long i = 62; i >= 1; i--) {
 		if ((long long)pow(2, i) < n) {
 			go(n - (long long)pow(2, i), 1 - cnt);
 			break;
