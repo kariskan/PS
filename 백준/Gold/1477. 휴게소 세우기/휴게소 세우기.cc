@@ -21,10 +21,7 @@ int main()
         right = max(right, a[i] - a[i - 1]);
     }
     int ans = 0;
-    while (left <= right)
-    {
-        int mid = (left + right) / 2;
-
+    for(int mid = 1; mid <= right; mid++) {
         int cursor = 0;
         int cnt = m;
         for (int i = 0; i < n; i++)
@@ -47,15 +44,12 @@ int main()
         }
         if (cnt < 0)
         {
-            left = mid + 1;
+            continue;
         }
         else
         {
-            if (ans == 0 || ans > mid)
-            {
-                ans = mid;
-            }
-            right = mid - 1;
+            cout << mid;
+            return 0;
         }
     }
 
