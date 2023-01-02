@@ -10,7 +10,7 @@ void go(int idx, int cnt)
 		return;
 	go(idx + 1, cnt);
 
-	for (int i = 1; i <= n; i++)
+	for (int i = idx; i <= n; i++)
 	{
 		if (!vis[idx] && !vis[i] && map[idx][i])
 		{
