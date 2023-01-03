@@ -4,6 +4,9 @@ int n, m, r;
 int map[300][300], ans[300][300];
 int main()
 {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 	cin >> n >> m >> r;
 	for (int i = 0; i < n; i++)
 	{
