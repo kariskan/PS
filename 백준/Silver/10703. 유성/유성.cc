@@ -8,6 +8,9 @@ int n, m;
 
 int main()
 {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 	queue<pair<int, int>> q;
 	cin >> n >> m;
 	int minDiff = 987654321;
