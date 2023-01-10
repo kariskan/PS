@@ -41,11 +41,6 @@ int main()
 				v[i].push_back({j, dis});
 				v[j].push_back({i, dis});
 			}
-			else
-			{
-				v[i].push_back({j, 5000000000});
-				v[j].push_back({i, 5000000000});
-			}
 		}
 	}
 	vector<double> dis(n + 1, 5000000000);
