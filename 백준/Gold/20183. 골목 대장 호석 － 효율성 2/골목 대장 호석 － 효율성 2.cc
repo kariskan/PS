@@ -26,6 +26,8 @@ int main()
 		start = min(start, cost);
 		end = max(end, cost);
 	}
+	
+	start = 1, end = c;
 
 	long long ans = -1;
 
