@@ -15,7 +15,7 @@ int main()
 	cout.tie(0);
 	cin >> n >> m >> a >> b >> c;
 	vector<vector<pair<int, long long>>> v(n + 1);
-	long long start = 1, end = c;
+	long long start = LLONG_MAX, end = 0;
 
 	for (int i = 0; i < m; i++)
 	{
@@ -24,6 +24,8 @@ int main()
 		cin >> n1 >> n2 >> cost;
 		v[n1].push_back({n2, cost});
 		v[n2].push_back({n1, cost});
+		start = min(start, cost);
+		end = max(end, cost);
 	}
 
 	long long ans = -1;
@@ -31,10 +33,7 @@ int main()
 	while (start <= end)
 	{
 		long long mid = (start + end) / 2;
-		for (int i = 1; i <= n; i++)
-		{
-			disC[i] = 1e15;
-		}
+		memset(disC, -1, sizeof(disC));
 
 		priority_queue<pair<int, int>> pq;
 		pq.push({0, a});
@@ -62,7 +61,7 @@ int main()
 			}
 		}
 
-		if (disC[b] != 1e15)
+		if (disC[b] != -1)
 		{
 			ans = mid;
 			end = mid - 1;
