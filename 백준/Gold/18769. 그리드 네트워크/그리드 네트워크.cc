@@ -26,13 +26,14 @@ void Union(int a, int b)
 }
 int main()
 {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
 	int t;
 	cin >> t;
 	while (t--)
 	{
 		int r, c;
 		cin >> r >> c;
-		memset(parent, 0, sizeof(parent));
 		for (int i = 0; i < r; i++)
 		{
 			for (int j = 1; j <= c; j++)
