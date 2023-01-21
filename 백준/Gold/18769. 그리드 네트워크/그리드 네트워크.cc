@@ -22,7 +22,14 @@ void Union(int a, int b)
 	a = Find(a);
 	b = Find(b);
 
-	parent[a] = b;
+	if (a > b)
+	{
+		parent[a] = b;
+	}
+	else
+	{
+		parent[b] = a;
+	}
 }
 int main()
 {
@@ -34,12 +41,9 @@ int main()
 	{
 		int r, c;
 		cin >> r >> c;
-		for (int i = 0; i < r; i++)
+		for (int i = 1; i <= r * c; i++)
 		{
-			for (int j = 1; j <= c; j++)
-			{
-				parent[i * c + j] = i * c + j;
-			}
+			parent[i] = i;
 		}
 		vector<pair<pair<int, int>, int>> v;
 		for (int i = 0; i < r; i++)
