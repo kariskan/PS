@@ -60,7 +60,6 @@ int main() {
 
 	for (auto& i : inp) {
 		cout << i << ' ' << v[i].size() << ' ';
-		sort(v[i].begin(), v[i].end());
 		for (auto& j : v[i]) {
 			cout << j << ' ';
 		}
