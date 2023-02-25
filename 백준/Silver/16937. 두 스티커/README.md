@@ -1,4 +1,4 @@
-# [Silver IV] 두 스티커 - 16937 
+# [Silver III] 두 스티커 - 16937 
 
 [문제 링크](https://www.acmicpc.net/problem/16937) 
 
@@ -8,7 +8,7 @@
 
 ### 분류
 
-브루트포스 알고리즘(bruteforcing), 구현(implementation)
+브루트포스 알고리즘(bruteforcing), 기하학(geometry), 구현(implementation)
 
 ### 문제 설명
 
