@@ -17,6 +17,9 @@ bool check(char a, char b) {  // 살려놔야하는 문자인지 확인
 }
 
 int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    
     cin >> n >> m >> s1 >> s2;
     dp.resize(n + 1, vector<int>(m + 1));
     int r, ans = 0, r2;
