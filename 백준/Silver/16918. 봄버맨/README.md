@@ -8,7 +8,7 @@
 
 ### 분류
 
-그래프 이론(graphs), 그래프 탐색(graph_traversal), 구현(implementation), 시뮬레이션(simulation)
+구현, 그래프 이론, 그래프 탐색, 시뮬레이션
 
 ### 문제 설명
 
