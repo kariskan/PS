@@ -1,41 +1,36 @@
-#include <cstring>
 #include <iostream>
 #include <vector>
+#include <cstring>
 using namespace std;
 
-int t, n, m, dp[1001], isLeaf[1001];
+int t, n, m, one[1001];
 vector<vector<pair<int, int>>> v;
 
-void checkLeaf(int node, int pre) {
+void go(int node, int pre) {
     bool flag = false;
     for (auto &i : v[node]) {
         if (i.first != pre) {
+            go(i.first, node);
             flag = true;
-            checkLeaf(i.first, node);
         }
     }
     if (!flag) {
-        isLeaf[node] = 1;
+        one[node] = 1;
     }
 }
 
-int go(int node, int pre, int edge) {
-    if (dp[node]) {
-        return dp[node];
-    }
+int go2(int node, int pre, int edge) {
     int res = 0;
-
     for (auto &i : v[node]) {
         if (i.first != pre) {
-            if (isLeaf[i.first]) {
+            if (one[i.first]) {
                 res += i.second;
             } else {
-                res += go(i.first, node, i.second);
+                res += go2(i.first, node, i.second);
             }
         }
     }
-
-    return dp[node] = min(res, edge);
+    return min(edge, res);
 }
 
 int main() {
@@ -44,16 +39,16 @@ int main() {
         cin >> n >> m;
         v.clear();
         v.resize(n + 1);
-        memset(isLeaf, 0, sizeof(isLeaf));
-        memset(dp, 0, sizeof(dp));
+        memset(one, 0, sizeof(one));
+
         for (int i = 0; i < m; i++) {
             int a, b, c;
             cin >> a >> b >> c;
             v[a].push_back({b, c});
             v[b].push_back({a, c});
         }
-        checkLeaf(1, 0);
-        cout << go(1, 0, 1e9) << '\n';
-        continue;
+        
+        go(1, 0);
+        cout << go2(1, 0, 1e9) << '\n';
     }
 }
