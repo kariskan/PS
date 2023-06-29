@@ -15,7 +15,7 @@ int main()
 	while (left < right)
 	{
 		int s = a[right] + a[left];
-		if (abs(ans) > abs(s))
+		if (abs(ans) >= abs(s))
 		{
 			ans = s;
 		}
