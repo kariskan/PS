@@ -21,7 +21,7 @@ void Union(int a, int b) {
 
     p[b] = a;
     s[a] += s[b];
-    s[b] = 1;
+    s[b] = s[a];
 }
 
 int main() {
