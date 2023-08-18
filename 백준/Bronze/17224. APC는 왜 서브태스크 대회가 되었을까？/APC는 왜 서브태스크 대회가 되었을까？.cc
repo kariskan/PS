@@ -20,6 +20,9 @@ int main() {
     sort(a, a + n, compare);
     int ans = 0;
     for (int i = 0; i < n; i++) {
+        if (k == 0) {
+            break;
+        }
         if (a[i].second <= l) {
             ans += 140;
             k--;
@@ -28,9 +31,6 @@ int main() {
                 ans += 100;
                 k--;
             }
-        }
-        if (k == 0) {
-            break;
         }
     }
     cout << ans;
