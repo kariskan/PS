@@ -1,120 +1,59 @@
 #include <iostream>
+#include <algorithm>
+
 using namespace std;
-int n, m, hideLine = -1;
-string result;
-char map[1000][26];
 
-string go(int start, int end, string s)
-{
-	for (int i = start; i < end; i++)
-	{
-		string newS(m, ' ');
-		for (int j = 0; j < m; j++)
-		{
-			if (j == 0)
-			{
-				if (map[i][j] == '-')
-				{
-					newS[j + 1] = s[j];
-				}
-				else
-				{
-					newS[j] = s[j];
-				}
-			}
-			else if (j == m - 1)
-			{
-				if (map[i][j - 1] == '-')
-				{
-					newS[j - 1] = s[j];
-				}
-				else
-				{
-					newS[j] = s[j];
-				}
-			}
-			else
-			{
-				if (map[i][j - 1] == '-')
-				{
-					newS[j - 1] = s[j];
-				}
-				else if (map[i][j] == '-')
-				{
-					newS[j + 1] = s[j];
-				}
-				else
-				{ // 직선
-					newS[j] = s[j];
-				}
-			}
-		}
-		s = newS;
-	}
-	return s;
-}
+int n, m, idx = -1;
+string s;
 
-void outError()
-{
-	for (int i = 0; i < m - 1; i++)
-	{
-		cout << "x";
-	}
-}
+int main() {
+    char map[1000][27];
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    cin >> m >> n;
+    cin >> s;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m - 1; j++) {
+            cin >> map[i][j];
+        }
+        if (map[i][0] == '?') {
+            idx = i;
+        }
+    }
 
-int main()
-{
-	cin >> m >> n >> result;
-	for (int i = 0; i < n; i++)
-	{
-		for (int j = 0; j < m - 1; j++)
-		{
-			if (hideLine != -1)
-			{
-				cin >> map[n - i + hideLine][j];
-			}
-			else
-			{
-				cin >> map[i][j];
-			}
-			if (j == m - 2 && map[i][j] == '?')
-			{
-				hideLine = i;
-			}
-		}
-	}
-	string s(m, ' ');
-	for (int j = 0; j < m; j++)
-	{
-		s[j] = (j + 'A');
-	}
-	s = go(0, hideLine, s);
-	string s2 = go(hideLine + 1, n, result);
-	string ans = "";
-	for (int i = 0; i < m - 1; i++)
-	{
-		if (s[i] == s2[i])
-		{
-			ans += "*";
-		}
-		else
-		{
-			if (s[i + 1] == s2[i])
-			{
-				ans += "-";
-				if (i < m - 2)
-				{
-					ans += "*";
-					i++;
-				}
-			}
-			else
-			{
-				outError();
-				return 0;
-			}
-		}
-	}
-	cout << ans;
-	return 0;
+    string fs = "";
+    for (int i = 0; i < m; i++) {
+        fs += 'A' + i;
+    }
+    for (int i = 0; i < idx; i++) {
+        for (int j = 0; j < m - 1; j++) {
+            if (map[i][j] == '-') {
+                swap(fs[j], fs[j + 1]);
+            }
+        }
+    }
+    for (int i = n - 1; i > idx; i--) {
+        for (int j = 0; j < m - 1; j++) {
+            if (map[i][j] == '-') {
+                swap(s[j], s[j + 1]);
+            }
+        }
+    }
+
+    string ans = "";
+    for (int i = 0; i < m - 1; i++) {
+        if (fs[i] == s[i]) {
+            ans += '*';
+        } else if (fs[i] == s[i + 1] && fs[i + 1] == s[i]) {
+            ans += '-';
+            swap(fs[i], fs[i + 1]);
+        } else {
+            for (int j = 0; j < m - 1; j++) {
+                cout << "x";
+            }
+            return 0;
+        }
+    }
+    cout << ans;
 }
