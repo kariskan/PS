@@ -1,40 +1,40 @@
 #include <iostream>
-#include <string>
 #include <algorithm>
+#include <cstring>
 using namespace std;
 
-bool isPrime(int a) {
-	for (int i = 2; i * i <= a; i++) {
-		if (a % i == 0) return false;
-	}
+bool isPrime[100000001];
 
-	return true;
+bool isPalindrome(int n) {
+    string s = to_string(n);
+    reverse(s.begin(), s.end());
+    return s == to_string(n);
 }
 
-bool palindrome[10000001];
-
-void isPalindrome(int a, int b) {
-	for (int i = a; i <= b; i++) {
-		string s1 = to_string(i);
-		string s2 = s1;
-		reverse(s2.begin(), s2.end());
-		if (s1 == s2) palindrome[i] = 1;
-	}
+void go() {
+    for (int i = 2; i * i <= 10000000; i++) {
+        if (isPrime[i]) {
+            for (int j = i * 2; j <= 10000000; j += i) {
+                isPrime[j] = false;
+            }
+        }
+    }
 }
 
 int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    memset(isPrime, true, sizeof(isPrime));
+    isPrime[0] = isPrime[1] = false;
+    go();
+    int a, b;
+    cin >> a >> b;
 
-	ios_base::sync_with_stdio(0);
-	cout.tie(0);
-
-	int a, b;
-	cin >> a >> b;
-	isPalindrome(a, min(10000000, b));
-	for (int i = a; i <= min(10000000, b); i++) {
-		if (palindrome[i])
-			if (isPrime(i)) {
-				cout << i << '\n';
-			}
-	}
-	cout << -1;
+    for (int i = a; i <= min(10000000, b); i++) {
+        if (isPrime[i] && isPalindrome(i)) {
+            cout << i << '\n';
+        }
+    }
+    cout << -1;
 }
