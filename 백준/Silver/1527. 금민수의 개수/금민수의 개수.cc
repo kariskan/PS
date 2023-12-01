@@ -1,42 +1,29 @@
 #include <iostream>
-#include <string>
+#include <vector>
 using namespace std;
 
-int ans, l, r;
+vector<int> v;
 
-// 현재 수가 left와 right 사이에 있는지 확인하는 함수
-bool check(string s)
-{
-	int ss = stoi(s);
-	return ss >= l && ss <= r;
-}
-
-// 백트래킹
-void go(string s)
-{
-	long long ss = stoll(s);
-	// 범위를 넘어갈 경우
-	if (ss > r)
-	{
+void go(long long num) {
+	if (num > 1000000000) {
 		return;
 	}
-	// 범위에 맞을 경우
-	else if (ss >= l && ss <= r)
-	{
-		if (check(s))
-		{
+	v.push_back(num);
+
+	go(num * 10 + 4);
+	go(num * 10 + 7);
+}
+
+int main() {
+	int n, m;
+	cin >> n >> m;
+
+	go(0);
+	int ans = 0;
+	for (auto& i : v) {
+		if (i >= n && i <= m) {
 			ans++;
 		}
 	}
-
-	go(s + "4");
-	go(s + "7");
-}
-
-int main()
-{
-	cin >> l >> r;
-	go("0");
-	
 	cout << ans;
 }
