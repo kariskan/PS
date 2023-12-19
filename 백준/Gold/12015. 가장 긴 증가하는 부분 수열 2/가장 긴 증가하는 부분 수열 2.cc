@@ -1,39 +1,37 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+
 using namespace std;
 
-int arr[1000001];
-vector<int> dp;
+vector<int> v;
+int n, a[1000000];
 
 int main() {
-	int n;
-	cin >> n;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-	}
-	dp.push_back(arr[0]);
-	for (int i = 1; i < n; i++) {
-		if (dp.back() < arr[i]) {
-			dp.push_back(arr[i]);
-		}
-		else {
-			int start = 0;
-			int end = dp.size() - 1;
-			int mid = (start + end) / 2;
-			while (start <= end) {
-				mid = (start + end) / 2;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
 
-				if (arr[i] <= dp[mid]) {
-					end = mid - 1;
-				}
-				else {
-					start = mid + 1;
-				}
-			}
-			dp[start] = arr[i];
-		}
-	}
-	cout << dp.size();
-	return 0;
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        if (v.empty() || v[v.size() - 1] < a[i]) {
+            v.push_back(a[i]);
+        } else {
+            int l = 0, r = v.size() - 1;
+            int ans = v.size() - 1;
+            while (l <= r) {
+                int mid = (l + r) / 2;
+
+                if (v[mid] >= a[i]) {
+                    r = mid - 1;
+                    ans = min(ans, mid);
+                } else {
+                    l = mid + 1;
+                }
+            }
+            v[ans] = a[i];
+        }
+    }
+
+    cout << v.size();
 }
