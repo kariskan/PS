@@ -1,54 +1,60 @@
 #include <iostream>
-using namespace std;
-string s[51];
-int n, m;
-int a[26];
-int visit[51];
-int b;
-int ans;
+#include <vector>
+#include <algorithm>
 
-int cal() {
-    int res = 0;
-    for (int i = 0; i < n; i++) {
-        int len = s[i].length();
-        int no = 0;
-        for (int j = 4; j < len - 4; j++) {
-            if (!a[s[i][j] - 'a']) {
-                no = 1;
-                break;
+using namespace std;
+
+int vis[26];
+int n, k, ans;
+vector<string> v;
+
+void go(int cnt, int idx) {
+    if (cnt == k) {
+        int c = 0;
+        for (int i = 0; i < n; i++) {
+            bool flag = true;
+            int len = v[i].length();
+            for (int j = 4; j < len - 4; j++) {
+                if (!vis[v[i][j] - 'a']) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                c++;
             }
         }
-        if (!no) {
-            res++;
-        }
-    }
-    return res;
-}
-
-void run(int cnt, int idx) {
-    if (cnt > m)return;
-    if (cnt == m) {
-        int res = cal();
-        ans = ans < res ? res : ans;
+        ans = max(ans, c);
         return;
     }
-    for (int i = idx; i < 26; i++) {
-        if (a[i])continue;
-        a[i] = 1;
-        run(cnt + 1, i + 1);
-        a[i] = 0;
+    if (idx == 26) {
+        return;
     }
+    if (!vis[idx]) {
+        vis[idx] = 1;
+        go(cnt + 1, idx + 1);
+        vis[idx] = 0;
+    }
+    go(cnt, idx + 1);
 }
+
 int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-    cin >> n >> m;
+    ios_base::sync_with_stdio();
+    cin.tie();
+    cout.tie();
+    cin >> n >> k;
 
     for (int i = 0; i < n; i++) {
-        cin >> s[i];
+        string s;
+        cin >> s;
+        v.push_back(s);
     }
-    a[0] = a['n' - 'a'] = a['t' - 'a'] = a['c' - 'a'] = a['i' - 'a'] = 1;
-    run(5, 0);
+
+    if (k < 5) {
+        cout << 0;
+        return 0;
+    }
+    vis[0] = vis['n' - 'a'] = vis['t' - 'a'] = vis['c' - 'a'] = vis['i' - 'a'] = 1;
+    go(5, 0);
     cout << ans;
 }
