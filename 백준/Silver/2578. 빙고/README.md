@@ -8,7 +8,11 @@
 
 ### 분류
 
-구현(implementation)
+구현, 시뮬레이션
+
+### 제출 일자
+
+2022년 7월 3일 13:33:07
 
 ### 문제 설명
 
@@ -20,8 +24,7 @@
 
 <p>다음은 사회자가 부르는 수를 차례로 지워나간다. 예를 들어 5, 10, 7이 불렸다면 이 세 수를 지운 뒤 빙고판의 모습은 다음과 같다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/6fc024b4-5bf7-42de-b303-406db2e3ff5b/-/preview/" style="width: 179px; height: 167px;"><br>
- </p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/6fc024b4-5bf7-42de-b303-406db2e3ff5b/-/preview/" style="width: 179px; height: 167px;"></p>
 
 <p>차례로 수를 지워가다가 같은 가로줄, 세로줄 또는 대각선 위에 있는 5개의 모든 수가 지워지는 경우 그 줄에 선을 긋는다.</p>
 
