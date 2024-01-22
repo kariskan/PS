@@ -24,12 +24,11 @@ pair<int, int> getScore(vector<int> res) {
 
 bool ok(vector<int> res) {
     for (int i = 10; i >= 0; i--) {
-        if (res[i] == 0 && ans.second[i] == 0) {
-            continue;
-        }
         if (res[i] > ans.second[i]) {
             return true;
-        } else break;
+        } else if (res[i] < ans.second[i]) {
+            return false;
+        }
     }
     return false;
 }
