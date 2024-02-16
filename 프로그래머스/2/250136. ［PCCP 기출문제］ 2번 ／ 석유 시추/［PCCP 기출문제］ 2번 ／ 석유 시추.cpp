@@ -1,53 +1,55 @@
 #include <string>
 #include <vector>
-#include <set>
 #include <queue>
+#include <set>
 using namespace std;
-
-int vis[500][500], cnt[250001];
+int g[250000],gCnt=1;
+int vis[500][500];
 int dx[4]={0,0,1,-1};
 int dy[4]={1,-1,0,0};
-
 int solution(vector<vector<int>> land) {
     int answer = 0;
-    int n=land.size(),m=land[0].size();
-    int visCnt=0;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
-            if(!vis[i][j]&&land[i][j]){
-                queue<pair<int, int>> q;
-                visCnt++;
-                
-                vis[i][j]=visCnt;
+    
+    queue<pair<int,int>> q;
+    
+    for(int i=0;i<land.size();i++){
+        for(int j=0;j<land[i].size();j++){
+            if(land[i][j]&&!vis[i][j]){
+                vis[i][j]=gCnt;
                 q.push({i,j});
+                
                 while(!q.empty()){
                     int x=q.front().first;
                     int y=q.front().second;
-                    cnt[visCnt]++;
                     q.pop();
+                    g[gCnt]++;
                     for(int k=0;k<4;k++){
                         int nx=x+dx[k];
                         int ny=y+dy[k];
-                        if(nx>=0&&nx<n&&ny>=0&&ny<m&&!vis[nx][ny]&&land[nx][ny]){
-                            vis[nx][ny]=visCnt;
+                        if(nx>=0&&nx<land.size()&&ny>=0&&ny<land[0].size()&&land[nx][ny]&&!vis[nx][ny]){
+                            vis[nx][ny]=gCnt;
                             q.push({nx,ny});
                         }
                     }
                 }
+                gCnt++;
             }
         }
     }
-    for(int j=0;j<m;j++){
+    
+    for(int j=0;j<land[0].size();j++){
+        int temp=0;
         set<int> se;
-        int sum=0;
-        for(int i=0;i<n;i++){
-            if(!land[i][j]||se.find(vis[i][j])!=se.end()){
-                continue;
+        for(int i=0;i<land.size();i++){
+            if(land[i][j]){
+                se.insert(vis[i][j]);
             }
-            sum+=cnt[vis[i][j]];
-            se.insert(vis[i][j]);
         }
-        answer=max(answer,sum);
+        for(auto&i:se){
+            temp+=g[i];
+        }
+        answer=max(answer,temp);
     }
+    
     return answer;
 }
