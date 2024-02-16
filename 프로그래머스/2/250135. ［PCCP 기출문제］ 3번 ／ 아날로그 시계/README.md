@@ -1,10 +1,10 @@
 # [level 2] [PCCP 기출문제] 3번 / 아날로그 시계 - 250135 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/250135?language=cpp#) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/250135) 
 
 ### 성능 요약
 
-메모리: 4.2 MB, 시간: 0.44 ms
+메모리: 3.63 MB, 시간: 0.76 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 2월 5일 21:14:17
+2024년 2월 5일 21:15:47
 
 ### 문제 설명
 

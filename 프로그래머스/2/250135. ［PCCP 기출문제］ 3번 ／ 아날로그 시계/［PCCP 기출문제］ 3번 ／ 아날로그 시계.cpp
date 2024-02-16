@@ -3,50 +3,53 @@
 
 using namespace std;
 
-int rad(int s, int type) {
-    if (type == 0) {
-        return s % 43200;
-    } else if (type == 1) {
-        return (s % 3600) * 12;
+double getRad(int h,int m,int s,int type){
+    if(type==0){ //시침
+        return (h%12)*30+(double)m/2+(double)s/120;
+    }else if(type==1){ //분침
+        return m*6+(double)s/10;
+    }else{ //초침
+        return s*6;
     }
-    return (s % 60) * 720;
 }
-
+int getTime(int h,int m,int s){
+    return h*3600+m*60+s;
+}
 int solution(int h1, int m1, int s1, int h2, int m2, int s2) {
     int answer = 0;
-    
-    int H = rad(h1 * 3600 + m1 * 60 + s1, 0);
-    int M = rad(h1 * 3600 + m1 * 60 + s1, 1);
-    int S = rad(h1 * 3600 + m1 * 60 + s1, 2);
-    for (int t = h1 * 3600 + m1 * 60 + s1 + 1; t <= h2 * 3600 + m2 * 60 + s2; t++) {
-        int h = rad(t, 0);
-        int m = rad(t, 1);
-        int s = rad(t, 2);
-        if (s == 0) {
-            s = 43200;
-        }
-        bool HMatch = S < H && s >= h;
-        bool MMatch = S < M && s >= m;
-        if (HMatch) {
-            answer++;
-        }
-        if (MMatch) {
-            answer++;
-        }
-        if (s == 43200) {
-            s = 0;
-        }
-        if (h == 0 && m == 0) {
-            answer--;
-        }
-        H = h;
-        M = m;
-        S = s;
-    }
-    
-    if ((h1 * 3600 + m1 * 60 + s1) % 43200 == 0) {
+    double preH=getRad(h1,m1,s1,0);
+    double preM=getRad(h1,m1,s1,1);
+    double preS=getRad(h1,m1,s1,2);
+
+    int start=getTime(h1,m1,s1);
+    int end=getTime(h2,m2,s2);
+
+    if(start==0||start==43200){
         answer++;
     }
-    
+
+    for(int i=start+1;i<=end;i++){
+        double nowH=getRad(i/3600,(i%3600)/60,i%60,0);
+        double nowM=getRad(i/3600,(i%3600)/60,i%60,1);
+        double nowS=getRad(i/3600,(i%3600)/60,i%60,2);
+
+        if((preS<preH&&nowS>=nowH)||(preS==354&&preH>354)){
+            answer++;
+        }
+        if((preS<preM&&nowS>=nowM)||(preS==354&&preM>354)){
+            answer++;
+        }
+        if(nowH==nowM){
+            answer--;
+        }
+
+        preH=nowH;
+        preM=nowM;
+        preS=nowS;
+    }
     return answer;
+}
+
+int main(){
+    solution(11,59,30,12,0,0);
 }
