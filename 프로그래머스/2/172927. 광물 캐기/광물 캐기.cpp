@@ -1,14 +1,14 @@
 #include <string>
 #include <vector>
-
+#include <climits>
 using namespace std;
-int answer = 1000000000;
+int answer=INT_MAX;
 vector<string> minerals;
-int getP(int source, string target){
-    if(source==0){
+int get(int now,string target){
+    if(now==0){
         return 1;
     }
-    if(source==1){
+    if(now==1){
         if(target=="diamond"){
             return 5;
         }
@@ -22,43 +22,27 @@ int getP(int source, string target){
     }
     return 1;
 }
-
-void go(vector<int> picks, int idx, int p){
+void go(int p,vector<int> picks,int idx){
     if(idx>=minerals.size()||(picks[0]==0&&picks[1]==0&&picks[2]==0)){
         answer=min(answer,p);
         return;
     }
-    if(picks[0]>0){
-        picks[0]-=1;
-        int preP = p;
-        for(int i=idx;i<min((int)minerals.size(),idx+5);i++){
-            preP+=getP(0,minerals[i]);
+    for(int i=0;i<picks.size();i++){
+        if(picks[i]==0){
+            continue;
         }
-        go(picks,idx+5,preP);
-        picks[0]+=1;
-    }
-    if(picks[1]>0){
-        picks[1]-=1;
-        int preP = p;
-        for(int i=idx;i<min((int)minerals.size(),idx+5);i++){
-            preP+=getP(1,minerals[i]);
+        int newP=p;
+        picks[i]--;
+        for(int j=idx;j<min((int)minerals.size(),idx+5);j++){
+            newP+=get(i,minerals[j]);
         }
-        go(picks,idx+5,preP);
-        picks[1]+=1;
-    }
-    if(picks[2]>0){
-        picks[2]-=1;
-        int preP = p;
-        for(int i=idx;i<min((int)minerals.size(),idx+5);i++){
-            preP+=getP(2,minerals[i]);
-        }
-        go(picks,idx+5,preP);
-        picks[2]+=1;
+        go(newP,picks,idx+5);
+        picks[i]++;
     }
 }
 
 int solution(vector<int> picks, vector<string> minerals) {
     ::minerals=minerals;
-    go(picks,0,0);
+    go(0,picks,0);
     return answer;
 }
