@@ -2,29 +2,21 @@
 #include <vector>
 #include <queue>
 using namespace std;
-int vis[1000001];
-queue<int> q;
+
 int solution(int x, int y, int n) {
-    q.push(x);
-    vis[x]=1;
-    while(!q.empty()){
-        int a=q.front();
-        q.pop();
-        if(a==y){
-            return vis[a]-1;
+    int answer = 0;
+    int dp[1000001]={0,};
+    dp[x]=1;
+    for(int i=1;i<=y;i++){
+        if(i-n>=1&&dp[i-n]&&(dp[i]==0||dp[i]>dp[i-n]+1)){
+            dp[i]=dp[i-n]+1;
         }
-        if(a+n<=1000000&&!vis[a+n]){
-            vis[a+n]=vis[a]+1;
-            q.push(a+n);
+        if(i%2==0&&i/2>=1&&dp[i/2]&&(dp[i]==0||dp[i]>dp[i/2]+1)){
+            dp[i]=dp[i/2]+1;
         }
-        if(a*2<=1000000&&!vis[a*2]){
-            vis[a*2]=vis[a]+1;
-            q.push(a*2);
-        }
-        if(a*3<=1000000&&!vis[a*3]){
-            vis[a*3]=vis[a]+1;
-            q.push(a*3);
+        if(i%3==0&&i/3>=1&&dp[i/3]&&(dp[i]==0||dp[i]>dp[i/3]+1)){
+            dp[i]=dp[i/3]+1;
         }
     }
-    return -1;
+    return dp[y]==0?-1:dp[y]-1;
 }
