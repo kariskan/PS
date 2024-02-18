@@ -4,24 +4,19 @@
 using namespace std;
 
 vector<int> solution(vector<int> sequence, int k) {
-    vector<int> answer;
-    int l=0,r=0,s=sequence[0];
-    while(l<=r&&r<sequence.size()){
-        if(s>=k){
-            s-=sequence[l];
-            l++;
+    vector<int> answer={0,(int)sequence.size()-1};
+    int left=0,right=0,sum=sequence[0];
+    while(right<sequence.size()){
+        if(sum<k){
+            sum+=sequence[++right];
         }else{
-            r++;
-            if(r<sequence.size()){
-                s+=sequence[r];
+            if(sum==k){
+                if(answer[1]-answer[0]>right-left){
+                    answer={left,right};
+                }
             }
+            sum-=sequence[left++];
         }
-        if(s==k&&(answer.empty()||answer[1]-answer[0]>r-l)){
-            answer={l,r};
-        }
-    }
-    if(answer.empty()){
-        return {0,0};
     }
     return answer;
 }
