@@ -2,71 +2,43 @@
 #include <vector>
 
 using namespace std;
-
 vector<vector<int>> users;
-vector<int> emoticons;
-
-int maxSign, maxRes;
-
-void get(vector<int> ratio) {
-
-	int sign = 0, res = 0;
-
-	int sum = 0;
-
-	for (int i = 0; i < emoticons.size(); i++) {
-		sum += emoticons[i] * (100 - ratio[i]) / 100;
-	}
-
-	for (int i = 0; i < users.size(); i++) {
-		int userSum = 0;
-		for (int j = 0; j < emoticons.size(); j++) {
-			if (ratio[j] >= users[i][0]) {
-				userSum += emoticons[j] * (100 - ratio[j]) / 100;
-			}
-		}
-		if (userSum >= users[i][1]) {
-			sign++;
-		}
-		else {
-			res += userSum;
-		}
-	}
-
-	if (maxSign < sign) {
-		maxSign = sign;
-		maxRes = res;
-	}
-	else if (maxSign == sign) {
-		if (maxRes < res) {
-			maxRes = res;
-		}
-	}
+vector<int> emoticons,ratio;
+vector<int> answer={0,0};
+pair<int,int> get(){
+    int plus=0,price=0;
+    for(int i=0;i<users.size();i++){
+        int sum=0;
+        for(int j=0;j<emoticons.size();j++){
+            if(users[i][0]<=ratio[j]){
+                sum+=(emoticons[j]*(100-ratio[j]))/100;
+            }
+        }
+        if(sum>=users[i][1]){
+            plus++;
+        }else{
+            price+=sum;
+        }
+    }
+    return {plus,price};
 }
-
-void go(int idx, vector<int> ratio) {
-	get(ratio);
-	if (idx >= ratio.size()) return;
-
-
-
-	for (int j = 10; j <= 40; j += 10) {
-		int k = ratio[idx];
-		ratio[idx] = j;
-		go(idx + 1, ratio);
-		ratio[idx] = k;
-	}
-
+void go(int idx){
+    if(idx>=emoticons.size()){
+        pair<int,int>g=get();
+        if(answer[0]<g.first||(answer[0]==g.first&&answer[1]<g.second)){
+            answer={g.first,g.second};
+        }
+        return;
+    }
+    for(int i=10;i<=40;i+=10){
+        ratio.push_back(i);
+        go(idx+1);
+        ratio.pop_back();
+    }
 }
-
 vector<int> solution(vector<vector<int>> users, vector<int> emoticons) {
-	vector<int> answer;
-	::users = users;
-	::emoticons = emoticons;
-
-	vector<int> ratio(emoticons.size(), 10);
-
-	go(0, ratio);
-
-	return { maxSign,maxRes };
+    ::users=users;
+    ::emoticons=emoticons;
+    go(0);
+    return answer;
 }
