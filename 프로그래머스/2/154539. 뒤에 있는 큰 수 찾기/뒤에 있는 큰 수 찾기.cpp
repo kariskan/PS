@@ -1,29 +1,25 @@
 #include <string>
 #include <vector>
-#include <queue>
+#include <stack>
+#include <algorithm>
 using namespace std;
 
-int pos[1000001];
-
 vector<int> solution(vector<int> numbers) {
-    vector<int> answer(numbers.size());
-    priority_queue<pair<int,int>, vector<pair<int,int>>,greater<pair<int,int>>>q;
-    for(int i=numbers.size()-1;i>=0;i--){
-        if(i==numbers.size()-1){
-            q.push({i,numbers[i]});
-            answer[i]=-1;
-            continue;
+    vector<int> answer;
+    stack<int> st;
+    answer.push_back(-1);
+    st.push(numbers[numbers.size()-1]);
+    for(int i=numbers.size()-2;i>=0;i--){
+        while(!st.empty()&&st.top()<=numbers[i]){
+            st.pop();
         }
-        while(!q.empty()&&q.top().second<=numbers[i]){
-            q.pop();
-        }
-        if(q.empty()){
-            answer[i]=-1;
+        if(st.empty()){
+            answer.push_back(-1);
         }else{
-            answer[i]=q.top().second;
+            answer.push_back(st.top());
         }
-        q.push({i,numbers[i]});
+        st.push(numbers[i]);
     }
-    
+    reverse(answer.begin(),answer.end());
     return answer;
 }
