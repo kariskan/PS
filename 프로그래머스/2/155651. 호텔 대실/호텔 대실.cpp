@@ -1,33 +1,23 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <queue>
 using namespace std;
-
-int solution(vector<vector<string>> book_time) {
-    vector<pair<int, int>> book;
-    for(int i=0;i<book_time.size();i++){
-        int start=stoi(book_time[i][0].substr(0,2))*60+stoi(book_time[i][0].substr(3));
-        int end=stoi(book_time[i][1].substr(0,2))*60+stoi(book_time[i][1].substr(3))+10;
-        book.push_back({start,end});
-    }
-    sort(book.begin(), book.end());
-    vector<int> reser;
+int toTime(string s){
+    return stoi(s.substr(0,2))*60+stoi(s.substr(3));
+}
+int solution(vector<vector<string>> book) {
+    sort(book.begin(),book.end());
+    priority_queue<int> q;
     for(int i=0;i<book.size();i++){
-        if(reser.empty()){
-            reser.push_back(i);
+        int start=toTime(book[i][0]);
+        int end=toTime(book[i][1])+10;
+        if(q.empty()||-q.top()>start){
+            q.push(-end);
             continue;
         }
-        bool flag=false;
-        for(int j=0;j<reser.size();j++){
-            if(book[reser[j]].second<=book[i].first){
-                book[reser[j]]=book[i];
-                flag=true;
-                break;
-            }
-        }
-        if(!flag){
-            reser.push_back(i);
-        }
+        q.pop();
+        q.push(-end);
     }
-    return reser.size();
+    return q.size();
 }
