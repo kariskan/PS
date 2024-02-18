@@ -1,30 +1,24 @@
 #include <string>
 #include <vector>
-
+#include <map>
 using namespace std;
-
-int weight[1001];
-
+map<int,long long> ma;
 long long solution(vector<int> weights) {
     long long answer = 0;
     for(int i=0;i<weights.size();i++){
-        weight[weights[i]]++;
+        ma[weights[i]]++;
     }
-    for(int i=1;i<=1000;i++){
-        answer += (long long)weight[i] * (weight[i] - 1) / 2;
-    }
-    long long a = 0;
-    for(int i=0;i<weights.size();i++){
-        for(int j=2;j<=4;j++){
-            for(int k=2;k<=4;k++){
-                if(j==k){
-                    continue;
-                }
-                if((weights[i]*j)%k==0&&(weights[i]*j)/k<=1000){
-                    a+=weight[(weights[i]*j)/k];
-                }
-            }
+    for(auto&i:ma){
+        answer+=((i.second)*(i.second-1))/2;
+        if((i.first*3)%2==0&&ma.find((i.first*3)/2)!=ma.end()){
+            answer+=i.second*ma[(i.first*3)/2];
+        }
+        if((i.first*4)%2==0&&ma.find((i.first*4)/2)!=ma.end()){
+            answer+=i.second*ma[(i.first*4)/2];
+        }
+        if((i.first*4)%3==0&&ma.find((i.first*4)/3)!=ma.end()){
+            answer+=i.second*ma[(i.first*4)/3];
         }
     }
-    return answer+a/2;
+    return answer;
 }
