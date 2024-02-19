@@ -4,12 +4,14 @@
 using namespace std;
 
 long long solution(int k, int d) {
-    long long K = k;
-    long long D = d;
-    long long answer = 0;
-    for(long long i=0;i<=D;i+=K){
-        answer+=(long long)sqrt(D*D-i*i)/K+1;
-        // printf("%lld\n", (long long)sqrt(D*D-i*i)/K);
+    long long K=k,D=d;
+    long long answer=(D/K)*2+1;
+    for(long long i=K;i<D;i+=K){
+        long long s=sqrt(D*D-i*i);
+        if(s==0){
+            break;
+        }
+        answer+=s/K;
     }
     return answer;
 }
