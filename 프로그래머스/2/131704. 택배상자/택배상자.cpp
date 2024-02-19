@@ -1,35 +1,21 @@
 #include <string>
 #include <vector>
 #include <stack>
-#include <queue>
 using namespace std;
-stack<int> st;
+
 int solution(vector<int> order) {
     int answer = 0;
-    queue<int> q;
-    for(int i=1;i<=order.size();i++){
-        q.push(i);
-    }
-    int idx=0;
+    stack<int> st;
+    int now=1;
     for(int i=0;i<order.size();i++){
-        if(!q.empty()&&q.front()==order[i]){
-            q.pop();
-            answer++;
-            continue;
+        if(now>order[i]&&!st.empty()&&st.top()>order[i]){
+            return i;
         }
-        if(!st.empty()&&st.top()==order[i]){
-            st.pop();
-            answer++;
-            continue;
+        while(now<=order[i]){
+            st.push(now++);
         }
-        if((q.empty()||(!q.empty()&&order[i]<q.front()))&&(st.empty()||(!st.empty()&&order[i]!=st.top()))){
-            break;
-        }
-        while(!q.empty()&&q.front()<order[i]){
-            st.push(q.front());
-            q.pop();
-        }
-        q.pop();
+        
+        st.pop();
         answer++;
     }
     return answer;
