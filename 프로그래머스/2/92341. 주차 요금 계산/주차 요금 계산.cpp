@@ -2,43 +2,42 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <climits>
 using namespace std;
-map<string, int> record;
-map<string, int> fee;
-pair<int, pair<string, int>> parse(string s){
+vector<string> parse(string s){
     stringstream ss(s);
     vector<string> v;
     string temp;
     while(getline(ss,temp,' ')){
         v.push_back(temp);
     }
-    return {stoi(v[0].substr(0,2))*60+stoi(v[0].substr(3)),{v[1],v[2]=="IN"?1:0}};
+    return v;
 }
-
+int toTime(string s){
+    return stoi(s.substr(0,2))*60+stoi(s.substr(3));
+}
 vector<int> solution(vector<int> fees, vector<string> records) {
     vector<int> answer;
+    map<string,int> ma,ans;
     for(int i=0;i<records.size();i++){
-        pair<int,pair<string,int>> p=parse(records[i]);
-        if(p.second.second==1){
-            record[p.second.first]=p.first;
+        vector<string> p=parse(records[i]);
+        int time=toTime(p[0]);
+        if(p[2]=="IN"){
+            ma[p[1]]=time;
         }else{
-            int diff=p.first-record[p.second.first];
-            fee[p.second.first]+=diff;
-            record.erase(p.second.first);
+            ans[p[1]]+=time-ma[p[1]];
+            ma.erase(p[1]);
         }
     }
-    for(auto&i:record){
-        int diff=23*60+59-i.second;
-        fee[i.first]+=diff;
+    for(auto&i:ma){
+        ans[i.first]+=toTime("23:59")-i.second;
     }
-    for(auto&i:fee){
-        if(i.second<=fees[0]){
-            i.second=fees[1];
-        }else{
+    for(auto&i:ans){
+        if(i.second>=fees[0]){
             i.second=fees[1]+((i.second-fees[0]+fees[2]-1)/fees[2])*fees[3];
+        }else{
+            i.second=fees[1];
         }
-    }
-    for(auto&i:fee){
         answer.push_back(i.second);
     }
     return answer;
