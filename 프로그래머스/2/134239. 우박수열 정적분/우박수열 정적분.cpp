@@ -4,28 +4,31 @@
 using namespace std;
 
 vector<double> solution(int k, vector<vector<int>> ranges) {
-    long long K = k;
     vector<double> answer;
-    vector<pair<double,pair<int,long long>>> seq={{0.0,{0,K}}};
-    int n=0;
-    while(K!=1){
-        if(K%2==0){
-            K/=2;
+    vector<int> v={k};
+    while(k!=1){
+        if(k%2==1){
+            k=k*3+1;
         }else{
-            K=K*3+1;
+            k/=2;
         }
-        n++;
-        double area = seq.back().first+((double)seq.back().second.second+K)/2;
-        seq.push_back({area,{n,K}});
+        v.push_back(k);
+    }
+    vector<double> width={0};
+    for(int i=1;i<v.size();i++){
+        width.push_back(((double)v[i]+v[i-1])/2);
+        if(i>1){
+            width[i]+=width[i-1];
+        }
     }
     for(int i=0;i<ranges.size();i++){
-        int start = ranges[i][0];
-        int end = n + ranges[i][1];
+        int start=ranges[i][0];
+        int end=width.size()+ranges[i][1]-1;
         if(start>end){
             answer.push_back(-1);
-            continue;
+        }else{
+            answer.push_back(width[end]-width[start]);
         }
-        answer.push_back(seq[end].first-seq[start].first);
     }
     return answer;
 }
