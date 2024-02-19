@@ -1,31 +1,28 @@
 #include <string>
 #include <vector>
-#include <queue>
+
 using namespace std;
-
-int vis[101];
-
+int vis[100];
 int solution(vector<int> cards) {
     int answer = 0;
-    priority_queue<int> q;
+    vector<int> g;
     for(int i=0;i<cards.size();i++){
-        if(vis[i]){
-            continue;
+        int cnt=0;
+        if(!vis[i]){
+            int idx=i;
+            while(!vis[idx]){
+                vis[idx]=1;
+                idx=cards[idx]-1;
+                cnt++;
+            }
+            g.push_back(cnt);
         }
-        vis[i]=1;
-        int idx = cards[i]-1;
-        int s = 1;
-        while(idx!=i){
-            s++;
-            vis[idx]=1;
-            idx=cards[idx]-1;
+    }
+    printf("%d",g.size());
+    for(int i=0;i<g.size();i++){
+        for(int j=0;j<i;j++){
+            answer=max(answer,g[i]*g[j]);
         }
-        q.push(s);
     }
-    if(q.size()<=1){
-        return 0;
-    }
-    answer=q.top();
-    q.pop();
-    return answer*q.top();
+    return answer;
 }
