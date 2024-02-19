@@ -4,20 +4,21 @@
 using namespace std;
 
 int solution(int n, int k, vector<int> enemy) {
-    if(k>=enemy.size()){
-        return enemy.size();
-    }
-    vector<int> v;
-    priority_queue<int, vector<int>, greater<int>>q;
+    int answer = 0;
+    priority_queue<int> pq;
     for(int i=0;i<enemy.size();i++){
-        q.push(enemy[i]);
-        if(q.size()>k){
-            n-=q.top();
-            q.pop();
-            if(n<0){
+        pq.push(enemy[i]);
+        if(n<enemy[i]){
+            while(!pq.empty()&&k&&n<enemy[i]){
+                k--;
+                n+=pq.top();
+                pq.pop();
+            }
+            if(n<enemy[i]){
                 return i;
             }
         }
+        n-=enemy[i];
     }
     return enemy.size();
 }
