@@ -5,20 +5,24 @@ using namespace std;
 
 int solution(int k, vector<vector<int>> dungeons) {
     int answer = 0;
-    vector<int> seq;
+    vector<int> v;
     for(int i=0;i<dungeons.size();i++){
-        seq.push_back(i);
+        v.push_back(i);
     }
     do{
-        int K = k, c = 0;
-        for(int i=0;i<seq.size();i++){
-            if(K>=dungeons[seq[i]][0]){
-                K-=dungeons[seq[i]][1];
-                c++;
+        int now=k;
+        bool flag=true;
+        for(int i=0;i<v.size();i++){
+            if(dungeons[v[i]][0]>now){
+                answer=max(answer,i);
+                flag=false;
+                break;
             }
+            now-=dungeons[v[i]][1];
         }
-        answer=max(answer, c);
-        printf("\n");
-    }while(next_permutation(seq.begin(),seq.end()));
+        if(flag){
+            answer=dungeons.size();
+        }
+    }while(next_permutation(v.begin(),v.end()));
     return answer;
 }
