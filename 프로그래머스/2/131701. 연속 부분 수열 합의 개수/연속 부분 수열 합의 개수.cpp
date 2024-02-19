@@ -2,16 +2,20 @@
 #include <vector>
 #include <set>
 using namespace std;
-set<int> s;
+int sum[2002];
+set<int> se;
 int solution(vector<int> elements) {
+    int siz=elements.size();
+    for(int i=0;i<siz-1;i++){
+        elements.push_back(elements[i]);
+    }
     for(int i=1;i<=elements.size();i++){
-        for(int start=0;start<elements.size();start++){
-            int sum=0;
-            for(int cnt=0;cnt<i;cnt++){
-                sum+=elements[(start+cnt)%elements.size()];
-            }
-            s.insert(sum);
+        sum[i]=sum[i-1]+elements[i-1];
+    }
+    for(int i=elements.size()/2;i<elements.size();i++){
+        for(int j=i-siz;j<i;j++){
+            se.insert(sum[i]-sum[j]);
         }
     }
-    return s.size();
+    return se.size();
 }
