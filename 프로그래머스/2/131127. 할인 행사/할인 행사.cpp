@@ -2,20 +2,26 @@
 #include <vector>
 #include <map>
 using namespace std;
-map<string, int> ma;
+
 int solution(vector<string> want, vector<int> number, vector<string> discount) {
     int answer = 0;
-    for(int i=0;i<9;i++){
-        ma[discount[i]]++;
+    int sum=0;
+    map<string,int> ma;
+    for(int i=0;i<number.size();i++){
+        sum+=number[i];
+        ma[want[i]]=number[i];
     }
-    for(int i=9;i<discount.size();i++){
-        ma[discount[i]]++;
-        if(i-10>=0){
-            ma[discount[i-10]]--;
+    for(int i=0;i<=discount.size()-sum;i++){
+        map<string,int> temp;
+        for(int j=i;j<i+sum;j++){
+            temp[discount[j]]++;
         }
-        bool flag = true;
-        for(int j=0;j<number.size();j++){
-            if(ma[want[j]]!=number[j]){
+        if(ma.size()!=temp.size()){
+            continue;
+        }
+        bool flag=true;
+        for(auto&i:ma){
+            if(i.second!=temp[i.first]){
                 flag=false;
                 break;
             }
