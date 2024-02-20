@@ -3,46 +3,25 @@
 
 using namespace std;
 string word;
-int cnt=0;
-bool ok=false;
-void go(string s){
-    if(s==word){
-        ok=true;
+int answer;
+char w[5]={'A','E','I','O','U'};
+int cnt;
+void go(string now){
+    if(word==now){
+        answer=cnt;
         return;
     }
-    if(s.length()==5){
+    if(now.length()==5){
         return;
     }
-    cnt++;
-    go(s+"A");
-    if(ok){
-        return;
+    for(int i=0;i<5;i++){
+        cnt++;
+        go(now+w[i]);
     }
-    cnt++;
-    go(s+"E");
-    if(ok){
-        return;
-    }
-    cnt++;
-    go(s+"I");
-    if(ok){
-        return;
-    }
-    cnt++;
-    go(s+"O");
-    if(ok){
-        return;
-    }
-    cnt++;
-    go(s+"U");
 }
 
 int solution(string word) {
     ::word=word;
     go("");
-    return cnt;
-}
-
-int main(){
-    solution("AAAAE");
+    return answer;
 }
