@@ -1,70 +1,67 @@
 #include <string>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
-vector<int> info;
-pair<int, vector<int>> ans = {-1, {}};
+vector<int> info,answer;
 int n;
-
-pair<int, int> getScore(vector<int> res) {
-    int rionScore = 0, peachScore = 0;
-    for (int i = 0; i < info.size(); i++) {
-        if (info[i] == 0 && res[i] == 0) {
+int getScore(vector<int> now){
+    int rion=0,peach=0;
+    for(int i=0;i<11;i++){
+        if(now[i]==0&&info[i]==0){
             continue;
         }
-        if (info[i] >= res[i]) {
-            peachScore += 10 - i;
-        } else {
-            rionScore += 10 - i;
+        if(now[i]>info[i]){
+            rion+=(10-i);
+        }else{
+            peach+=(10-i);
         }
     }
-    return {peachScore, rionScore};
+    if(now[10]==10){
+        printf("%d %d\n", rion,peach);
+    }
+    return rion-peach;
 }
-
-bool ok(vector<int> res) {
-    for (int i = 10; i >= 0; i--) {
-        if (res[i] > ans.second[i]) {
+bool lower(vector<int> now){
+    for(int i=10;i>=0;i--){
+        if(now[i]==0&&answer[i]==0){
+            continue;
+        }
+        if(now[i]>answer[i]){
             return true;
-        } else if (res[i] < ans.second[i]) {
+        }else if(now[i]<answer[i]){
             return false;
         }
     }
     return false;
 }
-
-void go(int idx, vector<int> res, int N) {
-    if (idx >= 10 || N == 0) {
-        res[10] += N;
-        pair<int, int> score = getScore(res);
-        if (score.first >= score.second) {
+void go(vector<int> now,int idx,int rest){
+    if(idx>=info.size()){
+        now[10]+=rest;
+        int score=getScore(now);
+        if(score<=0){
             return;
         }
-        if (ans.first < score.second - score.first || (ans.first == score.second - score.first && ok(res))) {
-            ans = {score.second - score.first, res};
+        if(answer.empty()||score>answer[11]||(score==answer[11]&&lower(now))){
+            answer=now;
+            answer.push_back(score);
         }
         return;
     }
-    if (N > info[idx]) {
-        res[idx] = info[idx] + 1;
-        go(idx + 1, res, N - info[idx] - 1);
-        res[idx] = 0;
-    }
-    go(idx + 1, res, N);
+    go(now,idx+1,rest);
+    int mi=min(info[idx]+1,rest);
+    now[idx]+=mi;
+    go(now,idx+1,rest-mi);
+    now[idx]-=mi;
 }
 
 vector<int> solution(int n, vector<int> info) {
-    ::n = n;
-    ::info = info;
-    vector<int> res(11);
-    go(0, res, n);
-    if (ans.first == -1) {
+    ::n=n;
+    ::info=info;
+    vector<int> now(11);
+    go(now,0,n);
+    if(answer.empty()){
         return {-1};
     }
-    return ans.second;
-}
-
-int main() {
-    ans.second = {0, 0, 2, 3, 4, 1, 0, 0, 0, 0, 0};
-    ok({9, 0, 0, 0, 0, 0, 0, 1, 0, 0});
+    answer.pop_back();
+    return answer;
 }
