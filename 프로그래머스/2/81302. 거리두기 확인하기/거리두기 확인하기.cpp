@@ -2,62 +2,47 @@
 #include <vector>
 
 using namespace std;
-
-int dx[12]={-2,-1,-1,-1,0,0,0,0,1,1,1,2};
-int dy[12]={0,-1,0,1,-2,-1,1,2,-1,0,1,0};
-vector<string> place;
-
-int getDis(int x, int y, int nx, int ny){
-    return abs(x-y)+abs(nx-ny);
+int dx[4]={0,0,1,-1};
+int dy[4]={1,-1,0,0};
+int dx2[4]={1,1,-1,-1};
+int dy2[4]={1,-1,1,-1};
+int n,m;
+bool range(int x,int y){
+    return x>=0&&x<n&&y>=0&&y<m;
 }
-
-bool valid(int x, int y, int nx, int ny){
-    int dis = getDis(x,y,nx,ny);
-    if(dis==1){
-        return false;
-    }
-    if(x==nx){
-        if(place[x][(y+ny)/2]=='X'){
-            return true;
-        }
-        return false;
-    }
-    if(y==ny){
-        if(place[(x+nx)/2][y]=='X'){
-            return true;
-        }
-        return false;
-    }
-    return place[nx][y]=='X'&&place[x][ny]=='X';
-}
-
 vector<int> solution(vector<vector<string>> places) {
     vector<int> answer;
     for(vector<string> place:places){
-        ::place=place;
+        n=place.size(),m=place[0].length();
         bool flag=true;
-        for(int i=0;i<5;i++){
-            for(int j=0;j<5;j++){
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
                 if(place[i][j]=='P'){
-                    for(int k=0;k<12;k++){
+                    for(int k=0;k<4;k++){
                         int nx=i+dx[k];
                         int ny=j+dy[k];
-                        if(nx>=0&&nx<5&&ny>=0&&ny<5&&place[nx][ny]=='P'&&!valid(i,j,nx,ny)){
+                        if(range(nx,ny)&&place[nx][ny]=='P'){
                             flag=false;
-                            printf("%d %d %d %d\n", i,j,nx,ny);
-                            break;
                         }
-                    }
-                    if(!flag){
-                        break;
+                        nx=i+2*dx[k];
+                        ny=j+2*dy[k];
+                        if(range(nx,ny)&&place[nx][ny]=='P'&&place[nx-dx[k]][ny-dy[k]]!='X'){
+                            flag=false;
+                        }
+                        nx=i+dx2[k];
+                        ny=j+dy2[k];
+                        if(range(nx,ny)&&place[nx][ny]=='P'&&(place[nx-dx2[k]][ny]!='X'||place[nx][ny-dy2[k]]!='X')){
+                            flag=false;
+                        }
                     }
                 }
             }
-            if(!flag){
-                break;
-            }
         }
-        answer.push_back(flag);
+        if(flag){
+            answer.push_back(1);
+        }else{
+            answer.push_back(0);
+        }
     }
     return answer;
 }
