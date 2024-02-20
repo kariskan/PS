@@ -1,36 +1,41 @@
 #include <string>
 #include <vector>
-#include <algorithm>
 #include <climits>
 #include <set>
 using namespace std;
+typedef long long ll;
 vector<string> solution(vector<vector<int>> line) {
     vector<string> answer;
-    set<pair<long long, long long>> coor;
-    long long minx=LLONG_MAX,miny=LLONG_MAX,maxx=LLONG_MIN,maxy=LLONG_MIN;
+    set<pair<ll,ll>> v;
+    ll maxx=LLONG_MIN,maxy=LLONG_MIN,minx=LLONG_MAX,miny=LLONG_MAX;
     for(int i=0;i<line.size();i++){
         for(int j=i+1;j<line.size();j++){
-            long long BF_ED = (long long)line[i][1]*line[j][2]-(long long)line[i][2]*line[j][1];
-            long long EC_AF = (long long)line[i][2]*line[j][0]-(long long)line[i][0]*line[j][2];
-            long long AD_BC = (long long)line[i][0]*line[j][1]-(long long)line[i][1]*line[j][0];
-            if(!AD_BC||BF_ED%AD_BC!=0||EC_AF%AD_BC!=0){
+            ll bfed=(ll)line[i][1]*line[j][2]-(ll)line[i][2]*line[j][1];
+            ll adbc=(ll)line[i][0]*line[j][1]-(ll)line[i][1]*line[j][0];
+            ll ecaf=(ll)line[i][2]*line[j][0]-(ll)line[i][0]*line[j][2];
+            if(adbc==0){
                 continue;
             }
-            long long x=BF_ED/AD_BC;
-            long long y=EC_AF/AD_BC;
-            minx=min(minx,x);
-            maxx=max(maxx,x);
-            miny=min(miny,y);
-            maxy=max(maxy,y);
-            coor.insert({x,y});
+            if(bfed%adbc==0&&ecaf%adbc==0){
+                ll x=bfed/adbc;
+                ll y=ecaf/adbc;
+                v.insert({x,y});
+                maxx=max(maxx,x);
+                maxy=max(maxy,y);
+                minx=min(minx,x);
+                miny=min(miny,y);
+            }
         }
     }
-    for(long long i=0;i<maxy-miny+1;i++){
+    answer.resize(maxy-miny+1);
+    for(int i=0;i<answer.size();i++){
         string s(maxx-minx+1,'.');
-        answer.push_back(s);
+        answer[i]=s;
     }
-    for(auto& i:coor){
-        answer[maxy-i.second][i.first-minx]='*';
+    for(auto&i:v){
+        ll x=i.first;
+        ll y=i.second;
+        answer[maxy-y][x-minx]='*';
     }
     return answer;
 }
