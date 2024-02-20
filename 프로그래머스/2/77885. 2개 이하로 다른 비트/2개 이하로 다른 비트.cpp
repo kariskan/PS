@@ -2,52 +2,53 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-
-string parse(long long n){
+string toBinary(long long n){
     string res="";
     while(n){
         res+=(n%2+'0');
         n/=2;
     }
-    res+="0";
     reverse(res.begin(),res.end());
     return res;
 }
-
-long long parse2(string s){
-    long long pow=1,res=0;
-    for(int i=s.length()-1;i>=0;i--){
-        res+=pow*(s[i]-'0');
-        pow*=2;
+long long toLL(string b){
+    long long p=1;
+    long long res=0;
+    for(int i=b.length()-1;i>=0;i--){
+        res+=p*(b[i]-'0');
+        p*=2;
     }
     return res;
 }
-
 vector<long long> solution(vector<long long> numbers) {
     vector<long long> answer;
-    
     for(int i=0;i<numbers.size();i++){
-        string binary=parse(numbers[i]);
-        string minBinary(binary.size(), '1');
-        for(int j=0;j<binary.size();j++){
-            string temp = binary;
-            temp[j] = (1-(binary[j]-'0'))+'0';
-            if(temp>binary&&minBinary>temp){
-                minBinary=temp;
-            }
-        }
-        for(int j=0;j<binary.size();j++){
-            for(int k=j+1;k<binary.size();k++){
-                string temp = binary;
-                temp[j] = (1-(binary[j]-'0'))+'0';
-                temp[k] = (1-(binary[k]-'0'))+'0';
-                if(temp>binary&&minBinary>temp){
-                    minBinary=temp;
+        string b="0" + toBinary(numbers[i]);
+        for(int j=0;j<b.length();j++){
+            string temp=b;
+            temp[j]=(1-(temp[j]-'0'))+'0';
+            if(b<temp){
+                if(answer.size()==i){
+                    answer.push_back(toLL(temp));
+                }else if(answer[answer.size()-1]>toLL(temp)){
+                    answer.back()=toLL(temp);
                 }
             }
         }
-        answer.push_back(parse2(minBinary));
+        for(int j=0;j<b.length();j++){
+            for(int k=j+1;k<b.length();k++){
+                string temp=b;
+                temp[j]=(1-(temp[j]-'0'))+'0';
+                temp[k]=(1-(temp[k]-'0'))+'0';
+                if(b<temp){
+                    if(answer.size()==i){
+                        answer.push_back(toLL(temp));
+                    }else if(answer[answer.size()-1]>toLL(temp)){
+                        answer.back()=toLL(temp);
+                    }
+                }
+            }
+        }
     }
-    
     return answer;
 }
