@@ -5,17 +5,19 @@ using namespace std;
 
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
     vector<int> answer;
-    queue<int> q;
+    queue<int>q;
     for(int i=0;i<progresses.size();i++){
-        q.push((99+speeds[i]-progresses[i])/speeds[i]);
+        q.push((99-progresses[i]+speeds[i])/speeds[i]);
     }
+    int time=0;
     while(!q.empty()){
-        int day = q.front(),cnt=0;
-        while(!q.empty()&&q.front()<=day){
+        time=q.front();
+        int t=0;
+        while(!q.empty()&&time>=q.front()){
             q.pop();
-            cnt++;
+            t++;
         }
-        answer.push_back(cnt);
+        answer.push_back(t);
     }
     return answer;
 }
