@@ -11,9 +11,13 @@ long long solution(int r1, int r2) {
         long long coor1=sqrt(R1*R1-i*i);
         long long coor2=sqrt(R2*R2-i*i);
         answer+=(coor2-coor1)*4;
-        if(i<R1&&coor1*coor1==R1*R1-i*i){
+        if(coor1!=0&&coor1*coor1==R1*R1-i*i){
             answer+=4;
         }
     }
     return answer;
+}
+
+int main(){
+    solution(2,3);
 }
