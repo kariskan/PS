@@ -14,7 +14,7 @@ vector<int> solution(vector<int> prices) {
         st.push({prices[i],i});
     }
     while(!st.empty()){
-        answer[st.top().second]=prices.size()-st.top().second-1;
+        answer[st.top().second]=prices.size()-1-st.top().second;
         st.pop();
     }
     return answer;
