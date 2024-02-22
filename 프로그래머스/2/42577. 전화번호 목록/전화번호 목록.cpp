@@ -1,23 +1,21 @@
 #include <string>
 #include <vector>
-#include <map>
 #include <algorithm>
+#include <set>
 using namespace std;
-map<string,int> ma;
-bool solution(vector<string> phone_book) {
+bool compare(string a,string b){
+    return a.length()>b.length();
+}
+bool solution(vector<string> phone) {
     bool answer = true;
-    sort(phone_book.begin(),phone_book.end());
-    for(int j=0;j<phone_book.size();j++){
-        string phone=phone_book[j];
-        string s="";
-        for(int i=0;i<phone.length();i++){
-            s+=phone[i];
-            ma[s]=j;
-        }
-    }
-    for(int i=0;i<phone_book.size();i++){
-        if(ma.find(phone_book[i])!=ma.end()&&ma[phone_book[i]]!=i){
+    sort(phone.begin(),phone.end(),compare);
+    set<string> se;
+    for(int i=0;i<phone.size();i++){
+        if(se.find(phone[i])!=se.end()){
             return false;
+        }
+        for(int j=1;j<=phone[i].length();j++){
+            se.insert(phone[i].substr(0,j));
         }
     }
     return true;
