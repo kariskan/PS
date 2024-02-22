@@ -1,13 +1,11 @@
 #include <string>
 #include <vector>
-#include <algorithm>
 #include <set>
 using namespace std;
-int answer,vis[7];
-string numbers;
 set<int> se;
+string numbers;
 bool isPrime(int n){
-    if(n<=1){
+    if(n==0||n==1){
         return false;
     }
     for(int i=2;i*i<=n;i++){
@@ -17,23 +15,25 @@ bool isPrime(int n){
     }
     return true;
 }
-void go(int num,int cnt){
-    if(isPrime(num)){
-        se.insert(num);
-    }
-    if(cnt>=numbers.length()){
+void go(int now,int idx,vector<int> vis){
+    if(idx>numbers.size()){
         return;
     }
-    for(int i=0;i<numbers.length();i++){
+    if(isPrime(now)){
+        se.insert(now);
+    }
+    for(int i=0;i<vis.size();i++){
         if(!vis[i]){
             vis[i]=1;
-            go(num*10+(numbers[i]-'0'),cnt+1);
+            go(now*10+(numbers[i]-'0'),idx+1,vis);
             vis[i]=0;
         }
     }
 }
+
 int solution(string numbers) {
     ::numbers=numbers;
-    go(0,0);
-    return (int)se.size();
+    vector<int> vis(numbers.size());
+    go(0,0,vis);
+    return se.size();
 }
