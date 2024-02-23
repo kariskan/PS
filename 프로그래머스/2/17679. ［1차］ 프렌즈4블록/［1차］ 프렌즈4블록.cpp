@@ -1,61 +1,56 @@
 #include <string>
 #include <vector>
-#include <queue>
+#include <algorithm>
 using namespace std;
 int dx[3]={0,1,1};
 int dy[3]={1,0,1};
-int solution(int m, int n, vector<string> board) {
+int solution(int n, int m, vector<string> board) {
     int answer = 0;
-    
     while(1){
-        queue<pair<int, int>> q;
-        for(int i=0;i<m-1;i++){
-            for(int j=0;j<n-1;j++){
+        vector<pair<int,int>> v;
+        for(int i=0;i<n-1;i++){
+            for(int j=0;j<m-1;j++){
                 if(board[i][j]==' '){
                     continue;
                 }
-                bool flag=true;
+                bool flag2=true;
                 for(int k=0;k<3;k++){
-                    int nx=i+dx[k];
-                    int ny=j+dy[k];
-                    if(!(nx>=0&&nx<m&&ny>=0&&ny<n&&board[nx][ny]==board[i][j])){
-                        flag=false;
+                    if(board[i][j]!=board[i+dx[k]][j+dy[k]]){
+                        flag2=false;
                         break;
                     }
                 }
-                if(flag){
-                    q.push({i,j});
+                if(flag2){
+                    v.push_back({i,j});
                     for(int k=0;k<3;k++){
-                        q.push({i+dx[k],j+dy[k]});
+                        v.push_back({i+dx[k],j+dy[k]});
                     }
                 }
             }
         }
-        if(q.empty()){
+        
+        if(v.empty()){
             break;
         }
-        while(!q.empty()){
-            board[q.front().first][q.front().second]=' ';
-            q.pop();
+        sort(v.begin(),v.end());
+        v.erase(unique(v.begin(),v.end()),v.end());
+        answer+=v.size();
+        
+        for(int i=0;i<v.size();i++){
+            board[v[i].first][v[i].second]=' ';
         }
-        for(int j=0;j<n;j++){
-            for(int i=m-1;i>=0;i--){
+        for(int j=0;j<m;j++){
+            for(int i=n-1;i>=0;i--){
                 if(board[i][j]==' '){
                     int idx=i;
-                    while(idx>0&&board[idx][j]==' '){
+                    while(idx>=0&&board[idx][j]==' '){
                         idx--;
                     }
-                    board[i][j]=board[idx][j];
-                    board[idx][j] = ' ';
+                    if(idx>=0){
+                        board[i][j]=board[idx][j];
+                        board[idx][j]=' ';
+                    }
                 }
-            }
-        }
-    }
-    
-    for(int i=0;i<m;i++){
-        for(int j=0;j<n;j++){
-            if(board[i][j]==' '){
-                answer++;
             }
         }
     }
