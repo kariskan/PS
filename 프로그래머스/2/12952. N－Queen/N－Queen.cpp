@@ -2,30 +2,30 @@
 #include <vector>
 
 using namespace std;
-int answer,n;
-int a[12];
-void go(int idx){
-    if(idx>=n){
+int a[13],n,answer;
+bool isValid(int col,int idx){
+    for(int i=1;i<col;i++){
+        if(a[i]==idx||abs(col-i)==abs(a[i]-idx)){
+            return false;
+        }
+    }
+    return true;
+}
+void go(int col) {
+    if(col>n){
         answer++;
         return;
     }
-    for(int i=0;i<n;i++){
-        bool flag=true;
-        for(int j=0;j<idx;j++){
-            if(a[j]==i||abs(j-idx)==abs(i-a[j])){
-                flag=false;
-                break;
-            }
-        }
-        if(flag){
-            a[idx]=i;
-            go(idx+1);
-            a[idx]=0;
+    for(int i=1;i<=n;i++){
+        if(isValid(col,i)){
+            a[col]=i;
+            go(col+1);
+            a[col]=0;
         }
     }
 }
 int solution(int n) {
     ::n=n;
-    go(0);
+    go(1);
     return answer;
 }
