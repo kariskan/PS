@@ -2,8 +2,7 @@
 #include <vector>
 
 using namespace std;
-
-string tolower(string s){
+string toLower(string s){
     for(int i=0;i<s.length();i++){
         if(s[i]>='A'&&s[i]<='Z'){
             s[i]=s[i]-'A'+'a';
@@ -11,39 +10,35 @@ string tolower(string s){
     }
     return s;
 }
-
-bool compare(string s1, string s2){
-    return tolower(s1)==tolower(s2);
-}
-
 int solution(int cacheSize, vector<string> cities) {
     if(cacheSize==0){
         return cities.size()*5;
     }
-    int answer = 0;
     vector<pair<string,int>> v;
-    int t=1;
-    for(int i=0;i<cities.size();i++,t++){
-        int idx=-1,last=1000000000,lastIdx=-1;
+    int answer = 0;
+    for(int i=0;i<cities.size();i++){
+        cities[i]=toLower(cities[i]);
+        bool flag=false;
+        int mi=100000,miIdx=-1;
         for(int j=0;j<v.size();j++){
-            if(compare(v[j].first,cities[i])){
-                idx=j;
-                v[j].second=t;
+            if(v[j].first==cities[i]){
+                flag=true;
+                v[j].second=i;
             }
-            if(last>v[j].second){
-                last=v[j].second;
-                lastIdx=j;
+            if(mi>v[j].second){
+                mi=v[j].second;
+                miIdx=j;
             }
         }
-        if(idx==-1){
+        if(flag){
+            answer++;
+        }else{
             answer+=5;
             if(v.size()<cacheSize){
-                v.push_back({cities[i],t});
+                v.push_back({cities[i],i});
             }else{
-                v[lastIdx]={cities[i],t};
+                v[miIdx]={cities[i],i};
             }
-        }else{
-            answer++;
         }
     }
     return answer;
