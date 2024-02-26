@@ -1,25 +1,36 @@
 #include <string>
 #include <vector>
-
+#include <algorithm>
 using namespace std;
-
-int c(int n){
-    int res=0;
+string toBinary(int n){
+    string res="";
     while(n){
-        res+=n%2;
+        res+=(n%2+'0');
         n/=2;
     }
+    reverse(res.begin(),res.end());
     return res;
 }
-
-bool get(int n,int i){
-    return c(n)==c(i);
-}
-
 int solution(int n) {
-    for(int i=n+1;;i++){
-        if(get(n,i)){
-            return i;
+    int answer = 0;
+    string a=toBinary(n);
+    int cnt=0;
+    for(int i=0;i<a.length();i++){
+        if(a[i]=='1'){
+            cnt++;
         }
     }
+    while(++n){
+        string temp=toBinary(n);
+        int tempCnt=0;
+        for(int i=0;i<temp.length();i++){
+            if(temp[i]=='1'){
+                tempCnt++;
+            }
+        }
+        if(cnt==tempCnt){
+            return n;
+        }
+    }
+    return answer;
 }
