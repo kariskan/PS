@@ -1,18 +1,15 @@
 #include <vector>
 #include <queue>
-#include <cstring>
 using namespace std;
 int dx[4]={0,0,1,-1};
 int dy[4]={1,-1,0,0};
-int vis[100][100];
-vector<int> solution(int m, int n, vector<vector<int>> picture) {
-    memset(vis,0,sizeof(vis));
-    int ground=0,ans=0;
-    for(int i=0;i<m;i++){
-        for(int j=0;j<n;j++){
+vector<int> solution(int n, int m, vector<vector<int>> picture) {
+    int vis[100][100]={0,};    
+    vector<int> answer={0,0};
+    queue<pair<int,int>> q;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
             if(!vis[i][j]&&picture[i][j]){
-                ground++;
-                queue<pair<int,int>>q;
                 vis[i][j]=1;
                 q.push({i,j});
                 int cnt=0;
@@ -24,15 +21,16 @@ vector<int> solution(int m, int n, vector<vector<int>> picture) {
                     for(int k=0;k<4;k++){
                         int nx=x+dx[k];
                         int ny=y+dy[k];
-                        if(nx>=0&&nx<m&&ny>=0&&ny<n&&!vis[nx][ny]&&picture[nx][ny]==picture[x][y]){
+                        if(nx>=0&&nx<n&&ny>=0&&ny<m&&!vis[nx][ny]&&picture[nx][ny]==picture[i][j]){
                             vis[nx][ny]=1;
                             q.push({nx,ny});
                         }
                     }
                 }
-                ans=max(ans,cnt);
+                answer[1]=max(answer[1],cnt);
+                answer[0]++;
             }
         }
     }
-    return {ground,ans};
+    return answer;
 }
