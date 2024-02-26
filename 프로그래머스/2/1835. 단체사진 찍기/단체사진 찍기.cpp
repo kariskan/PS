@@ -1,48 +1,59 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+
 using namespace std;
 
-// 전역 변수를 정의할 경우 함수 내에 초기화 코드를 꼭 작성해주세요.
-int solution(int n, vector<string> data) {
-    int answer = 0;
-    vector<char> seq={'A','C','F','J','M','N','R','T'};
-    do{
-        bool flag=true;
-        for(int i=0;i<data.size();i++){
-            char first=data[i][0];
-            char second=data[i][2];
-            char eq=data[i][3];
-            int term=data[i][4]-'0';
-            int firstIdx,secondIdx;
-            for(int j=0;j<seq.size();j++){
-                if(seq[j]==first){
-                    firstIdx=j;
-                }
-                if(seq[j]==second){
-                    secondIdx=j;
-                }
-            }
-            if(eq=='='){
-                if(abs(firstIdx-secondIdx)!=term+1){
-                    flag=false;
-                    break;
-                }
-            }else if(eq=='>'){
-                if(!(abs(firstIdx-secondIdx)>term+1)){
-                    flag=false;
-                    break;
-                }
-            }else{ //eq= '<'
-                if(!(abs(firstIdx-secondIdx)<term+1)){
-                    flag=false;
-                    break;
+char seq[8]={'A','C','F','J','M','N','R','T'};
+int n,answer;
+vector<string> d;
+
+bool valid(vector<char> now){
+    for(int i=0;i<d.size();i++){
+        for(int j=0;j<now.size();j++){
+            for(int k=j+1;k<now.size();k++){
+                if((now[j]==d[i][0]&&now[k]==d[i][2])||(now[j]==d[i][2]&&now[k]==d[i][0])){
+                    if(d[i][3]=='='){
+                        if(k-j-1!=d[i][4]-'0'){
+                            return false;
+                        }
+                    }else if(d[i][3]=='>'){
+                        if(k-j-1<=d[i][4]-'0'){
+                            return false;
+                        }
+                    }else if(d[i][3]=='<'){
+                        if(k-j-1>=d[i][4]-'0'){
+                            return false;
+                        }
+                    }
                 }
             }
         }
-        if(flag){
+    }
+    return true;
+}
+void go(vector<char> now,vector<int> vis){
+    if(now.size()==8){
+        if(valid(now)){
             answer++;
         }
-    }while(next_permutation(seq.begin(),seq.end()));
+        return;
+    }
+    for(int i=0;i<8;i++){
+        if(!vis[i]){
+            vis[i]=1;
+            now.push_back(seq[i]);
+            go(now,vis);
+            vis[i]=0;
+            now.pop_back();
+        }
+    }
+}
+
+int solution(int n, vector<string> data) {
+    ::n=n;
+    d=data;
+    answer = 0;
+    vector<int> vis(8);
+    go({}, vis);
     return answer;
 }
