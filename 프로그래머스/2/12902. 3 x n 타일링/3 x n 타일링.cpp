@@ -2,16 +2,15 @@
 #include <vector>
 
 using namespace std;
-long long dp[5001];
-int solution(int n) {
-    dp[0]=1;
-    dp[2]=3;
-    dp[4]=11;
-    for(int i=6;i<=n;i+=2){
-        dp[i]=(dp[i-2]*3)%1000000007;
-        for(int j=0;j<i-2;j+=2){
-            dp[i]=(dp[i]+dp[j]*2)%1000000007;
-        }
+
+long long dp[5001][2],mod=1000000007;
+int solution(int n) {    
+    dp[0][0]=1;
+    dp[2][0]=3;
+    dp[2][1]=2;
+    for(int i=4;i<=n;i+=2){
+        dp[i][1]=(dp[i-2][0]*2+dp[i-2][1])%mod;
+        dp[i][0]=(dp[i-2][0]*3+dp[i-2][1])%mod;
     }
-    return dp[n];
+    return dp[n][0];
 }
