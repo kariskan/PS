@@ -3,16 +3,17 @@
 
 using namespace std;
 vector<vector<int>> answer;
-void go(int n, int source, int target, int other){
-    if(n==1){
-        answer.push_back({source,target});
+//          1       3       2
+void go(int from, int to, int other,int n){
+    if(n==0){
         return;
     }
-    go(n - 1, source, other, target);
-    answer.push_back({source, target});
-    go(n - 1, other, target, source);
+    go(from,other,to,n-1);
+    answer.push_back({from,to});
+    go(other,to,from,n-1);
 }
+
 vector<vector<int>> solution(int n) {
-    go(n, 1, 3, 2);
+    go(1,3,2,n);
     return answer;
 }
