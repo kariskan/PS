@@ -2,33 +2,33 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-string binary(int i,int n){
-    if(i==0){
+
+string toBinary(int num, int n){
+    if(num==0){
         return "0";
     }
     string res="";
-    while(i){
-        if(i%n>=10){
-            res+=(i%n-10+'A');
+    while(num){
+        if(num%n>=10){
+            res+=(num%n-10+'A');
         }else{
-            res+=(i%n+'0');
+            res+=(num%n+'0');
         }
-        i/=n;
+        num/=n;
     }
     reverse(res.begin(),res.end());
     return res;
 }
+
 string solution(int n, int t, int m, int p) {
-    string answer = "";
-    int len=p+(t-1)*m;
-    string temp="";
-    for(int i=0;temp.length()<len;i++){
-        temp+=binary(i,n);
+    string answer="",s="";
+    int num=0;
+    while(s.length()<=m*t){
+        s+=toBinary(num++,n);
     }
-    int idx=p-1;
     for(int i=0;i<t;i++){
-        answer+=temp[idx];
-        idx+=m;
+        answer+=(s[p-1]);
+        p+=m;
     }
     return answer;
 }
