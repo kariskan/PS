@@ -2,23 +2,39 @@
 #include <vector>
 
 using namespace std;
-
+bool isPrime(int idx){
+    if(idx==0||idx==1){
+        return false;
+    }
+    for(int i=2;i*i<=idx;i++){
+        if(idx%i==0){
+            return false;
+        }
+    }
+    return true;
+}
+int getBlock(int idx){
+    if(idx==1){
+        return 0;
+    }
+    if(isPrime(idx)){
+        return 1;
+    }
+    int res=0;
+    for(int i=2;i*i<=idx;i++){
+        if(idx%i==0&&idx/i>=2&&idx/i<=10000000){
+            res=max(res,idx/i);
+        }
+        if(idx%i==0&&i>=2&&i<=10000000){
+            res=max(res,i);
+        }
+    }
+    return res;
+}
 vector<int> solution(long long begin, long long end) {
-    vector<int> answer(end-begin+1);
-    for(long long i=begin;i<=end;i++){
-        if(i==1){
-            continue;
-        }
-        answer[i-begin]=1;
-        for(long long j=2;j*j<=i;j++){
-            if(i%j==0){
-                answer[i-begin]=max((long long)answer[i-begin],j);
-                if(i/j<=10000000){
-                    answer[i-begin]=max((long long)answer[i-begin],i/j);
-                    break;
-                }
-            }
-        }
+    vector<int> answer;
+    for(int i=begin;i<=end;i++){
+        answer.push_back(getBlock(i));
     }
     return answer;
 }
