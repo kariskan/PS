@@ -2,19 +2,23 @@
 #include <vector>
 #include <climits>
 using namespace std;
-typedef long long ll;
-ll sum[500001];
+
 long long solution(vector<int> sequence) {
-    ll answer = abs(sequence[0]);
-    sum[1]=sequence[0];
-    
-    ll fmi=0,smi=0;
-    for(int i=1;i<=sequence.size();i++){
-        sum[i]=(i%2==1?1:-1)*sequence[i-1]+sum[i-1];
-        
-        answer=max(answer, max(sum[i]-fmi,-sum[i]-smi));
-        fmi=min(fmi,sum[i]);
-        smi=min(smi,-sum[i]);
+    vector<long long> v;
+    long long answer = 0,mi=0,ma=0;
+    for(int i=0;i<sequence.size();i++){
+        if(i%2==1){
+            sequence[i]*=-1;
+        }
+        v.push_back(sequence[i]);
+        if(i>0){
+            v[i]+=v[i-1];
+        }
+    }
+    for(int i=0;i<v.size();i++){
+        answer=max(answer,max(abs(v[i]-mi),abs(v[i]-ma)));
+        mi=min(mi,v[i]);
+        ma=max(ma,v[i]);
     }
     return answer;
 }
