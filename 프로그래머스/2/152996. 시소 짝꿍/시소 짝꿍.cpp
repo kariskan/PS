@@ -5,19 +5,17 @@ using namespace std;
 map<int,long long> ma;
 long long solution(vector<int> weights) {
     long long answer = 0;
-    for(int i=0;i<weights.size();i++){
-        ma[weights[i]]++;
+    for(int weight:weights){
+        ma[weight]++;
     }
     for(auto&i:ma){
-        answer+=((i.second)*(i.second-1))/2;
-        if((i.first*3)%2==0&&ma.find((i.first*3)/2)!=ma.end()){
-            answer+=i.second*ma[(i.first*3)/2];
+        answer+=((i.second-1)*(i.second))/2; // 같은 거리
+        answer+=i.second*ma[i.first*2];
+        if(i.first%3==0){
+            answer+=i.second*ma[(i.first*2)/3];
         }
-        if((i.first*4)%2==0&&ma.find((i.first*4)/2)!=ma.end()){
-            answer+=i.second*ma[(i.first*4)/2];
-        }
-        if((i.first*4)%3==0&&ma.find((i.first*4)/3)!=ma.end()){
-            answer+=i.second*ma[(i.first*4)/3];
+        if(i.first%4==0){
+            answer+=i.second*ma[(i.first*3)/4];
         }
     }
     return answer;
