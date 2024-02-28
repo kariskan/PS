@@ -9,39 +9,51 @@ string toBinary(long long n){
         res+=(n%2+'0');
         n/=2;
     }
-    int cnt=(int)res.length();
-    int len=0;
-    for(long long i=1;;i*=2){
-        if(len+i>=cnt){
-            for(int j=0;j<len+i-cnt;j++){
+    for(long long i=2;;i*=2){
+        if(res.length()<=i-1){
+            int len=res.length();
+            for(int j=0;j<i-1-len;j++){
                 res+='0';
             }
-            reverse(res.begin(),res.end());
-            return res;
+            break;
         }
-        len+=i;
     }
+    reverse(res.begin(),res.end());
+    return res;
 }
-
-bool isValid(string s,int ps,int pe,int start,int end){
-    if(start>end){
+vector<int> answer;
+bool flag;
+bool isValid(string s,int left, int right){
+    if(s[(left+right)/2]=='1'){
         return true;
     }
-    int pm=(ps+pe)/2;
-    int m=(start+end)/2;
-    if(s[pm]=='0'&&s[m]=='1'){
-        return false;
+    for(int i=left;i<=right;i++){
+        if(s[i]=='1'){
+            return false;
+        }
     }
-    return isValid(s,start,end,start,m-1)&&isValid(s,start,end,m+1,end);
+    return true;
+}
+void go(string s,int left,int right){
+    if(left>=right){
+        return;
+    }
+    int mid=(left+right)/2;
+    if(!isValid(s,left,right)){
+        flag=false;
+        return;
+    }
+    go(s,left,mid-1);
+    go(s,mid+1,right);
 }
 
 vector<int> solution(vector<long long> numbers) {
-    vector<int> answer;
-    
     for(long long number:numbers){
-        string s=toBinary(number);
-        answer.push_back(isValid(s,0,s.length()-1,0,s.length()-1));
+        flag=true;
+        string binary=toBinary(number);
+        
+        go(binary,0,binary.length()-1);
+        answer.push_back(flag);
     }
-    
     return answer;
 }
