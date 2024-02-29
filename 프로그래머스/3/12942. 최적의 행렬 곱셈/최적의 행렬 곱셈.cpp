@@ -1,29 +1,23 @@
 #include <string>
 #include <vector>
-#include <climits>
+
 using namespace std;
-int n, dp[201][201];
 vector<vector<int>> matrix;
-int go(int start, int end){
-    if(start>=end){
+int dp[200][200];
+int go(int left, int right){
+    if(left>=right){
         return 0;
     }
-    if(dp[start][end]){
-        return dp[start][end];
+    if(dp[left][right]){
+        return dp[left][right];
     }
-    int res=INT_MAX;
-    for(int i=start;i<end;i++){
-        int l=go(start,i);
-        int r=go(i+1,end);
-        res=min(res,l+r+matrix[start][0]*matrix[i][1]*matrix[end][1]);
+    int res=2*1e9;
+    for(int i=left;i<right;i++){
+        res=min(res,matrix[left][0]*matrix[i][1]*matrix[right][1]+go(left,i)+go(i+1,right));
     }
-    return dp[start][end]=res;
+    return dp[left][right]=res;
 }
-
-int solution(vector<vector<int>> matrix_sizes) {
-    int answer = 0;
-    matrix=matrix_sizes;
-    n=matrix_sizes.size();
-    
-    return go(0,n-1);
+int solution(vector<vector<int>> matrix) {
+    ::matrix=matrix;
+    return go(0,matrix.size()-1);
 }
