@@ -3,56 +3,56 @@
 #include <queue>
 using namespace std;
 
-vector<vector<int>> v;
 int in[1000001],out[1000001],vis[1000001];
+vector<vector<int>> v(1000001);
 vector<int> solution(vector<vector<int>> edges) {
-    vector<int> answer={0,0,0,0};
-    v.resize(1000001);
+    vector<int> answer(4);
+    
     int n=0;
-    for(int i=0;i<edges.size();i++){
-        v[edges[i][0]].push_back(edges[i][1]);
-        in[edges[i][1]]++;
-        out[edges[i][0]]++;
-        n=max(n,max(edges[i][0],edges[i][1]));
+    for(auto&i:edges){
+        in[i[1]]++;
+        out[i[0]]++;
+        v[i[0]].push_back(i[1]);
+        n=max(n,max(i[0],i[1]));
     }
+    
     int start;
     for(int i=1;i<=n;i++){
-        if(out[i]>=2&&in[i]==0){
+        if(in[i]==0&&out[i]>=2){
             start=i;
             break;
         }
     }
+    answer[0]=start;
     
-    int total=v[start].size();
-    
-    for(int i=0;i<v[start].size();i++){
-        int node=0,edge=0;
-        int now=v[start][i];
-        queue<int> q;
-        q.push(now);
-        vis[now]=1;
+    queue<int> q;
+    for(auto&i:v[start]){
+        vis[i]=1;
+        q.push(i);
+        int nodeCnt=0,edgeCnt=0;
         
         while(!q.empty()){
-            int x=q.front();
+            int node=q.front();
             q.pop();
             
-            node++;
-            edge+=v[x].size();
-            for(auto&i:v[x]){
-                if(!vis[i]){
-                    vis[i]=1;
-                    q.push(i);
+            nodeCnt++;
+            edgeCnt+=v[node].size();
+            
+            for(auto&j:v[node]){
+                if(!vis[j]){
+                    vis[j]=1;
+                    q.push(j);
                 }
             }
         }
-        if(node==edge){
+        
+        if(edgeCnt==nodeCnt){ // 도넛
             answer[1]++;
-        }else if(node==edge+1){
+        }else if(edgeCnt==nodeCnt-1){ // 막대
             answer[2]++;
-        }else{
+        }else{ // 8자
             answer[3]++;
         }
     }
-    answer[0]=start;
     return answer;
 }
