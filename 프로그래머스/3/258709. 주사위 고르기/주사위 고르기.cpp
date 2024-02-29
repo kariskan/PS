@@ -2,88 +2,82 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-
 vector<vector<int>> dice;
-vector<int> answer;
-int vis[10];
-vector<int> redSum,blueSum;
-vector<int> red,blue;
-void getDiceSumCase(int flag,int idx,int sum){
-    if(idx>=red.size()){
-        if(!flag){
-            redSum.push_back(sum);
+vector<int> answer,A,B;
+int vis[10],maxWinCnt;
+
+void numberChoose(vector<int> diceNum,int idx,int sum,int flag){
+    if(idx==diceNum.size()){
+        if(flag==0){
+            A.push_back(sum);
         }else{
-            blueSum.push_back(sum);
+            B.push_back(sum);
         }
         return;
     }
+    
     for(int i=0;i<6;i++){
-        if(!flag){
-            getDiceSumCase(flag,idx+1,sum+dice[red[idx]][i]);
-        }else{
-            getDiceSumCase(flag,idx+1,sum+dice[blue[idx]][i]);
-        }
+        numberChoose(diceNum,idx+1,sum+dice[diceNum[idx]][i],flag);
     }
 }
-
-void go(int idx,int cnt){
-    if(cnt==dice.size()/2){
-        red.clear();
-        blue.clear();
+void diceChoose(vector<int> diceNumA, int idx){
+    if(diceNumA.size()==dice.size()/2){
+        A.clear(), B.clear();
+        
+        vector<int> diceNumB;
         for(int i=0;i<dice.size();i++){
-            if(vis[i]){
-                red.push_back(i);
-            }else{
-                blue.push_back(i);
+            if(!vis[i]){
+                diceNumB.push_back(i);
             }
         }
-        redSum.clear();
-        blueSum.clear();
-        getDiceSumCase(0,0,0);
-        getDiceSumCase(1,0,0);
-        sort(redSum.begin(),redSum.end());
-        sort(blueSum.begin(),blueSum.end());
         
-        int redWinCnt=0;
-        for(int i=0;i<redSum.size();i++){
-            int r=redSum[i];
+        numberChoose(diceNumA,0,0,0);
+        numberChoose(diceNumB,0,0,1);
+        
+        sort(A.begin(),A.end());
+        sort(B.begin(),B.end());
+        
+        int totalWinCnt=0;
+        for(int i=0;i<A.size();i++){
+            int left=0,right=B.size()-1;
+            int winCnt=0;
             
-            int left=0,right=blueSum.size()-1;
-            int cnt=0;
             while(left<=right){
                 int mid=(left+right)/2;
                 
-                if(blueSum[mid]<r){
-                    cnt=max(cnt,mid);
+                if(B[mid]<A[i]){
                     left=mid+1;
+                    winCnt=mid+1;
                 }else{
                     right=mid-1;
                 }
             }
-            redWinCnt+=cnt;
+            
+            totalWinCnt+=winCnt;
         }
-        if(answer.empty()||answer[answer.size()-1]<redWinCnt){
-            answer.clear();
-            for(int i=0;i<red.size();i++){
-                answer.push_back(red[i]+1);
+        if(maxWinCnt<totalWinCnt){
+            maxWinCnt=totalWinCnt;
+            for(int i=0;i<diceNumA.size();i++){
+                answer[i]=diceNumA[i]+1;
             }
-            answer.push_back(redWinCnt);
         }
+        
         return;
     }
     if(idx>=dice.size()){
         return;
     }
-    go(idx+1,cnt);
+    
+    diceChoose(diceNumA,idx+1);
+    diceNumA.push_back(idx);
     vis[idx]=1;
-    go(idx+1,cnt+1);
+    diceChoose(diceNumA,idx+1);
     vis[idx]=0;
 }
 
 vector<int> solution(vector<vector<int>> dice) {
     ::dice=dice;
-    go({},0);
-    answer.pop_back();
-    sort(answer.begin(),answer.end());
+    answer.resize(dice.size()/2);
+    diceChoose({},0);
     return answer;
 }
