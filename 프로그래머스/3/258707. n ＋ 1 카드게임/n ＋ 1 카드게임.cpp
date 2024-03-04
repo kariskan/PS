@@ -2,34 +2,27 @@
 #include <vector>
 #include <set>
 using namespace std;
-set<int> mine,discard;  
+
+set<int> mine,discard;
 int solution(int coin, vector<int> cards) {
-    int n=cards.size();
-    for(int i=0;i<n/3;i++){
+    int answer = 0;
+    for(int i=0;i<cards.size()/3;i++){
         mine.insert(cards[i]);
     }
-    for(int i=cards.size()/3;i<n;i+=2){
-        // printf("%d %d\n",i, coin);
-        int flag=0;
+    
+    for(int i=cards.size()/3;i<cards.size();i+=2){
         discard.insert(cards[i]);
         discard.insert(cards[i+1]);
-        // for(auto&j:mine){
-        //     printf("%d ",j);
-        // }
-        // printf("\n");
-        // for(auto&j:discard){
-        //     printf("%d ",j);
-        // }
-        // printf("\n\n");
+        bool flag=false;
         for(auto&j:mine){
             for(auto&k:mine){
                 if(j==k){
                     continue;
                 }
-                if(j+k==n+1){
+                if(j+k==cards.size()+1){
                     mine.erase(j);
                     mine.erase(k);
-                    flag=1;
+                    flag=true;
                     break;
                 }
             }
@@ -38,45 +31,42 @@ int solution(int coin, vector<int> cards) {
             }
         }
         if(!flag){
-            if(coin==0){
-                return (i-n/3)/2+1;
-            }
-            int flag=0;
-            for(auto&j:discard){
-                if(mine.find(n+1-j)!=mine.end()){
-                    mine.erase(n+1-j);
-                    discard.erase(j);
-                    flag=1;
-                    coin--;
-                    break;
-                }
-            }
-            if(flag==0){
-                if(coin<2){
-                    return (i-n/3)/2+1;
-                }
-                for(auto&j:discard){
-                    for(auto&k:discard){
-                        if(j==k){
-                            continue;
-                        }
-                        if(j+k==n+1){
-                            discard.erase(j);
-                            discard.erase(k);
-                            flag=1;
-                            coin-=2;
-                            break;
-                        }
-                    }
-                    if(flag){
+            if(coin>0){
+                for(auto&j:mine){
+                    if(discard.find(cards.size()+1-j)!=discard.end()){
+                        coin--;
+                        discard.erase(cards.size()+1-j);
+                        flag=true;
                         break;
                     }
                 }
-                if(!flag){
-                    return (i-n/3)/2+1;
+            }
+            if(!flag){
+                if(coin>=2){
+                    for(auto&j:discard){
+                        for(auto&k:discard){
+                            if(j==k){
+                                continue;
+                            }
+                            if(j+k==cards.size()+1){
+                                coin-=2;
+                                discard.erase(j);
+                                discard.erase(k);
+                                flag=true;
+                                break;
+                            }
+                        }
+                        if(flag){
+                            break;
+                        }
+                    }
                 }
             }
         }
+        printf("%d %d", i, coin);
+        if(!flag){
+            return (i-cards.size()/3)/2+1;
+        }
     }
-    return (n-n/3)/2+1;
+    return (cards.size()-cards.size()/3)/2+1;
 }
