@@ -1,23 +1,21 @@
 #include <string>
 #include <vector>
 #include <queue>
-#include <climits>
 using namespace std;
 
 vector<int> solution(int n, vector<vector<int>> roads, vector<int> sources, int destination) {
     vector<int> answer;
-    
-    vector<int> dis(n+1,INT_MAX);
-    priority_queue<pair<int,int>> pq;
     vector<vector<int>> v(n+1);
-    
-    for(vector<int> road:roads){
-        v[road[0]].push_back(road[1]);
-        v[road[1]].push_back(road[0]);
+    for(int i=0;i<roads.size();i++){
+        v[roads[i][0]].push_back(roads[i][1]);
+        v[roads[i][1]].push_back(roads[i][0]);
     }
     
-    pq.push({0,destination});
+    vector<int> dis(n+1,987654321);
+    priority_queue<pair<int,int>> pq;
+    
     dis[destination]=0;
+    pq.push({0,destination});
     
     while(!pq.empty()){
         int node=pq.top().second;
@@ -25,19 +23,20 @@ vector<int> solution(int n, vector<vector<int>> roads, vector<int> sources, int 
         pq.pop();
         
         for(auto&i:v[node]){
-            int nxCost=cost+1;
             int nxNode=i;
-            if(dis[nxNode]>nxCost){
+            int nxCost=cost+1;
+            if(nxCost<dis[nxNode]){
                 dis[nxNode]=nxCost;
                 pq.push({-nxCost,nxNode});
             }
         }
     }
-    for(int source:sources){
-        if(dis[source]==INT_MAX){
+    
+    for(int i=0;i<sources.size();i++){
+        if(dis[sources[i]]==987654321){
             answer.push_back(-1);
         }else{
-            answer.push_back(dis[source]);
+            answer.push_back(dis[sources[i]]);
         }
     }
     return answer;
