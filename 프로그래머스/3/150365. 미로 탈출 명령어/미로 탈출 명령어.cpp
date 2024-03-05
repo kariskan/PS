@@ -2,46 +2,25 @@
 #include <vector>
 
 using namespace std;
-// d l r u
 int dx[4]={1,0,0,-1};
 int dy[4]={0,-1,1,0};
-char d[4]={'d','l','r','u'};
-int getDis(int x1,int y1,int x2,int y2){
-    return abs(x1-x2)+abs(y1-y2);
+char ch[4]={'d','l','r','u'};
+int getDis(int x,int y,int targetX,int targetY){
+    return abs(x-targetX)+abs(y-targetY);
 }
 string solution(int n, int m, int x, int y, int r, int c, int k) {
-    if(getDis(x,y,r,c)>k||getDis(x,y,r,c)%2!=k%2){
+    if(k<getDis(x,y,r,c)||(k-getDis(x,y,r,c))%2==1){
         return "impossible";
     }
-    string answer="";
-    for(int t=0;t<k;t++){
-        if(k-t==getDis(x,y,r,c)){
-            for(int i=0;i<4;i++){
-                int nx=x+dx[i];
-                int ny=y+dy[i];
-                if(nx>=1&&nx<=n&&ny>=1&&ny<=m){
-                    if(getDis(x,y,r,c)>getDis(nx,ny,r,c)){
-                        if(i==0||i==3){
-                            for(int j=0;j<abs(x-r);j++){
-                                answer+=d[i];
-                            }
-                        }else{
-                            for(int j=0;j<abs(y-c);j++){
-                                answer+=d[i];
-                            }
-                        }
-                    }
-                }
-            }
-            break;
-        }
-        for(int i=0;i<4;i++){
-            int nx=x+dx[i];
-            int ny=y+dy[i];
-            if(nx>=1&&nx<=n&&ny>=1&&ny<=m){
-                answer+=d[i];
+    string answer = "";
+    for(int i=k;i>0;i--){
+        for(int j=0;j<4;j++){
+            int nx=x+dx[j];
+            int ny=y+dy[j];
+            if(nx>0&&nx<=n&&ny>0&&ny<=m&&getDis(nx,ny,r,c)<=i-1){
                 x=nx;
                 y=ny;
+                answer+=ch[j];
                 break;
             }
         }
