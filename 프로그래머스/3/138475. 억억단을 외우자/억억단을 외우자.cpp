@@ -1,27 +1,25 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+
 using namespace std;
-
-int a[5000001], b[5000001];
-
+int cnt[5000001],ans[5000001];
 vector<int> solution(int e, vector<int> starts) {
     vector<int> answer;
     for(int i=1;i<=e;i++){
         for(int j=i;j<=e;j+=i){
-            a[j]++;
+            cnt[j]++;
         }
     }
-    int ma=0,mi;
+    int ma=0,idx=e;
     for(int i=e;i>=1;i--){
-        if(ma<=a[i]){
-            ma=a[i];
-            mi=i;
+        if(ma<=cnt[i]){
+            ma=cnt[i];
+            idx=i;
         }
-        b[i]=mi;
+        ans[i]=idx;
     }
-    for(int i=0;i<starts.size();i++){
-        answer.push_back(b[starts[i]]);
+    for(int start:starts){
+        answer.push_back(ans[start]);
     }
     return answer;
 }
