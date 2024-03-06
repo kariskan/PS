@@ -2,71 +2,56 @@
 #include <vector>
 
 using namespace std;
+int n,m,answer=-1;
+vector<vector<int>> beginning, target;
 
-int row[10],col[10];
-int n,m, answer=-1;
-vector<vector<int>> b,t;
-vector<vector<int>> temp;
-void flap(int rc, int idx){
-    if(rc==0){ // 행
+// flag==0일때 가로 뒤집기, 1일때 세로 뒤집기
+vector<vector<int>> flap(vector<int> v){
+    vector<vector<int>> res=beginning;
+    
+    for(int i=0;i<v.size();i++){
+        int idx=v[i];
         for(int j=0;j<m;j++){
-            temp[idx][j]=1-temp[idx][j];
-        }
-    }else{
-        for(int i=0;i<n;i++){
-            temp[i][idx]=1-temp[i][idx];
+            res[idx][j]=1-res[idx][j];
         }
     }
+    return res;
 }
-void go(int rowIdx, int colIdx, int cnt) {
-    if(rowIdx>=n&&colIdx>=m){
-        temp=b;
-        for(int i=0;i<n;i++){
-            if(row[i]){
-                flap(0,i);
-            }
-        }
-        for(int i=0;i<m;i++){
-            if(col[i]){
-                flap(1,i);
-            }
-        }
-        
-        bool flag=true;
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
-                if(temp[i][j]!=t[i][j]){
-                    flag=false;
-                    break;
+
+void go(vector<int> now, int idx){
+    if(idx==n){
+        vector<vector<int>> res=flap(now);
+        int totalCnt=now.size();
+        for(int j=0;j<m;j++){
+            int cnt=0;
+            for(int i=0;i<n;i++){
+                if(res[i][j]!=target[i][j]){
+                    cnt++;
                 }
             }
-        }
-        if(flag){
-            if(answer==-1||answer>cnt){
-                answer=cnt;
+            if(cnt>0&&cnt<n){
+                return;
             }
+            if(cnt==0){
+                continue;
+            }
+            totalCnt++;
+        }
+        if(answer==-1||answer>totalCnt){
+            answer=totalCnt;
         }
         return;
     }
     
-    if(rowIdx<n){
-        go(rowIdx+1,colIdx,cnt);
-        row[rowIdx]=1;
-        go(rowIdx+1,colIdx,cnt+1);
-        row[rowIdx]=0;
-    }else{
-        go(rowIdx,colIdx+1,cnt);
-        col[colIdx]=1;
-        go(rowIdx,colIdx+1,cnt+1);
-        col[colIdx]=0;
-    }
+    go(now,idx+1);
+    now.push_back(idx);
+    go(now,idx+1);
 }
 
 int solution(vector<vector<int>> beginning, vector<vector<int>> target) {
-    b=beginning;
-    t=target;
-    n=b.size();
-    m=b[0].size();
-    go(0,0,0);
+    ::beginning=beginning;
+    ::target=target;
+    n=beginning.size(),m=beginning[0].size();
+    go({},0);
     return answer;
 }
