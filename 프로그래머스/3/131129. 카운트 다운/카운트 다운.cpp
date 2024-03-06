@@ -1,37 +1,37 @@
 #include <string>
 #include <vector>
+
 using namespace std;
-// 1~20싱글, 1~20더블, 1~20트리플, 불(50)
+
 pair<int,int> dp[100001];
 vector<int> solution(int target) {
     vector<int> answer;
-    for(int i=0;i<=target;i++){
-        dp[i]={100000,100000};
+    
+    for(int i=1;i<=target;i++){
+        dp[i].first=dp[i].second=1e9;
     }
-    dp[0]={0,0};
-    for(int i=0;i<=target;i++){
+    for(int i=0;i<target;i++){
         for(int j=1;j<=20;j++){
             for(int k=1;k<=3;k++){
-                int nxScore = i + j * k;
-                int additional = (k == 1 ? 1 : 0);
-                if (nxScore > target) {
+                int nx=i+j*k;
+                if(nx>target){
                     continue;
                 }
-                if (dp[nxScore].first > dp[i].first + 1 
-                    || (dp[nxScore].first == dp[i].first + 1 && dp[nxScore].second < dp[i].second + additional)) {
-                    dp[nxScore] = {dp[i].first + 1,dp[i].second + additional};
+                pair<int,int> nd={dp[i].first+1,dp[i].second};
+                if(k==1){
+                    nd.second++;
+                }
+                if(dp[nx].first>nd.first||(dp[nx].first==nd.first&&dp[nx].second<nd.second)){
+                    dp[nx]=nd;
                 }
             }
-            int nxScore = i + 50;
-            if (nxScore > target) {
-                continue;
-            }
-            if (dp[nxScore].first > dp[i].first + 1
-               || (dp[nxScore].first == dp[i].first + 1 && dp[nxScore].second < dp[i].second + 1)) {
-                dp[nxScore] = {dp[i].first + 1,dp[i].second + 1};
+        }
+        if(i+50<=target){
+            if(dp[i+50].first>dp[i].first+1||(dp[i+50].first==dp[i].first+1&&dp[i+50].second<dp[i].second+1)){
+                dp[i+50]={dp[i].first+1,dp[i].second+1};
             }
         }
     }
     
-    return {dp[target].first, dp[target].second};
+    return {dp[target].first,dp[target].second};
 }
