@@ -4,61 +4,55 @@
 #include <algorithm>
 using namespace std;
 vector<vector<string>> relation;
-vector<vector<int>> v;
-bool valid(vector<int> now){
-    set<string> se;
+int answer;
+vector<int> q;
+bool valid(vector<int> v){
+    if(v.empty()){
+        return false;
+    }
+    set<string> t;
     for(int i=0;i<relation.size();i++){
-        string sum="";
-        for(int j=0;j<now.size();j++){
-            sum+=relation[i][now[j]];
+        string s="";
+        for(int j=0;j<v.size();j++){
+            s+=relation[i][v[j]];
         }
-        if(se.find(sum)!=se.end()){
+        if(t.find(s)!=t.end()){
             return false;
         }
-        se.insert(sum);
+        t.insert(s);
     }
-    v.push_back(now);
     return true;
 }
-void go(int idx, vector<int> now){
-    if(!now.empty()&&valid(now)){
+void go(vector<int> v,int idx){
+    if(valid(v)){
+        int sum=0;
+        for(int i=0;i<v.size();i++){
+            sum+=(1<<v[i]);
+        }
+        q.push_back(sum);
+        answer++;
+    }
+    if(idx==relation[0].size()){
         return;
     }
-    if(idx>=relation[0].size()){
-        return;
-    }
-    now.push_back(idx);
-    go(idx+1,now);
-    now.pop_back();
-    go(idx+1,now);
-}
-
-bool bit(int i, int j){
-    int first=0,second=0;
-    for(int k=0;k<v[i].size();k++){
-        first += (1<<v[i][k]);
-    }
-    for(int k=0;k<v[j].size();k++){
-        second += (1<<v[j][k]);
-    }
-    return (first & second) == first;
-}
-
-bool compare(vector<int>& v1, vector<int>&v2){
-    return v1.size()<v2.size();
+    go(v,idx+1);
+    v.push_back(idx);
+    go(v,idx+1);
 }
 
 int solution(vector<vector<string>> relation) {
     ::relation=relation;
-    go(0,{});
-    sort(v.begin(),v.end(),compare);
-    for(int i=0;i<v.size();i++){
-        for(int j=i+1;j<v.size();j++){
-            if(bit(i,j)){
-                v.erase(v.begin()+j);
+    go({},0);
+    
+    sort(q.begin(),q.end());
+    q.erase(unique(q.begin(),q.end()),q.end());
+    for(int i=0;i<q.size();i++){
+        for(int j=i+1;j<q.size();j++){
+            if((q[i]&q[j])==q[i]){
+                q.erase(q.begin()+j);
                 j--;
             }
         }
     }
-    return v.size();
+    return q.size();
 }
