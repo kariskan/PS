@@ -5,7 +5,7 @@ using namespace std;
 vector<vector<int>> v;
 int answer;
 vector<int> info;
-int cnt;
+
 void go(int now,int sheep, int wolf, queue<int> q){
     if(sheep<=wolf){
         return;
