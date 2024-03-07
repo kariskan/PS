@@ -1,25 +1,26 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <queue>
 using namespace std;
 
 long long solution(int n, vector<int> works) {
     long long answer = 0;
-    long long sum=0;
-    sort(works.begin(),works.end());
+    priority_queue<int> pq;
     for(int i=0;i<works.size();i++){
-        sum+=works[i];
+        pq.push(works[i]);
     }
-    sum=max((long long)0,sum-n); // 6
-    for(int i=0;i<works.size();i++){
-        long long k = sum / (works.size()-i);
-        if (k>works[i]){
-            answer += works[i] * works[i];
-            sum -= works[i];
-            continue;
+    while(!pq.empty()&&n){
+        int a=pq.top();
+        pq.pop();
+        if(a>1){
+            pq.push(a-1);
         }
-        sum -= k;
-        answer += k * k;
+        n--;
+    }
+    while(!pq.empty()){
+        long long a=pq.top();
+        pq.pop();
+        answer+=a*a;
     }
     return answer;
 }
