@@ -2,31 +2,40 @@
 #include <vector>
 #include <queue>
 using namespace std;
-queue<int> q;
-int vis[20001];
+vector<vector<int>> v;
 int solution(int n, vector<vector<int>> edge) {
-    int answer = 0;
-    vis[1]=1;
-    q.push(1);
-    vector<vector<int>> v(n+1);
+    v.resize(n+1);
     for(int i=0;i<edge.size();i++){
         v[edge[i][0]].push_back(edge[i][1]);
         v[edge[i][1]].push_back(edge[i][0]);
     }
+    vector<int> dis(n+1,1e9);
+    priority_queue<pair<int,int>> pq;
+    
+    dis[1]=0;
+    pq.push({0,1});
     int ma=0;
-    while(!q.empty()){
-        int node=q.front();
-        q.pop();
-        ma=vis[node];
+    while(!pq.empty()){
+        int cost=-pq.top().first;
+        int node=pq.top().second;
+        pq.pop();
+        ma=max(ma,dis[node]);
+        if(dis[node]<cost){
+            continue;
+        }
+        
         for(auto&i:v[node]){
-            if(!vis[i]){
-                vis[i]=vis[node]+1;
-                q.push(i);
+            int nxNode=i;
+            int nxCost=cost+1;
+            if(dis[nxNode]>nxCost){
+                dis[nxNode]=nxCost;
+                pq.push({-nxCost,nxNode});
             }
         }
     }
+    int answer=0;
     for(int i=2;i<=n;i++){
-        if(vis[i]==ma){
+        if(ma==dis[i]){
             answer++;
         }
     }
