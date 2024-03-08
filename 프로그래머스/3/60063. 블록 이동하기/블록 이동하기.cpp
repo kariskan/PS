@@ -2,75 +2,92 @@
 #include <vector>
 #include <queue>
 using namespace std;
-int vis[101][101][2];
-int dx[4]={0,1,0,-1};
-int dy[4]={1,0,-1,0};
-int n;
+
+int dx[4]={0,0,1,-1};
+int dy[4]={1,-1,0,0};
+int vis[100][100][2],n;
 vector<vector<int>> board;
-queue<pair<pair<int,int>,int>> q;
-bool range(int x,int y){
+bool isValidRange(int x,int y){
     return x>=0&&x<n&&y>=0&&y<n&&!board[x][y];
 }
-vector<pair<pair<int,int>,int>> rotate(int x, int y, int dir){
-    vector<pair<pair<int,int>,int>> v;
+pair<int,int> getConnectedCoor(int x,int y,int dir){
     if(dir==0){
-        if(range(x+1,y)&&range(x+1,y+1)){
-            v.push_back({{x,y},1});
-            v.push_back({{x,y+1},1});
-        }
-        if(range(x-1,y)&&range(x-1,y+1)){
-            v.push_back({{x-1,y},1});
-            v.push_back({{x-1,y+1},1});
-        }
-    }else{
-        if(range(x,y+1)&&range(x+1,y+1)){
-            v.push_back({{x,y},0});
-            v.push_back({{x+1,y},0});
-        }
-        if(range(x,y-1)&&range(x+1,y-1)){
-            v.push_back({{x,y-1},0});
-            v.push_back({{x+1,y-1},0});
-        }
+        return {x,y+1};
     }
-    return v;
+    return {x+1,y};
 }
 int solution(vector<vector<int>> board) {
     ::board=board;
     n=board.size();
-    vis[0][0][0]=1;
+    queue<pair<pair<int,int>,int>> q;
     q.push({{0,0},0});
+    vis[0][0][0]=1;
+    
     while(!q.empty()){
         int x=q.front().first.first;
         int y=q.front().first.second;
         int dir=q.front().second;
         q.pop();
-
-        if((x==n-1&&y==n-1)||(x+dx[dir]==n-1&&y+dy[dir]==n-1)){
+        
+        if((x==n-1&&y==n-2&&dir==0)||(x==n-2&&y==n-1&&dir==1)){
             return vis[x][y][dir]-1;
         }
-
+        
         for(int i=0;i<4;i++){
             int nx=x+dx[i];
             int ny=y+dy[i];
-            if(range(nx,ny)&&range(nx+dx[dir],ny+dy[dir])&&!vis[nx][ny][dir]){
+            pair<int,int> nnc=getConnectedCoor(nx,ny,dir);
+            if(isValidRange(nx,ny)&&isValidRange(nnc.first,nnc.second)
+              &&!vis[nx][ny][dir]){
                 q.push({{nx,ny},dir});
                 vis[nx][ny][dir]=vis[x][y][dir]+1;
             }
         }
-        vector<pair<pair<int,int>,int>> v=rotate(x,y,dir);
-        for(pair<pair<int,int>,int> p:v){
-            int nx=p.first.first;
-            int ny=p.first.second;
-            int nd=p.second;
-            if(range(nx,ny)&&range(nx+dx[nd],ny+dy[nd])&&!vis[nx][ny][nd]){
-                vis[nx][ny][nd]=vis[x][y][dir]+1;
-                q.push({{nx,ny},nd});
+        
+        // 수평에서 수직으로 회전
+        if(dir==0){
+            if(isValidRange(x+1,y)&&isValidRange(x+1,y+1)){
+                if(!vis[x][y][1-dir]){
+                    vis[x][y][1-dir]=vis[x][y][dir]+1;
+                    q.push({{x,y},1-dir});
+                }
+                if(!vis[x][y+1][1-dir]){
+                    vis[x][y+1][1-dir]=vis[x][y][dir]+1;
+                    q.push({{x,y+1},1-dir});
+                }
+            }
+            if(isValidRange(x-1,y)&&isValidRange(x-1,y+1)){
+                if(!vis[x-1][y][1-dir]){
+                    vis[x-1][y][1-dir]=vis[x][y][dir]+1;
+                    q.push({{x-1,y},1-dir});
+                }
+                if(!vis[x-1][y+1][1-dir]){
+                    vis[x-1][y+1][1-dir]=vis[x][y][dir]+1;
+                    q.push({{x-1,y+1},1-dir});
+                }
+            }
+        }else {
+            // 수직에서 수평으로 회전
+            if(isValidRange(x,y+1)&&isValidRange(x+1,y+1)){
+                if(!vis[x][y][1-dir]){
+                    vis[x][y][1-dir]=vis[x][y][dir]+1;
+                    q.push({{x,y,},1-dir});
+                }
+                if(!vis[x+1][y][1-dir]){
+                    vis[x+1][y][1-dir]=vis[x][y][dir]+1;
+                    q.push({{x+1,y},1-dir});
+                }
+            }
+            if(isValidRange(x,y-1)&&isValidRange(x+1,y-1)){
+                if(!vis[x][y-1][1-dir]){
+                    vis[x][y-1][1-dir]=vis[x][y][dir]+1;
+                    q.push({{x,y-1},1-dir});
+                }
+                if(!vis[x+1][y-1][1-dir]){
+                    vis[x+1][y-1][1-dir]=vis[x][y][dir]+1;
+                    q.push({{x+1,y-1},1-dir});
+                }
             }
         }
     }
-    return -1;
-}
-
-int main(){
-    solution({{0, 0, 0, 1, 1},{0, 0, 0, 1, 0},{0, 1, 0, 1, 1},{1, 1, 0, 0, 1},{0, 0, 0, 0, 0}});
 }
