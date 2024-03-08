@@ -2,49 +2,59 @@
 #include <vector>
 #include <stack>
 using namespace std;
+
+int left[1000000],right[1000000],flag[1000000];
 stack<int> st;
-pair<int,int> pos[1000002];
 string solution(int n, int k, vector<string> cmd) {
-    string answer(n,'O');
-    for(int i=0;i<=n-1;i++){
-        pos[i]={i-1,i+1};
+    string answer = "";
+    for(int i=0;i<n;i++){
+        left[i]=i-1;
+        right[i]=i+1;
     }
-    pos[n-1].second=-1;
+    right[n-1]=-1;
+    
     for(string c:cmd){
         if(c[0]=='U'){
-            int t=stoi(c.substr(2));
-            while(t-->0){
-                k=pos[k].first;
+            int x=stoi(c.substr(2));
+            while(x--){
+                k=left[k];
             }
         }else if(c[0]=='D'){
-            int t=stoi(c.substr(2));
-            while(t-->0){
-                k=pos[k].second;
+            int x=stoi(c.substr(2));
+            while(x--){
+                k=right[k];
             }
-        }else if(c=="C"){
+        }else if(c[0]=='C'){
+            flag[k]=1;
             st.push(k);
-            if(pos[k].first!=-1){
-                pos[pos[k].first].second=pos[k].second;
+            if(-1!=left[k]){
+                right[left[k]]=right[k];
             }
-            if(pos[k].second!=-1){
-                pos[pos[k].second].first=pos[k].first;
+            if(-1!=right[k]){
+                left[right[k]]=left[k];
             }
-            answer[k]='X';
-            if(pos[k].second!=-1){
-                k=pos[k].second;
+            if(-1==right[k]){
+                k=left[k];
             }else{
-                k=pos[k].first;
+                k=right[k];
             }
         }else{
-            int t=st.top();
+            int recent=st.top();
             st.pop();
-            if(pos[t].first!=-1){
-                pos[pos[t].first].second=t;
+            flag[recent]=0;
+            if(-1!=left[recent]){
+                right[left[recent]]=recent;   
             }
-            if(pos[t].second!=-1){
-                pos[pos[t].second].first=t;
+            if(-1!=right[recent]){
+                left[right[recent]]=recent;
             }
-            answer[t]='O';
+        }
+    }
+    for(int i=0;i<n;i++){
+        if(flag[i]==0){
+            answer+="O";
+        }else{
+            answer+="X";
         }
     }
     return answer;
