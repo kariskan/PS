@@ -2,37 +2,7 @@
 #include <vector>
 
 using namespace std;
-int dx[4]={0,1,0,-1};
-int dy[4]={1,0,-1,0};
 int map[101][101];
-
-int rotate(int x1,int y1,int x2,int y2){
-    int mi = map[x1][y1];
-    int dir=0;
-    int nx=x1;
-    int ny=y1;
-    int a = map[x1][y1];
-    while(1){
-        nx+=dx[dir];
-        ny+=dy[dir];
-        if(!(nx>=x1&&nx<=x2&&ny>=y1&&ny<=y2)){
-            nx-=dx[dir];
-            ny-=dy[dir];
-            dir=(dir+1)%4;
-            nx+=dx[dir];
-            ny+=dy[dir];
-        }
-        int temp=map[nx][ny];
-        map[nx][ny]=a;
-        a=temp;
-        mi=min(mi,a);
-        if(nx==x1&&ny==y1){
-            break;
-        }
-    }
-    return mi;
-}
-
 vector<int> solution(int n, int m, vector<vector<int>> queries) {
     vector<int> answer;
     for(int i=1;i<=n;i++){
@@ -40,9 +10,29 @@ vector<int> solution(int n, int m, vector<vector<int>> queries) {
             map[i][j]=(i-1)*m+j;
         }
     }
-    for(int i=0;i<queries.size();i++){
-        answer.push_back(rotate(queries[i][0],queries[i][1],queries[i][2],queries[i][3]));
+    for(vector<int> q:queries){
+        int mi=map[q[0]][q[1]];
+        int pre=map[q[0]][q[1]];
+        for(int i=q[0];i<q[2];i++){
+            map[i][q[1]]=map[i+1][q[1]];
+            mi=min(mi,map[i][q[1]]);
+        }
+        for(int i=q[1];i<q[3];i++){
+            map[q[2]][i]=map[q[2]][i+1];
+            mi=min(mi,map[q[2]][i]);
+        }
+        for(int i=q[2];i>q[0];i--){
+            map[i][q[3]]=map[i-1][q[3]];
+            mi=min(mi,map[i][q[3]]);
+        }
+        for(int i=q[3];i>q[1];i--){
+            map[q[0]][i]=map[q[0]][i-1];
+            if(i==q[1]+1){
+                map[q[0]][i]=pre;
+            }
+            mi=min(mi,map[q[0]][i]);
+        }
+        answer.push_back(mi);
     }
-    
     return answer;
 }
