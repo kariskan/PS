@@ -1,25 +1,20 @@
 #include <string>
 #include <vector>
-
 using namespace std;
-long long answer=0;
+
 vector<vector<int>> v;
 vector<int> a;
-
+long long answer;
 long long go(int now,int pre){
-    
-    long long res=0,p=0;
+    long long res=0;
     for(auto&i:v[now]){
         if(i!=pre){
-            long long g=go(i,now);
-            res+=g;
-            p+=abs(g);
+            res+=go(i,now);
         }
     }
-    answer+=a[now]+p;
-    return a[now]+res;
+    answer+=abs(res-a[now]);
+    return res-a[now];
 }
-
 long long solution(vector<int> a, vector<vector<int>> edges) {
     ::a=a;
     v.resize(a.size());
@@ -27,5 +22,6 @@ long long solution(vector<int> a, vector<vector<int>> edges) {
         v[edges[i][0]].push_back(edges[i][1]);
         v[edges[i][1]].push_back(edges[i][0]);
     }
-    return go(0,-1)==0?answer:-1;
+    long long result=go(0,-1);
+    return result==0?answer:-1;
 }
