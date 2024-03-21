@@ -1,34 +1,42 @@
 #include <string>
 #include <vector>
-#include <map>
 #include <algorithm>
 #include <set>
+#include <map>
 using namespace std;
 vector<vector<string>> tickets;
-string answer;
-int vis[10000],n;
-void go(string route){
-    if((int)route.length()/3==tickets.size()+1){
-        if(answer.empty()||answer>route){
-            answer=route;
-        }
+map<string,vector<string>> ma;
+vector<string> answer;
+map<pair<string,string>,int> ma2;
+bool flag;
+void go(string now,vector<string> seq){
+    if(seq.size()==tickets.size()+1){
+        answer=seq;
+        flag=true;
         return;
     }
-    for(int i=0;i<tickets.size();i++){
-        if(tickets[i][0]==route.substr(route.size()-3)&&!vis[i]){
-            vis[i]=1;
-            go(route+tickets[i][1]);
-            vis[i]=0;
+    for(auto&i:ma[now]){
+        if(ma2[{now,i}]){
+            ma2[{now,i}]--;
+            seq.push_back(i);
+            go(i,seq);
+            if(flag){
+                return;
+            }
+            seq.pop_back();
+            ma2[{now,i}]++;
         }
     }
 }
 vector<string> solution(vector<vector<string>> tickets) {
-    n=tickets.size();
     ::tickets=tickets;
-    go("ICN");
-    vector<string> ans;
-    for(int i=0;i<answer.length();i+=3){
-        ans.push_back(answer.substr(i,3));
+    for(int i=0;i<tickets.size();i++){
+        ma[tickets[i][0]].push_back(tickets[i][1]);
+        ma2[{tickets[i][0],tickets[i][1]}]++;
     }
-    return ans;
+    for(auto&i:ma){
+        sort(i.second.begin(),i.second.end());
+    }
+    go("ICN",{"ICN"});
+    return answer;
 }
