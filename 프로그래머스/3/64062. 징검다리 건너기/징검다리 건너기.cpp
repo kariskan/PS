@@ -1,34 +1,31 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+
 using namespace std;
 
 int solution(vector<int> stones, int k) {
     int answer = 0;
-    
-    int left=*min_element(stones.begin(),stones.end()),right=*max_element(stones.begin(),stones.end());
+    int left=1,right=200000000;
     while(left<=right){
         int mid=(left+right)/2;
         
-        vector<int> v=stones;
-        int seq=0;
+        int cnt=0;
         bool flag=true;
-        for(int i=0;i<v.size();i++){
-            v[i]-=mid;
-            if(v[i]<0){
-                seq++;
+        for(int i=0;i<stones.size();i++){
+            if(stones[i]-mid<0){
+                cnt++;
             }else{
-                seq=0;
+                cnt=0;
             }
-            if(seq>=k){
+            if(cnt>=k){
                 flag=false;
                 break;
             }
         }
         
         if(flag){
-            answer=mid;
             left=mid+1;
+            answer=mid;
         }else{
             right=mid-1;
         }
