@@ -1,45 +1,64 @@
 #include <string>
 #include <vector>
-
+#include <sstream>
 using namespace std;
-long long sum[100*3700];
-int toTime(string s){
-    return stoi(s.substr(0,2))*3600+stoi(s.substr(3,2))*60+stoi(s.substr(6,2));
+int toSecond(string s){
+    return stoi(s.substr(0,2))*3600+stoi(s.substr(3,2))*60+stoi(s.substr(6));
 }
-string toS2(int t){
-    if(t==0){
-        return "00";
+pair<int,int> getTime(string s){
+    stringstream ss(s);
+    vector<string> v;
+    string temp;
+    while(getline(ss,temp,'-')){
+        v.push_back(temp);
     }
-    if(t<10){
-        return "0"+to_string(t);
+    return {toSecond(v[0]),toSecond(v[1])};
+}
+string toTimeString(int second){
+    string res="";
+    if(second/3600<10){
+        res+="0"+to_string(second/3600);
+    }else{
+        res+=to_string(second/3600);
     }
-    return to_string(t);
+    res+=":";
+    if((second%3600)/60<10){
+        res+="0"+to_string((second%3600)/60);
+    }else{
+        res+=to_string((second%3600)/60);
+    }
+    res+=":";
+    if(second%60<10){
+        res+="0"+to_string(second%60);
+    }else{
+        res+=to_string(second%60);
+    }
+    return res;
 }
-string toS(int time){
-    return toS2(time/3600)+":"+toS2((time%3600)/60)+":"+toS2(time%60);
-}
+long long timeSum[100*3600+1];
 string solution(string play_time, string adv_time, vector<string> logs) {
-    string answer = "00:00:00";
-    long long ma=0;
+    string answer = "";
     for(int i=0;i<logs.size();i++){
-        int start=toTime(logs[i].substr(0,8));
-        int end=toTime(logs[i].substr(9));
-        
-        sum[start]++;
-        sum[end]--;
+        pair<int,int> p=getTime(logs[i]);
+        int start=p.first;
+        int end=p.second;
+        timeSum[start]++;
+        timeSum[end]--;
     }
-    for(int i=1;i<=toTime(play_time);i++){
-        sum[i]+=sum[i-1];
+    int totalTime=toSecond(play_time);
+    int adv=toSecond(adv_time);
+    for(int i=1;i<=totalTime;i++){
+        timeSum[i]+=timeSum[i-1];
     }
-    for(int i=1;i<=toTime(play_time);i++){
-        sum[i]+=sum[i-1];
+    for(int i=1;i<=totalTime;i++){
+        timeSum[i]+=timeSum[i-1];
     }
-    int adv=toTime(adv_time);
-    for(int i=0;i<=toTime(play_time)-adv;i++){
-        if(ma<sum[i+adv-1]-sum[i-1]){
-            ma=sum[i+adv-1]-sum[i-1];
-            answer=toS(i);
+    long long maxTime=timeSum[adv-1],idx=0;
+    for(int i=1;i<=totalTime-adv;i++){
+        if(maxTime<timeSum[i+adv-1]-timeSum[i-1]){
+            maxTime=timeSum[i+adv-1]-timeSum[i-1];
+            idx=i;
         }
     }
-    return answer;
+    return toTimeString(idx);
 }
