@@ -2,27 +2,27 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-
-int solution(vector<int> A, vector<int> B) {
+int vis[100000];
+int solution(vector<int> a, vector<int> b) {
     int answer = 0;
-    sort(A.begin(),A.end());
-    sort(B.begin(),B.end());
-    int last=0;
-    for(int i=0;i<B.size();i++){
-        int left=last,right=A.size()-1;
+    sort(a.begin(),a.end());
+    sort(b.begin(),b.end());
+    for(int i=0;i<a.size();i++){
+        int left=0,right=(int)b.size()-1;
+        int ans=-1;
         while(left<=right){
             int mid=(left+right)/2;
             
-            if(A[mid]>=B[i]){
+            if(vis[mid]||b[mid]<=a[i]){
                 left=mid+1;
             }else{
                 right=mid-1;
-                last=mid;
+                ans=mid;
             }
         }
-        if(last>=0&&A[last]<B[i]){
+        if(ans!=-1){
+            vis[ans]=1;
             answer++;
-            last++;
         }
     }
     return answer;
