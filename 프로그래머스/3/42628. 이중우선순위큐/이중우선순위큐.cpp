@@ -1,40 +1,49 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <map>
 using namespace std;
-priority_queue<int> maxq,minq;
+
+map<int,int> ma;
 vector<int> solution(vector<string> operations) {
     vector<int> answer;
-    int siz=0;
+    priority_queue<int,vector<int>,greater<int>> minq;
+    priority_queue<int> maxq;
     for(string op:operations){
-        int num=stoi(op.substr(2));
-        if(op[0]=='I'){
-            maxq.push(num);
-            minq.push(-num);
-            siz++;
+        char o=op[0];
+        int d=stoi(op.substr(2));
+        if(o=='I'){
+            minq.push(d);
+            maxq.push(d);
+            ma[d]++;
         }else{
-            if(siz==0){
-                continue;
-            }
-            if(num==1){
-                maxq.pop();
+            if(d==1){
+                while(!maxq.empty()&&ma[maxq.top()]==0){
+                    maxq.pop();
+                }
+                if(!maxq.empty()){
+                    ma[maxq.top()]--;
+                    maxq.pop();
+                }
             }else{
-                minq.pop();
-            }
-            siz--;
-        }
-        if(siz==0){
-            while(!maxq.empty()){
-                maxq.pop();
-            }
-            while(!minq.empty()){
-                minq.pop();
+                while(!minq.empty()&&ma[minq.top()]==0){
+                    minq.pop();
+                }
+                if(!minq.empty()){
+                    ma[minq.top()]--;
+                    minq.pop();
+                }
             }
         }
     }
-    
-    if(siz==0){
+    while(!minq.empty()&&ma[minq.top()]==0){
+        minq.pop();
+    }
+    while(!maxq.empty()&&ma[maxq.top()]==0){
+        maxq.pop();
+    }
+    if(minq.empty()||maxq.empty()){
         return {0,0};
     }
-    return {maxq.top(),-minq.top()};
+    return {maxq.top(),minq.top()};
 }
