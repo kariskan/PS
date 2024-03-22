@@ -1,32 +1,32 @@
 #include <string>
 #include <vector>
-
+#include <map>
+#include <queue>
 using namespace std;
-int cnt[500001];
 int solution(vector<int> a) {
-    if(a.size()<2){
-        return 0;
-    }
-    int answer = 2;
-    
-    int maxValue=0;
+    int answer = 0;
+    map<int,int>ma;
     for(int i=0;i<a.size();i++){
-        cnt[a[i]]++;
-        maxValue=max(maxValue,a[i]);
+        ma[a[i]]++;
     }
-    for(int i=0;i<=maxValue;i++){
-        if(answer>=cnt[i]*2){
-            continue;
+    priority_queue<pair<int,int>> pq;
+    for(auto&i:ma){
+        pq.push({i.second,i.first});
+    }
+    while(!pq.empty()){
+        if(pq.top().first*2<answer){
+            break;
         }
-        int temp=0;
-        for(int j=0;j<a.size()-1;j++){
-            if((a[j]==i||a[j+1]==i)&&a[j]!=a[j+1]){
-                j++;
-                temp+=2;
-                continue;
+        int k=pq.top().second;
+        pq.pop();
+        int cnt=0;
+        for(int i=0;i<a.size()-1;i++){
+            if((a[i]==k&&a[i+1]!=k)||(a[i]!=k&&a[i+1]==k)){
+                cnt+=2;
+                i++;
             }
         }
-        answer=max(answer,temp);
+        answer=max(answer,cnt);
     }
     
     return answer;
