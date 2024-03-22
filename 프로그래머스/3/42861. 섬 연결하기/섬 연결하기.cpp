@@ -2,11 +2,9 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-
 int p[100];
-
 int Find(int x){
-    if(x==p[x]){
+    if(p[x]==x){
         return x;
     }
     return p[x]=Find(p[x]);
