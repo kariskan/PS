@@ -8,11 +8,10 @@ vector<int> solution(int n, int s) {
         return {-1};
     }
     vector<int> answer;
-    int N=n;
-    for(int i=0;i<N;i++){
+    while(n){
         answer.push_back(s/n);
-        s-=answer.back();
         n--;
+        s-=answer.back();
     }
     return answer;
 }
