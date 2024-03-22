@@ -1,31 +1,37 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <algorithm>
 #include <queue>
+#include <algorithm>
 using namespace std;
-map<string,int> playMap;
-map<string,priority_queue<pair<int, int>>> genreMap;
-bool compare(pair<string,int>&p1,pair<string,int>&p2){
-    return p1.second>p2.second;
-}
+
+map<string,int> genreCnt;
 vector<int> solution(vector<string> genres, vector<int> plays) {
     vector<int> answer;
     for(int i=0;i<genres.size();i++){
-        playMap[genres[i]]+=plays[i];
-        genreMap[genres[i]].push({plays[i],-i});
+        genreCnt[genres[i]]+=plays[i];
     }
-    vector<pair<string,int>> genreV;
-    for(auto&i:playMap){
-        genreV.push_back({i.first,i.second});
+    priority_queue<pair<int,string>> pq;
+    for(auto&i:genreCnt){
+        pq.push({i.second,i.first});
     }
-    sort(genreV.begin(),genreV.end(),compare);
-    for(int i=0;i<genreV.size();i++){
-        string genre=genreV[i].first;
-        int siz=min(2,(int)genreMap[genre].size());
-        for(int j=0;j<siz;j++){
-            answer.push_back(-genreMap[genre].top().second);
-            genreMap[genre].pop();
+    while(!pq.empty()){
+        string genre=pq.top().second;
+        pq.pop();
+        vector<pair<int,int>> v;
+        for(int i=0;i<genres.size();i++){
+            if(genres[i]==genre){
+                v.push_back({-plays[i],i});
+            }
+        }
+        sort(v.begin(),v.end());
+        int cnt=0;
+        for(int i=0;i<v.size();i++){
+            answer.push_back(v[i].second);
+            cnt++;
+            if(cnt==2){
+                break;
+            }
         }
     }
     return answer;
