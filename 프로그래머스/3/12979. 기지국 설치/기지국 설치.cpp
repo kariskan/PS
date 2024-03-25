@@ -5,7 +5,6 @@ using namespace std;
 int solution(int n, vector<int> stations, int w){
     int answer = 0;
     
-    int left=0,right=(n+w*2)/(w*2+1);
     int pre=0;
     for(int i=0;i<stations.size();i++){
         int now=stations[i]-w-1;
