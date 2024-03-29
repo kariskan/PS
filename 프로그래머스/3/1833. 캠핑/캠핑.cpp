@@ -1,56 +1,56 @@
 #include <vector>
-#include <algorithm>
 #include <map>
+#include <algorithm>
 using namespace std;
 
-int solution(int n, vector<vector<int>> data) {
-    int sum[5002][5002]={0,};
-    map<int,int> xs,ys;
-    int xCnt=1,yCnt=1;
-    for(int i=0;i<data.size();i++){
-        if(xs.find(data[i][0])==xs.end()){
-            xs[data[i][0]]=0;
-        }
-        if(ys.find(data[i][1])==ys.end()){
-            ys[data[i][1]]=0;
-        }
-    }
-    for(auto&i:xs){
-        i.second=xCnt++;
-    }
-    for(auto&i:ys){
-        i.second=yCnt++;
-    }
-    for(int i=0;i<data.size();i++){
-        data[i][0]=xs[data[i][0]];
-        data[i][1]=ys[data[i][1]];
-    }
-    for(int i=0;i<data.size();i++){
-        sum[data[i][0]][data[i][1]]=1;
-    }
-    for(int i=1;i<xCnt;i++){
-        for(int j=1;j<yCnt;j++){
-            sum[i][j]+=sum[i-1][j]+sum[i][j-1]-sum[i-1][j-1];
-        }
-    }
-    int answer=0;
-    for(int i=0;i<data.size();i++){
-        for(int j=i+1;j<data.size();j++){
-            int lux=min(data[i][0],data[j][0]);
-            int luy=min(data[i][1],data[j][1]);
-            int rdx=max(data[i][0],data[j][0]);
-            int rdy=max(data[i][1],data[j][1]);
+bool compare(vector<int>& v1, vector<int>& v2){
+    return v1[1]<v2[1];
+}
 
-            if(lux==rdx||luy==rdy){
+int solution(int n, vector<vector<int>> data) {
+    int answer = 0;
+    int xCnt=0,yCnt=0;
+    int board[5001][5001]={0,};
+    map<int,int> xMap,yMap;
+    sort(data.begin(),data.end());
+    for(int i=0;i<data.size();i++){
+        if(xMap.find(data[i][0])==xMap.end()){
+            xMap[data[i][0]]=xCnt++;
+        }
+    }
+    sort(data.begin(),data.end(),compare);
+    for(int i=0;i<data.size();i++){
+        if(yMap.find(data[i][1])==yMap.end()){
+            yMap[data[i][1]]=yCnt++;
+        }
+    }
+    
+    for(int i=0;i<data.size();i++){
+        board[xMap[data[i][0]]][yMap[data[i][1]]]++;
+    }
+    for(int i=1;i<=xCnt;i++){
+        for(int j=1;j<=yCnt;j++){
+            board[i][j]+=board[i-1][j]+board[i][j-1]-board[i-1][j-1];
+        }
+    }
+    for(int i=0;i<data.size();i++){
+        int x1=xMap[data[i][0]];
+        int y1=yMap[data[i][1]];
+        for(int j=i+1;j<data.size();j++){
+            int x2=xMap[data[j][0]];
+            int y2=yMap[data[j][1]];
+            
+            int maxX=max(x1,x2);
+            int maxY=max(y1,y2);
+            int minX=min(x1,x2);
+            int minY=min(y1,y2);
+            int cnt=board[maxX-1][maxY-1]-board[minX][maxY-1]
+                -board[maxX-1][minY]+board[minX][minY];
+            if(x1==x2||y1==y2||cnt>0){
                 continue;
             }
-            if(sum[rdx-1][rdy-1]-sum[rdx-1][luy]-sum[lux][rdy-1]+sum[lux][luy]<=0){
-                answer++;
-            }
+            answer++;
         }
     }
     return answer;
-}
-int main(){
-    solution(4, {{0,1000000000},{1,1},{0,2},{2,0}});
 }
