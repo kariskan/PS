@@ -1,6 +1,6 @@
 # [level 3] 보행자 천국 - 1832 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/1832) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/1832?language=java) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 03월 22일 19:41:37
+2024년 04월 15일 10:20:22
 
 ### 문제 설명
 
