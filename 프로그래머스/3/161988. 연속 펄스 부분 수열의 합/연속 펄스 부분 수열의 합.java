@@ -2,13 +2,13 @@ import java.util.*;
 
 class Solution {
     public long solution(int[] sequence) {
-        List<Integer> v = new ArrayList<>();
+        List<Long> v = new ArrayList<>();
         long answer = 0, mi = 0, ma = 0;
         for (int i = 0; i < sequence.length; i++) {
             if (i % 2 == 1) {
                 sequence[i] *= -1;
             }
-            v.add(sequence[i]);
+            v.add((long) sequence[i]);
             if (i > 0) {
                 v.set(i, v.get(i) + v.get(i - 1));
             }
