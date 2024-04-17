@@ -1,10 +1,10 @@
 # [level 3] 카운트 다운 - 131129 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/131129) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/131129?language=java) 
 
 ### 성능 요약
 
-메모리: 3.59 MB, 시간: 0.01 ms
+메모리: 80.5 MB, 시간: 0.18 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 03월 06일 17:00:33
+2024년 04월 17일 10:09:34
 
 ### 문제 설명
 
