@@ -1,6 +1,6 @@
 # [level 3] 사라지는 발판 - 92345 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/92345?language=java) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/92345?language=cpp) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 04월 18일 10:24:28
+2024년 04월 18일 10:24:35
 
 ### 문제 설명
 
