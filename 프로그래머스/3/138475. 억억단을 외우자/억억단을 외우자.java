@@ -9,6 +9,7 @@ class Solution {
                 cnt[j]++;
             }
         }
+        
         int max = 0, idx = e;
         for (int i = e; i >= 1; i--) {
             if (max <= cnt[i]) {
@@ -17,6 +18,7 @@ class Solution {
             }
             ans[i] = idx;
         }
+        
         int[] answer = new int[starts.length];
         for (int i = 0; i < starts.length; i++) {
             answer[i] = ans[starts[i]];
