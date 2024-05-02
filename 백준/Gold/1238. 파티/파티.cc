@@ -1,50 +1,64 @@
 #include <iostream>
 #include <queue>
+#include <algorithm>
 #include <vector>
-#include <cstring>
 using namespace std;
-int n, m, x;
-int cost[1001][1001];
-vector<vector<pair<int, int>>> v;
-void dijkstra(int idx) {
-	priority_queue<pair<int, int>> pq;
-	pq.push({ idx, 0 });
-	while (!pq.empty()) {
-		int a = pq.top().first; //node
-		int b = -pq.top().second;//cost
-		pq.pop();
 
-		if (b != -1 && cost[idx][a] < b)continue;
-		for (int i = 0; i < v[a].size(); i++) {
-			int nx = b + v[a][i].second;
-			if (cost[idx][v[a][i].first] == -1 || cost[idx][v[a][i].first] > nx) {
-				cost[idx][v[a][i].first] = nx;
-				pq.push({ v[a][i].first, -nx });
-			}
-		}
-	}
-}
 int main() {
+	int n, m, x;
 	cin >> n >> m >> x;
-	v.resize(n + 1);
-	memset(cost, -1, sizeof(cost));
+
+	vector<vector<pair<int, int>>> v(n + 1), rev(n + 1);
+	vector<int> dis(n + 1, 1e9), revDis(n + 1, 1e9);
 	for (int i = 0; i < m; i++) {
 		int a, b, c;
 		cin >> a >> b >> c;
 		v[a].push_back({ b,c });
-	}
-	for (int i = 1; i <= n; i++) {
-		cost[i][i] = 0;
-	}
-	for (int i = 1; i <= n; i++) {
-		dijkstra(i);
+		rev[b].push_back({ a,c });
 	}
 
-	int ans = -1;
-	for (int i = 1; i <= n; i++) {
-		if (ans == -1 || ans < cost[x][i] + cost[i][x]) {
-			ans = cost[x][i] + cost[i][x];
+	priority_queue<pair<int, int>> pq;
+
+	pq.push({ 0,x });
+	dis[x] = 0;
+
+	while (!pq.empty()) {
+		int cost = -pq.top().first;
+		int node = pq.top().second;
+		pq.pop();
+
+		for (pair<int, int> nxt : v[node]) {
+			int nxCost = cost + nxt.second;
+			if (nxCost < dis[nxt.first]) {
+				dis[nxt.first] = nxCost;
+				pq.push({ -nxCost,nxt.first });
+			}
 		}
 	}
-	cout << ans;
+
+	pq.push({ 0,x });
+	revDis[x] = 0;
+
+	while (!pq.empty()) {
+		int cost = -pq.top().first;
+		int node = pq.top().second;
+		pq.pop();
+
+		for (pair<int, int> nxt : rev[node]) {
+			int nxCost = cost + nxt.second;
+			if (nxCost < revDis[nxt.first]) {
+				revDis[nxt.first] = nxCost;
+				pq.push({ -nxCost,nxt.first });
+			}
+		}
+	}
+
+	int answer = 0;
+	for (int i = 1; i <= n; i++) {
+		if (i == x) {
+			continue;
+		}
+		answer = max(answer, dis[i] + revDis[i]);
+	}
+	cout << answer;
 }
