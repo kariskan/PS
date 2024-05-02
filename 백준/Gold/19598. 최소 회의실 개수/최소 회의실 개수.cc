@@ -4,10 +4,6 @@
 #include <vector>
 using namespace std;
 
-bool compare(pair<int, int>& p1, pair<int, int>& p2) {
-	return p1.second < p2.second;
-}
-
 int main() {
 	vector<pair<int, int>> v;
 	int n;
