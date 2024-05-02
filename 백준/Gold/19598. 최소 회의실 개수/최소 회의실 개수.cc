@@ -1,33 +1,32 @@
 #include <iostream>
 #include <queue>
 #include <algorithm>
+#include <vector>
 using namespace std;
 
-int n;
-pair<int, int> arr[100000];
+bool compare(pair<int, int>& p1, pair<int, int>& p2) {
+	return p1.second < p2.second;
+}
 
 int main() {
+	vector<pair<int, int>> v;
+	int n;
 	cin >> n;
-
 	for (int i = 0; i < n; i++) {
-		cin >> arr[i].first >> arr[i].second;
+		int a, b;
+		cin >> a >> b;
+		v.push_back({ a,b });
 	}
 
-	sort(arr, arr + n);
+	sort(v.begin(), v.end());
 
 	priority_queue<int, vector<int>, greater<int>> pq;
-
-	int ans = 0;
-
 	for (int i = 0; i < n; i++) {
-
-		while (!pq.empty() && pq.top() <= arr[i].first) {
+		if (!pq.empty() && pq.top() <= v[i].first) {
 			pq.pop();
 		}
-
-		pq.push(arr[i].second);
-		ans = max(ans, (int)pq.size());
+		pq.push(v[i].second);
 	}
 
-	cout << ans;
+	cout << pq.size();
 }
