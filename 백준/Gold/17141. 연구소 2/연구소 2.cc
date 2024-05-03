@@ -1,68 +1,76 @@
 #include <iostream>
 #include <queue>
 #include <algorithm>
+#include <vector>
 using namespace std;
-queue<pair<int, int>> q;
-int board[50][50];
-vector<pair<int, int>> virus;
-vector<int> t;
-int x[4] = { 0,0,1,-1 };
-int y[4] = { 1,-1,0,0 };
+
+vector<pair<int, int>> pos;
+int map[50][50];
 int n, m;
+int answer = -1;
+int dx[4] = { 0,0,1,-1 };
+int dy[4] = { 1,-1,0,0 };
+
+void go(int idx, vector<pair<int, int>> selected) {
+	if (selected.size() == m) {
+		int vis[50][50] = { 0, };
+		queue<pair<int, int>> q;
+		for (auto& i : selected) {
+			q.push({ i.first,i.second });
+			vis[i.first][i.second] = 1;
+		}
+
+		int cnt = 0;
+		while (!q.empty()) {
+			int x = q.front().first;
+			int y = q.front().second;
+			q.pop();
+
+			cnt = max(cnt, vis[x][y] - 1);
+
+			for (int i = 0; i < 4; i++) {
+				int nx = x + dx[i];
+				int ny = y + dy[i];
+				if (nx >= 0 && nx < n && ny >= 0 && ny < n && !vis[nx][ny] && map[nx][ny] != 1) {
+					vis[nx][ny] = vis[x][y] + 1;
+					q.push({ nx,ny });
+				}
+			}
+		}
+		bool flag = true;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (map[i][j] != 1 && !vis[i][j]) {
+					flag = false;
+				}
+			}
+		}
+		if (flag) {
+			if (answer == -1 || answer > cnt) {
+				answer = cnt;
+			}
+		}
+		return;
+	}
+	if (idx >= pos.size()) {
+		return;
+	}
+
+	go(idx + 1, selected);
+	selected.push_back(pos[idx]);
+	go(idx + 1, selected);
+}
 
 int main() {
 	cin >> n >> m;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			cin >> board[i][j];
-			if (board[i][j] == 2) {
-				virus.push_back({ i,j });
+			cin >> map[i][j];
+			if (map[i][j] == 2) {
+				pos.push_back({ i,j });
 			}
 		}
 	}
-	t.resize(virus.size() - m);
-	for (int i = 0; i < m; i++) {
-		t.push_back(1);
-	}
-	int ans = -1;
-	do {
-		int visit[50][50] = { 0, };
-		int res = 1;
-		for (int i = 0; i < virus.size(); i++) {
-			if (t[i] == 1) {
-				q.push({ virus[i].first,virus[i].second });
-				visit[virus[i].first][virus[i].second] = 1;
-			}
-		}
-		while (!q.empty()) {
-			int a = q.front().first;
-			int b = q.front().second;
-			q.pop();
-			for (int i = 0; i < 4; i++) {
-				int nx = a + x[i];
-				int ny = b + y[i];
-				if (nx >= 0 && nx < n && ny >= 0 && ny < n && !visit[nx][ny] && board[nx][ny] != 1) {
-					visit[nx][ny] = visit[a][b] + 1;
-					res = visit[nx][ny];
-					q.push({ nx,ny });
-				}
-			}
-		}
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (visit[i][j] == 0 && board[i][j] != 1) {
-					res = -1;
-					break;
-				}
-			}
-			if (res == -1)break;
-		}
-		if (ans == -1) {
-			if (res != -1)ans = res - 1;
-		}
-		else {
-			if (res != -1)ans = min(ans, res - 1);
-		}
-	} while (next_permutation(t.begin(), t.end()));
-	cout << ans;
+	go(0, {});
+	cout << answer;
 }
