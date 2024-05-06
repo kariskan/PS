@@ -1,63 +1,62 @@
 #include <iostream>
-#include <vector>
-#include <set>
 #include <queue>
+#include <algorithm>
+#include <vector>
 using namespace std;
-
-int n, m, s, d;
-int meetTime;
-vector<vector<pair<int, int>>> v;
-vector<vector<pair<int, int>>> rev;
-vector<int> dis;
-void dijk() {
-	dis.resize(n + 1);
-	priority_queue<pair<int, int>> q;
-	q.push({ 0,s });
-	while (!q.empty()) {
-		int node = q.top().second;
-		int cost = q.top().first;
-		q.pop();
-
-		if (dis[node] > cost) continue;
-
-		for (auto& i : v[node]) {
-			if (cost + i.second > dis[i.first]) {
-				dis[i.first] = cost + i.second;
-				q.push({ cost + i.second, i.first });
-			}
-		}
-	}
-	meetTime = dis[d];
-}
-int visit[10001];
-int ans;
-void dfs(int pre, int node, int cost) {
-	if (node == s) {
-		return;
-	}
-	visit[node] = 1;
-	for (auto& i : rev[node]) {
-		if (cost + i.second + dis[i.first] == meetTime) {
-			ans++;
-			if (!visit[i.first]) {
-				dfs(node, i.first, cost + i.second);
-			}
-		}
-	}
-}
-
 int main() {
+	int n, m;
 	cin >> n >> m;
-	rev.resize(n + 1);
-	v.resize(n + 1);
+	vector<vector<pair<int, int>>> v(n + 1), rev(n + 1);
 	for (int i = 0; i < m; i++) {
 		int a, b, c;
 		cin >> a >> b >> c;
 		v[a].push_back({ b,c });
 		rev[b].push_back({ a,c });
 	}
-	cin >> s >> d;
-	dijk();
-	dfs(d, d, 0);
-	cout << meetTime << '\n' << ans << '\n';
+
+	int s, e;
+	cin >> s >> e;
+
+	priority_queue<pair<int, int>> pq;
+	vector<int> dis(n + 1);
+
+	pq.push({ 0, s });
+
+	while (!pq.empty()) {
+		int node = pq.top().second;
+		int cost = pq.top().first;
+		pq.pop();
+
+		for (auto& i : v[node]) {
+			int nxNode = i.first;
+			int nxCost = cost + i.second;
+			if (dis[nxNode] < nxCost) {
+				dis[nxNode] = nxCost;
+				pq.push({ nxCost, nxNode });
+			}
+		}
+	}
+	int cost = dis[e], cnt = 0;
+	cout << cost << '\n';
+
+	queue<int> q;
+	vector<int> vis(n + 1);
+	q.push(e);
+	vis[e] = 1;
+
+	while (!q.empty()) {
+		int node = q.front();
+		q.pop();
+
+		for (auto& i : rev[node]) {
+			if (dis[node] - i.second == dis[i.first]) {
+				cnt++;
+				if (!vis[i.first]) {
+					q.push(i.first);
+					vis[i.first] = 1;
+				}
+			}
+		}
+	}
+	cout << cnt;
 }
