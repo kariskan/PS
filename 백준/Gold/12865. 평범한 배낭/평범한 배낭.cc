@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-int n, k, dp[101][100001];
+int n, k, dp[100001];
 pair<int, int> a[101];
 int main() {
 	cin >> n >> k;
@@ -13,14 +13,10 @@ int main() {
 	}
 
 	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= k; j++) {
-			if (j < a[i].first) {
-				dp[i][j] = dp[i - 1][j];
-				continue;
-			}
-			dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - a[i].first] + a[i].second);
+		for (int j = k; j >= a[i].first; j--) {
+			dp[j] = max(dp[j], dp[j - a[i].first] + a[i].second);
 		}
 	}
 
-	cout << dp[n][k];
+	cout << dp[k];
 }
