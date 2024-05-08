@@ -1,50 +1,49 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
 #include <map>
 using namespace std;
 
-int a[100000];
-
+int a[100001];
 int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    int n, m;
-    cin >> n >> m;
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
+	int n, m;
+	cin >> n >> m;
+	for (int i = 0; i < n; i++) {
+		cin >> a[i];
+	}
 
-    int left = 1, right = n / m, ans = 0;
+	int ans = m;
+	int left = 1, right = n / m;
+	while (left <= right) {
+		int mid = (left + right) / 2;
 
-    while (left <= right) {
-        int mid = (left + right) / 2;  // 각 그룹의 카드 수
+		map<int, int> ma;
+		int cnt = 0;
+		for (int i = 0; i < n; i++) {
+			if (ma.find(a[i]) != ma.end()) {
+				i = ma[a[i]];
+				ma.clear();
+				continue;
+			}
+			ma[a[i]] = i;
+			if (ma.size() >= mid) {
+				cnt++;
+				ma.clear();
+			}
+		}
 
-        int group = 0;
-        map<int, int> se;
-        for (int i = 0; i < n; i++) {
-            if (se.find(a[i]) != se.end()) {
-                i = se[a[i]];
-                se.clear();
-                continue;
-            }
-            se[a[i]] = i;
-            if (se.size() == mid) {
-                group++;
-                se.clear();
-                continue;
-            }
-        }
+		if (cnt >= m) {
+			ans = mid;
+			left = mid + 1;
+		}
+		else {
+			right = mid - 1;
+		}
+	}
 
-        if (se.size() == mid) {
-            group++;
-        }
-
-        if (group >= m) {
-            left = mid + 1;
-            ans = max(ans, mid);
-        } else {
-            right = mid - 1;
-        }
-    }
-
-    cout << ans;
+	cout << ans;
 }
