@@ -1,92 +1,67 @@
 #include <iostream>
-#include <string>
+#include <queue>
 #include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
 using namespace std;
 
 int n, t, p;
-int ti[101][1441];
-pair<int, int> a[501];
+pair<int, int> a[500];
+int info[101][21 * 60 + 1];
 
-bool compare(pair<int, int> p1, pair<int, int> p2)
-{
-	if (p1.first == p2.first)
-	{
+bool compare(pair<int, int>& p1, pair<int, int>& p2) {
+	if (p1.first == p2.first) {
 		return p1.second < p2.second;
 	}
-	return p1.first < p2.first;
+	return p1.first > p2.first;
 }
 
-int getNumber(int now)
-{
-	int res = 0, maxL = 0;
-	for (int i = 1; i <= n; i++)
-	{
-		if (ti[i][now])
-		{
-			continue;
-		}
-		int minDis = 110;
-		for (int j = 1; j <= n; j++)
-		{
-			if (j == i)
-				continue;
-			if (ti[j][now])
-			{
-				int dis = abs(j - i);
-				minDis = min(minDis, dis);
-			}
-		}
-		if (maxL < minDis)
-		{
-			maxL = minDis;
-			res = i;
-		}
-	}
-
-	return res;
-}
-
-int parseToMinute(string s)
-{
-	return stoi(s.substr(0, 2)) * 60 + stoi(s.substr(2));
-}
-
-int main()
-{
+int main() {
 	cin >> n >> t >> p;
-
-	for (int i = 1; i <= t; i++)
-	{
-		string start, end;
-		cin >> start >> end;
-		a[i] = {parseToMinute(start), parseToMinute(end)};
+	for (int i = 0; i < t; i++) {
+		cin >> a[i].first >> a[i].second;
 	}
 
-	sort(a + 1, a + 1 + t, compare);
+	sort(a, a + t);
 
-	for (int i = 1; i <= t; i++)
-	{
-		int start = a[i].first;
-		int end = a[i].second;
-		int num = getNumber(start);
-		if (num != 0)
-		{
-			for (int j = start; j < end; j++)
-			{
-				ti[num][j] = i;
+	for (int i = 0; i < t; i++) {
+		int start = (a[i].first / 100) * 60 + a[i].first % 100;
+		int end = (a[i].second / 100) * 60 + a[i].second % 100;
+
+		int idx = -1;
+		vector<int> v;
+		for (int j = 1; j <= n; j++) {
+			if (info[j][start]) {
+				v.push_back(j);
 			}
 		}
-	}
-
-	int ans = 0;
-
-	for (int i = 9 * 60; i < 21 * 60; i++)
-	{
-		if (ti[p][i] == 0)
-		{
-			ans++;
+		if (v.empty()) {
+			idx = 1;
+		}
+		else {
+			vector<pair<int, int>> insert; // len, num
+			insert.push_back({ v[0] - 1,1 });
+			insert.push_back({ n - v.back(), n });
+			for (int i = 1; i < v.size(); i++) {
+				int len = min(v[i] - (v[i] + v[i - 1]) / 2, (v[i] + v[i - 1]) / 2 - v[i - 1]);
+				insert.push_back({ len,v[i - 1] + len });
+			}
+			sort(insert.begin(), insert.end(), compare);
+			idx = insert[0].second;
+		}
+		for (int j = start; j < end; j++) {
+			info[idx][j] = 1;
 		}
 	}
 
-	cout << ans;
+	int answer = 0;
+	for (int i = 9 * 60; i < 21 * 60; i++) {
+		if (!info[p][i]) {
+			answer++;
+		}
+	}
+	cout << answer;
 }
