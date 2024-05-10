@@ -1,34 +1,40 @@
 #include <iostream>
-#include <string>
+#include <queue>
 #include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
 using namespace std;
 
 string s, t;
-bool ok = false;
-
-void go(string c) {
-	if (c.length() < s.length()) return;
-	if (c == s) {
-		ok = true;
+bool flag;
+void go(string now) {
+	if (now == s) {
+		flag = true;
 		return;
 	}
-
-	if (c.front() == 'B') {
-		string temp = c.substr(1);
-		reverse(temp.begin(), temp.end());
-		go(temp);
-		if (ok)return;
+	if (now.length() == s.length()) {
+		return;
 	}
-
-	if (c.back() == 'A') {
-		c.pop_back();
-		go(c);
+	if (flag) {
+		return;
+	}
+	if (now.back() == 'A') {
+		go(now.substr(0, now.length() - 1));
+	}
+	if (flag) {
+		return;
+	}
+	if (now[0] == 'B') {
+		string n = now;
+		reverse(n.begin(), n.end());
+		go(n.substr(0, n.length() - 1));
 	}
 }
-
 int main() {
 	cin >> s >> t;
 	go(t);
-
-	cout << ok ? 1 : 0;
+	cout << flag;
 }
