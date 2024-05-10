@@ -1,51 +1,42 @@
 #include <iostream>
-#include <vector>
+#include <queue>
 #include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
 using namespace std;
-int n;
-int a[4000], b[4000], c[4000], d[4000];
 
+int n;
+vector<int> v1, v2;
+int a[4000][4];
 int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
 	cin >> n;
 	for (int i = 0; i < n; i++) {
-		cin >> a[i] >> b[i] >> c[i] >> d[i];
+		for (int j = 0; j < 4; j++) {
+			cin >> a[i][j];
+		}
 	}
-
-	vector<int> m;
-	vector<int> m2;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			m.push_back(a[i] + b[j]);
-			m2.push_back(c[i] + d[j]);
+			v1.push_back(a[i][0] + a[j][1]);
+			v2.push_back(a[i][2] + a[j][3]);
 		}
 	}
-	sort(m.begin(), m.end());
-	sort(m2.begin(), m2.end());
-	long long ans = 0;
-	int mSize = m.size(), m2Size = m2.size();
-	int mI = 0, m2I = m2.size() - 1;
-	while (mI < m2Size && m2I >= 0) {
-		long long firstCnt = 1, secondCnt = 1;
-		int firstSum = m[mI], secondSum = m2[m2I];
-		if (firstSum + secondSum < 0) {
-			mI++;
-		}
-		else if (firstSum + secondSum > 0) {
-			m2I--;
-		}
-		else {
-			while (mI < m2Size - 1 && m[mI] == m[mI + 1]) {
-				mI++;
-				firstCnt++;
-			}
-			while (m2I > 0 && m2[m2I] == m2[m2I - 1]) {
-				m2I--;
-				secondCnt++;
-			}
-			ans += firstCnt * secondCnt;
-			mI++;
-			m2I--;
-		}
+	sort(v1.begin(), v1.end());
+	sort(v2.begin(), v2.end());
+
+	long long answer = 0;
+
+	for (int i = 0; i < v1.size(); i++) {
+		int a = upper_bound(v2.begin(), v2.end(), -v1[i]) - v2.begin();
+		int b = lower_bound(v2.begin(), v2.end(), -v1[i]) - v2.begin();
+		answer += a - b;
 	}
-	cout << ans;
+
+	cout << answer;
 }
