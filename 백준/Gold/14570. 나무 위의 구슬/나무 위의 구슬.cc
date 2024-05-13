@@ -8,7 +8,7 @@
 #include <map>
 using namespace std;
 
-int n, p[200001];
+int n;
 pair<int, int> child[200001];
 
 void traversal(int node, long long k) {
@@ -33,17 +33,12 @@ void traversal(int node, long long k) {
 }
 
 int main() {
-
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
 	cin >> n;
 	for (int i = 0; i < n; i++) {
 		int u, v;
 		cin >> u >> v;
-		if (u != -1) {
-			p[u] = i + 1;
-		}
-		if (v != -1) {
-			p[v] = i + 1;
-		}
 		child[i + 1] = { u,v };
 	}
 
