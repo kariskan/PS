@@ -1,14 +1,18 @@
-# [Silver II] 후보 추천하기 - 1713 
+# [Silver I] 후보 추천하기 - 1713 
 
 [문제 링크](https://www.acmicpc.net/problem/1713) 
 
 ### 성능 요약
 
-메모리: 2020 KB, 시간: 0 ms
+메모리: 2024 KB, 시간: 0 ms
 
 ### 분류
 
-구현(implementation), 시뮬레이션(simulation)
+구현, 시뮬레이션
+
+### 제출 일자
+
+2024년 5월 13일 10:24:42
 
 ### 문제 설명
 
