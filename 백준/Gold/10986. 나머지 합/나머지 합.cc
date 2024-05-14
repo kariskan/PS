@@ -10,6 +10,8 @@ using namespace std;
 
 long long arr[1000001], mod[1001];
 int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
 	int n, m;
 	cin >> n >> m;
 
