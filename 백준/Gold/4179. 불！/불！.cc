@@ -1,60 +1,81 @@
 #include <iostream>
 #include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
 using namespace std;
 
-int n, m;
-char map[1000][1000];
-int fvisit[1000][1000], jvisit[1000][1000];
-int x[4] = { 0,0,1,-1 };
-int y[4] = { 1,-1,0,0 };
-int cx, cy;
-typedef struct c {
-	int x;
-	int y;
-	char c;
-};
+int n, m, vis[1000][1000];
+char board[1000][1000];
+int dx[4] = { 0,0,1,-1 };
+int dy[4] = { 1,-1,0,0 };
+
+bool range(int x, int y) {
+	return x >= 0 && x < n&& y >= 0 && y < m;
+}
+
 int main() {
 	cin >> n >> m;
-	queue<c> q;
+
+	queue<pair<int, int>> q, fire;
+
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
-			cin >> map[i][j];
-			if (map[i][j] == 'J') {
-				jvisit[i][j] = 1;
-				cx = i; cy = j;
+			cin >> board[i][j];
+			if (board[i][j] == 'J') {
+				board[i][j] = '.';
+				q.push({ i,j });
+				vis[i][j] = 1;
 			}
-			if (map[i][j] == 'F') {
-				fvisit[i][j] = 1;
-				q.push({ i,j,'F' });
+			if (board[i][j] == 'F') {
+				fire.push({ i,j });
 			}
 		}
 	}
-	q.push({ cx,cy,'J' });
 
 	while (!q.empty()) {
-		int a = q.front().x;
-		int b = q.front().y;
-		char c = q.front().c;
-		q.pop();
-		if ((a == 0 || a == n - 1 || b == 0 || b == m - 1) && c == 'J') {
-			cout << jvisit[a][b];
-			return 0;
+		int qSize = q.size();
+		for (int k = 0; k < qSize; k++) {
+			int x = q.front().first;
+			int y = q.front().second;
+			q.pop();
+			if (board[x][y] == 'F') {
+				continue;
+			}
+
+			for (int i = 0; i < 4; i++) {
+				int nx = x + dx[i];
+				int ny = y + dy[i];
+				if (!range(nx, ny)) {
+					cout << vis[x][y];
+					return 0;
+				}
+				if (!vis[nx][ny] && board[nx][ny] != 'F' && board[nx][ny] != '#') {
+					vis[nx][ny] = vis[x][y] + 1;
+					q.push({ nx,ny });
+				}
+			}
 		}
-		for (int k = 0; k < 4; k++) {
-			int nx = a + x[k];
-			int ny = b + y[k];
-			if (nx >= 0 && nx < n && ny >= 0 && ny < m && map[nx][ny] != '#') {
-				if ((c == 'J' && !fvisit[nx][ny] && !jvisit[nx][ny]) || (c == 'F' && fvisit[nx][ny] == 0)) {
-					q.push({ nx,ny,c });
-					if (c == 'J') {
-						jvisit[nx][ny] = jvisit[a][b] + 1;
-					}
-					else {
-						fvisit[nx][ny] = fvisit[a][b] + 1;
-					}
+
+		qSize = fire.size();
+		for (int k = 0; k < qSize; k++) {
+			int x = fire.front().first;
+			int y = fire.front().second;
+			fire.pop();
+
+			for (int i = 0; i < 4; i++) {
+				int nx = x + dx[i];
+				int ny = y + dy[i];
+				if (range(nx, ny) && board[nx][ny] == '.') {
+					board[nx][ny] = 'F';
+					fire.push({ nx,ny });
 				}
 			}
 		}
 	}
+
 	cout << "IMPOSSIBLE";
 }
