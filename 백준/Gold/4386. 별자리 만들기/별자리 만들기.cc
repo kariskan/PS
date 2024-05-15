@@ -1,50 +1,66 @@
 #include <iostream>
-#include <vector>
+#include <queue>
 #include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
+#include <set>
 #include <cmath>
 using namespace std;
 
-int parent[101];
-int n;
-pair<double ,double> coor[101];
-vector<pair<double, pair<int, int>>> v;
+pair<double, double> inp[101];
+int p[101];
 
-double getDis(pair<double, double> x, pair<double, double> y) {
-	return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
+double getDistance(double x1, double y1, double x2, double y2) {
+	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
-int getParent(int x) {
-	if (parent[x] == x)return x;
-	else return parent[x] = getParent(parent[x]);
+bool compare(pair<pair<int, int>, double>& p1, pair<pair<int, int>, double>& p2) {
+	return p1.second < p2.second;
+}
+
+int Find(int x) {
+	if (x == p[x]) {
+		return x;
+	}
+	return p[x] = Find(p[x]);
 }
 
 void Union(int a, int b) {
-	a = getParent(a);
-	b = getParent(b);
-	if (a > b)parent[a] = b;
-	else parent[b] = a;
+	a = Find(a);
+	b = Find(b);
+	p[b] = a;
 }
 
 int main() {
-	cin >> n;
-	
-	for (int i = 1; i <= n; i++) {
-		cin >> coor[i].first >> coor[i].second;
-	}
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
 
+	vector<pair<pair<int, int>, double>> v;
+	int n;
+
+	cin >> n;
+	for (int i = 1; i <= n; i++) {
+		cin >> inp[i].first >> inp[i].second;
+		p[i] = i;
+	}
 	for (int i = 1; i <= n; i++) {
 		for (int j = i + 1; j <= n; j++) {
-			v.push_back({ getDis(coor[i],coor[j]),{i,j} });
+			v.push_back({ {i,j},getDistance(inp[i].first,inp[i].second,inp[j].first,inp[j].second) });
 		}
 	}
-	sort(v.begin(), v.end());
-	double ans = 0;
-	for (int i = 1; i <= n; i++)parent[i] = i;
+
+	sort(v.begin(), v.end(), compare);
+
+	double answer = 0;
 	for (int i = 0; i < v.size(); i++) {
-		if (getParent(v[i].second.first) != getParent(v[i].second.second)) {
-			ans += v[i].first;
-			Union(v[i].second.first, v[i].second.second);
+		if (Find(v[i].first.first) != Find(v[i].first.second)) {
+			Union(v[i].first.first, v[i].first.second);
+			answer += v[i].second;
 		}
 	}
-	cout << ans;
+	cout << answer;
 }
