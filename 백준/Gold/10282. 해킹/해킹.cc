@@ -1,50 +1,56 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <set>
+#include <map>
+#include <climits>
+#include <cmath>
+#include <deque>
+#include <stack>
 #include <queue>
-#include <cstring>
+
 using namespace std;
-vector < vector<pair<int, int>>> v;
-void dijk(int n, int dis[]) {
-	priority_queue<pair<int, int>> q;
-	q.push({ 0, n });
-	dis[n] = 0;
 
-	while (!q.empty()) {
-		int cost = -q.top().first;
-		int node = q.top().second;
-		q.pop();
-
-		if (dis[node] != -1 && dis[node] < cost) continue;
-
-		for (auto& i : v[node]) {
-			int nCost = cost + i.second;
-			if (dis[i.first] > nCost || dis[i.first] == -1) {
-				dis[i.first] = nCost;
-				q.push({ -nCost, i.first });
-			}
-		}
-	}
-}
-int dis[10001];
 int main() {
-	int t; cin >> t;
-	while (t--) {
-		int n, d, c;
-		cin >> n >> d >> c;
-		v.clear();
-		v.resize(n + 1);
-		memset(dis, -1, sizeof(dis));
-		for (int i = 0; i < d; i++) {
-			int a, b, s; cin >> a >> b >> s;
-			v[b].push_back({ a,s });
-		}
-		dijk(c, dis);
-		int cnt = 0, ans = 0;
-		for (int i = 1; i <= n; i++) {
-			if (dis[i] != -1) {
-				cnt++;
-				ans = max(ans, dis[i]);
-			}
-		}
-		cout << cnt << ' ' << ans << '\n';
-	}
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, d, c;
+        cin >> n >> d >> c;
+        vector<vector<pair<int, int>>> v(n + 1);
+        for (int i = 0; i < d; i++) {
+            int a, b, s;
+            cin >> a >> b >> s;
+            v[b].push_back({a, s});
+        }
+
+        vector<int> dis(n + 1, 1e9);
+        priority_queue<pair<int, int>> pq;
+
+        pq.push({0, c});
+        dis[c] = 0;
+
+        int answer = 0;
+        set<int> se;
+        while (!pq.empty()) {
+            int node = pq.top().second;
+            int cost = -pq.top().first;
+            pq.pop();
+
+            answer = max(answer, dis[node]);
+            se.insert(node);
+
+            for (auto &i: v[node]) {
+                int nxNode = i.first;
+                int nxCost = cost + i.second;
+                if (nxCost < dis[nxNode]) {
+                    dis[nxNode] = nxCost;
+                    pq.push({-nxCost, nxNode});
+                }
+            }
+        }
+
+        cout << se.size() << ' ' << answer << '\n';
+    }
 }
