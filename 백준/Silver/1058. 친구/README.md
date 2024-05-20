@@ -1,14 +1,18 @@
-# [Silver III] 친구 - 1058 
+# [Silver II] 친구 - 1058 
 
 [문제 링크](https://www.acmicpc.net/problem/1058) 
 
 ### 성능 요약
 
-메모리: 2032 KB, 시간: 0 ms
+메모리: 2024 KB, 시간: 0 ms
 
 ### 분류
 
-브루트포스 알고리즘(bruteforcing), 플로이드–와샬(floyd_warshall), 그래프 이론(graphs), 그래프 탐색(graph_traversal)
+브루트포스 알고리즘, 그래프 이론, 그래프 탐색, 최단 경로
+
+### 제출 일자
+
+2024년 5월 20일 10:09:39
 
 ### 문제 설명
 
