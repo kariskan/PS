@@ -1,39 +1,46 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <set>
+#include <map>
+#include <climits>
+#include <cmath>
+#include <deque>
+#include <stack>
+#include <queue>
+
 using namespace std;
 
-int ans, n, x, y, a[12], r[24], c[30];
+int vis[15], n, x, y, answer;
 
-void go(int idx)
-{
-	if (r[idx])
-	{
-		go(idx + 1);
-		return;
-	}
-	if (idx == 2 * n)
-	{
-		ans++;
-		return;
-	}
+void go(int idx, vector<int> now) {
+    if (idx > n) {
+        answer++;
+        return;
+    }
+    if (vis[idx]) {
+        go(idx + 1, now);
+        return;
+    }
 
-	for (int i = 1; i <= n; i++)
-	{
-		if (!c[i] && !r[idx] && !r[idx + i + 1] && idx + i + 1 < 2 * n)
-		{
-			c[i] = 1;
-			r[idx] = r[idx + i + 1] = 1;
-			go(idx + 1);
-			c[i] = 0;
-			r[idx] = r[idx + i + 1] = 0;
-		}
-	}
+    for (int i = 1; i <= 2 * n; i++) {
+        if (i + idx + 1 <= 2 * n && now[i] == 0 && now[i + idx + 1] == 0) {
+            now[i] = now[i + idx + 1] = idx;
+            vis[idx] = 1;
+            go(idx + 1, now);
+            now[i] = now[i + idx + 1] = 0;
+            vis[idx] = 0;
+        }
+    }
 }
 
-int main()
-{
-	cin >> n >> x >> y;
-	r[x - 1] = r[y - 1] = y - x - 1;
-	c[y - x - 1] = 1;
-	go(0);
-	cout << ans;
+int main() {
+    cin >> n >> x >> y;
+    vis[y - x - 1] = 1;
+    vector<int> now(2 * n + 1);
+    now[x] = now[y] = y - x - 1;
+
+    go(1, now);
+    cout << answer;
 }
