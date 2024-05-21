@@ -1,28 +1,57 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <set>
+#include <map>
+#include <climits>
+#include <cmath>
+#include <deque>
+#include <stack>
+#include <queue>
+#include <cstring>
+
 using namespace std;
+
 int a[100000];
+
 int main() {
-    int n, m;
-    cin >> n >> m;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int n, s;
+    cin >> n >> s;
     for (int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    int p1 = 0, p2 = 0;
-    int sum = a[p1];
-    int minLen = 1000000;
-    while (p1 <= p2 && p2 < n) {
-        if (sum >= m) {
-            minLen = min(minLen, p2 - p1 + 1);
-            sum -= a[p1++];
-            if (p1 > p2) {
-                p2 = p1;
-                sum = a[p1];
+    int l = 0, r = 0, sum = a[0], ans = 0;
+    while (r < n) {
+        if (sum >= s) {
+            if (ans == 0 || ans > r - l + 1) {
+                ans = r - l + 1;
+            }
+            sum -= a[l];
+            l++;
+        }
+        if (r < n && sum < s) {
+            r++;
+            sum += a[r];
+            if (sum >= s) {
+                if (ans == 0 || ans > r - l + 1) {
+                    ans = r - l + 1;
+                }
             }
         }
-        else {
-            sum += a[++p2];
+    }
+    while (l <= r) {
+        sum -= a[l];
+        l++;
+        if (sum >= s) {
+            if (ans == 0 || ans > r - l + 1) {
+                ans = r - l + 1;
+            }
         }
     }
-    if (minLen == 1000000)minLen = 0;
-    cout << minLen;
+    cout << ans;
 }
