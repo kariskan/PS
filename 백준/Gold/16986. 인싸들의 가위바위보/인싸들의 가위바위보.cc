@@ -1,49 +1,81 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <string>
+#include <set>
+#include <map>
+#include <climits>
+#include <cmath>
+#include <deque>
+#include <stack>
+#include <queue>
+#include <cstring>
+
 using namespace std;
-int a[10][10];
-int p[4][21];
+
+int n, k, board[10][10], a[3][21];
+
 int main() {
-	int n, k;
-	cin >> n >> k;
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			cin >> a[i][j];
-		}
-	}
-	for (int i = 1; i <= 3; i++) {
-		for (int j = 1; j <= 20; j++) {
-			if (i == 1)p[i][j] = j;
-			else cin >> p[i][j];
-		}
-	}
-	do {
-		int index[4] = { 0,1,1,1 };
-		int cnt[4] = { 0,0,0,0 };
-		int first = 1, second = 2, third = 3;
-		while (1) {
-			if (first > second)swap(first, second);
-			if (first == 1 && index[1] > n)break;
-			if (index[first] > 20 || index[second] > 20)break;
-			int p1 = p[first][index[first]++];
-			int p2 = p[second][index[second]++];
-			
-			if (a[p1][p2] == 2) {
-				cnt[first]++;
-				swap(second, third);
-				if (cnt[first] == k)break;
-			}
-			else {
-				cnt[second]++;
-				swap(first, third);
-				if (cnt[second] == k)break;
-			}
-		}
-		if (cnt[1] >= k) {
-			cout << 1;
-			return 0;
-		}
-	} while (next_permutation(p[1] + 1, p[1] + 1 + n));
-	cout << 0;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    cin >> n >> k;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            // 2일 경우, i가 j를 이김, 1일 경우 비김, 0일 경우 i가 j한테 짐
+            cin >> board[i][j];
+        }
+    }
+
+    for (int i = 1; i <= 2; i++) {
+        for (int j = 0; j < 20; j++) {
+            cin >> a[i][j];
+        }
+    }
+
+    vector<int> seq;
+    for (int i = 0; i < n; i++) {
+        seq.push_back(i + 1);
+    }
+    do {
+        for (int i = 0; i < n; i++) {
+            a[0][i] = seq[i];
+        }
+        int score[3] = {0,}, idx[3] = {0,};
+        int first = 0, second = 1, pending = 2;
+        while (idx[0] < n) {
+            int p1 = a[first][idx[first]++];
+            int p2 = a[second][idx[second]++];
+            if (board[p1][p2] == 2) {
+                score[first]++;
+                swap(second, pending);
+            } else if (board[p1][p2] == 0) {
+                score[second]++;
+                int temp = first;
+                first = second;
+                second = temp;
+                swap(second, pending);
+            } else {
+                if (first < second) {
+                    score[second]++;
+                    int temp = first;
+                    first = second;
+                    second = temp;
+                    swap(second, pending);
+                } else {
+                    score[first]++;
+                    swap(second, pending);
+                }
+            }
+            if (score[0] >= k) {
+                cout << 1;
+                return 0;
+            }
+            if (score[1] >= k || score[2] >= k) {
+                break;
+            }
+        }
+    } while (next_permutation(seq.begin(), seq.end()));
+    cout << 0;
 }
