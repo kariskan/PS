@@ -1,69 +1,48 @@
-// #include <iostream>
-// #include <cstring>
-// #include <vector>
-// using namespace std;
-
-// int a[40001], dp[50][40001]; // dp[i][j]: i번째까지 동전으로 j원을 만드는 방법의 수
-// vector<int> prime;			 // 소수들을 저장하는 리스트
-
-// int main()
-// {
-// 	int n;
-// 	cin >> n;
-// 	prime.push_back(0);
-
-// 	// 에라토스 테네스
-// 	for (int i = 2; i * i <= 40000; i++)
-// 	{
-// 		if (!a[i])
-// 		{
-// 			prime.push_back(i);
-// 			for (int j = i * i; j <= 40000; j += i)
-// 			{
-// 				a[j] = 1;
-// 			}
-// 		}
-// 	}
-
-// 	int mod = 123456789;
-// 	for (int i = 1; i < prime.size(); i++)
-// 	{
-// 		dp[i][0] = 1;
-// 		for (int j = 1; j <= n; j++)
-// 		{
-// 			dp[i][j] = dp[i - 1][j];
-// 			if (j >= prime[i])
-// 			{
-// 				dp[i][j] = (dp[i][j] % mod + dp[i][j - prime[i]] % mod) % mod;
-// 			}
-// 		}
-// 	}
-
-// 	cout << dp[prime.size() - 1][n];
-// }
-
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <set>
+#include <map>
+#include <climits>
+#include <cmath>
+#include <deque>
+#include <stack>
+#include <queue>
+#include <cstring>
+
 using namespace std;
 
-int a[1001];
-int dp[1001]; // dp[i] = i번째 학생까지 그룹으로 묶었을 때 잘 짜여진 정도의 최댓값
-int main()
-{
-	int n;
-	cin >> n;
+int n, a[1001], dp[1001][1001];
 
-	for (int i = 1; i <= n; i++)
-	{
-		cin >> a[i];
-	}
+int get(int l, int r) {
+    int ma = 0, mi = 10000;
+    for (int i = l; i <= r; i++) {
+        ma = max(ma, a[i]);
+        mi = min(mi, a[i]);
+    }
+    return ma - mi;
+}
 
-	for (int i = 1; i <= n; i++)
-	{
-		for (int j = 0; j < i; j++)
-		{
-			dp[i] = max(dp[i], dp[j] + abs(a[i] - a[j + 1]));
-		}
-	}
+int go(int l, int r) {
+    if (l >= r) {
+        return dp[l][r] = 0;
+    }
+    if (dp[l][r] != -1) {
+        return dp[l][r];
+    }
+    int res = get(l, r);
+    for (int i = l + 1; i <= r - 1; i++) {
+        res = max(res, go(l, i) + go(i + 1, r));
+    }
+    return dp[l][r] = res;
+}
 
-	cout << dp[n];
+int main() {
+    cin >> n;
+    for (int i = 1; i <= n; i++) {
+        cin >> a[i];
+    }
+    memset(dp, -1, sizeof(dp));
+    cout << go(1, n);
 }
