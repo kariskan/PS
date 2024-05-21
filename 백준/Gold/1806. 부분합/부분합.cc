@@ -44,14 +44,5 @@ int main() {
             }
         }
     }
-    while (l <= r) {
-        sum -= a[l];
-        l++;
-        if (sum >= s) {
-            if (ans == 0 || ans > r - l + 1) {
-                ans = r - l + 1;
-            }
-        }
-    }
     cout << ans;
 }
