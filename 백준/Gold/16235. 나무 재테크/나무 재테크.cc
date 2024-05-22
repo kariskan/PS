@@ -1,86 +1,94 @@
 #include <iostream>
-#include <cstring>
 #include <queue>
 #include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
+#include <set>
+#include <cmath>
+#include <string>
 using namespace std;
-int food[11][11], a[11][11];
-vector<int> tree[11][11];
-int x[8] = { -1,-1,-1,0,0,1,1,1 };
-int y[8] = { -1,0,1,-1,1,-1,0,1 };
+
+int dx[8] = { -1,-1,-1,0,0,1,1,1 };
+int dy[8] = { -1,0,1,-1,1,-1,0,1 };
+int food[11][11], additional[11][11], dead[11][11];
+vector<int> v[11][11]; // (i,j)칸의 나무 나이 정보
+int n, m, c;
+
+bool range(int x, int y) {
+	return x >= 1 && x <= n && y >= 1 && y <= n;
+}
 
 int main() {
-	int n, m, year;
-	cin >> n >> m >> year;
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
 
+	cin >> n >> m >> c;
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
-			cin >> a[i][j];
 			food[i][j] = 5;
+			cin >> additional[i][j];
 		}
 	}
 
-	for (int i = 0; i < m; i++) {
-		int x, y, z;
-		cin >> x >> y >> z;
-		tree[x][y].push_back(z);
+	for (int i = 1; i <= m; i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		v[a][b].push_back(c);
 	}
 
-	//봄
-	while(year--){
-		int dead[11][11] = { 0, };
+	while (c--) {
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= n; j++) {
-				sort(tree[i][j].begin(), tree[i][j].end());
-				vector<int> temp;
-				for (int k = 0; k < tree[i][j].size(); k++) {
-					if (tree[i][j][k] > food[i][j]) {
-						dead[i][j] += tree[i][j][k] / 2;
+				sort(v[i][j].begin(), v[i][j].end());
+				for (int k = 0; k < v[i][j].size(); k++) {
+					if (v[i][j][k] <= food[i][j]) {
+						food[i][j] -= v[i][j][k];
+						v[i][j][k]++;
 					}
 					else {
-						food[i][j] -= tree[i][j][k];
-						temp.push_back(tree[i][j][k] + 1);
+						while (v[i][j].size() > k) {
+							dead[i][j] += v[i][j].back() / 2;
+							v[i][j].pop_back();
+						}
+						break;
 					}
 				}
-				tree[i][j] = temp;
-				food[i][j] += dead[i][j];
 			}
 		}
-		//가을
-		int add[11][11] = { 0, };
+
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= n; j++) {
-				for (int k = 0; k < tree[i][j].size(); k++) {
-					if (tree[i][j][k] % 5 == 0) {
+				for (int k = 0; k < v[i][j].size(); k++) {
+					if (v[i][j][k] % 5 == 0) {
 						for (int l = 0; l < 8; l++) {
-							int nx = i + x[l];
-							int ny = j + y[l];
-							if (nx > 0 && nx <= n && ny > 0 && ny <= n) {
-								add[nx][ny]++;
+							int nx = i + dx[l];
+							int ny = j + dy[l];
+							if (range(nx, ny)) {
+								v[nx][ny].push_back(1);
 							}
 						}
 					}
 				}
 			}
 		}
+
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= n; j++) {
-				for (int k = 0; k < add[i][j]; k++) {
-					tree[i][j].push_back(1);
-				}
-			}
-		}
-		//겨울
-		for (int i = 1; i <= n; i++) {
-			for (int j = 1; j <= n; j++) {
-				food[i][j] += a[i][j];
+				food[i][j] += additional[i][j] + dead[i][j];
+				dead[i][j] = 0;
 			}
 		}
 	}
-	int ans = 0;
+	int answer = 0;
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
-			ans += tree[i][j].size();
+			answer += v[i][j].size();
 		}
 	}
-	cout << ans;
+
+	cout << answer;
 }
