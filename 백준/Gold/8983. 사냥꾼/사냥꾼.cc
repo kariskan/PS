@@ -1,47 +1,59 @@
 #include <iostream>
+#include <queue>
 #include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
+#include <set>
+#include <cmath>
+#include <string>
 using namespace std;
 
-int shoot[100000];
-pair<int, int> p[100000];
-
-int main()
-{
+int main() {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
+	cout.tie(0);
 
 	int n, m, l;
 	cin >> n >> m >> l;
-	for (int i = 0; i < n; i++)
-	{
-		cin >> shoot[i];
-	}
-	for (int i = 0; i < m; i++)
-	{
-		cin >> p[i].first >> p[i].second;
-	}
-	sort(shoot, shoot + n);
-	sort(p, p + m);
 
-	int ans = 0;
-	int idx = 0, pre = 0;
+	vector<int> v;
+	for (int i = 0; i < n; i++) {
+		int a;
+		cin >> a;
+		v.push_back(a);
+	}
 
-	for (int i = 0; i < n; i++)
-	{
-		int nowX = shoot[i];
-		while (idx < m && abs(p[idx].first - nowX) + p[idx].second > l)
-		{
-			idx++;
+	vector<pair<int, int>> coor;
+	for (int i = 0; i < m; i++) {
+		int a, b;
+		cin >> a >> b;
+		coor.push_back({ a,b });
+	}
+
+	sort(v.begin(), v.end());
+
+	int answer = 0;
+	for (pair<int, int>& c : coor) {
+		int left = 0, right = v.size() - 1;
+
+		while (left <= right) {
+			int mid = (left + right) / 2;
+
+			if (c.second + abs(c.first - v[mid]) <= l) {
+				answer++;
+				break;
+			}
+
+			if (c.first < v[mid]) {
+				right = mid - 1;
+			}
+			else {
+				left = mid + 1;
+			}
 		}
-		pre = idx;
-		while (idx < m && abs(p[idx].first - nowX) + p[idx].second <= l)
-		{
-			idx++;
-		}
-
-		ans += idx - pre;
-		pre = idx;
 	}
-
-	cout << ans;
+	cout << answer;
 }
