@@ -1,39 +1,62 @@
 #include <iostream>
 #include <queue>
+#include <algorithm>
 #include <vector>
+#include <stack>
+#include <climits>
 #include <cstring>
+#include <map>
+#include <set>
+#include <cmath>
+#include <string>
 using namespace std;
-int n, e, k;
-vector <vector<pair<int, int>>> v;
-priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-int cost[20001];
 
 int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n, e, k;
 	cin >> n >> e >> k;
-	v.resize(n + 1);
+
+	vector<vector<pair<int, int>>> v(n + 1);
 	for (int i = 0; i < e; i++) {
 		int a, b, c;
 		cin >> a >> b >> c;
 		v[a].push_back({ b,c });
 	}
+
+	vector<int> dis(n + 1, 1e9);
+	priority_queue<pair<int, int>> pq;
+
+	dis[k] = 0;
 	pq.push({ 0,k });
-	memset(cost, -1, sizeof(cost));
-	cost[k] = 0;
+
 	while (!pq.empty()) {
-		int a = pq.top().first;
-		int b = pq.top().second;
+		int node = pq.top().second;
+		int cost = -pq.top().first;
 		pq.pop();
-		if (a > cost[b]) continue;
-		for (int i = 0; i < v[b].size(); i++) {
-			int nx = a + v[b][i].second;
-			if (cost[v[b][i].first] == -1 || cost[v[b][i].first] > nx) {
-				cost[v[b][i].first] = nx;
-				pq.push({ nx, v[b][i].first });
+
+		if (dis[node] < cost) {
+			continue;
+		}
+
+		for (auto& i : v[node]) {
+			int nxNode = i.first;
+			int nxCost = cost + i.second;
+			if (nxCost < dis[nxNode]) {
+				dis[nxNode] = nxCost;
+				pq.push({ -nxCost,nxNode });
 			}
 		}
 	}
+
 	for (int i = 1; i <= n; i++) {
-		if (cost[i] == -1)cout << "INF\n";
-		else cout << cost[i] << "\n";
+		if (dis[i] == 1e9) {
+			cout << "INF\n";
+		}
+		else {
+			cout << dis[i] << '\n';
+		}
 	}
 }
