@@ -53,10 +53,6 @@ int main() {
 	vector<long long> ans = { 1000000000, 1000000000, 1000000000 };
 	for (int i = 0; i < n; i++) {
 		for (int j = i + 1; j < n; j++) {
-			long long l = get(0, i - 1, a[i] + a[j]);
-			if (abs(ans[0] + ans[1] + ans[2]) >= abs(a[i] + a[j] + l)) {
-				ans = { l,a[i],a[j] };
-			}
 			long long r = get(j + 1, n - 1, a[i] + a[j]);
 			if (abs(ans[0] + ans[1] + ans[2]) >= abs(a[i] + a[j] + r)) {
 				ans = { a[i],a[j],r };
