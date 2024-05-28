@@ -1,37 +1,45 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
+#include <set>
+#include <cmath>
+#include <string>
 using namespace std;
-int a[1000000];
-int main()
-{
-	long long n, m;
-	long long left = 0, right = 0;
+
+long long a[1000000];
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n, m;
 	cin >> n >> m;
-	for (int i = 0; i < n; i++)
-	{
+	for (int i = 0; i < n; i++) {
 		cin >> a[i];
-		right = max(right, m * a[i]);
 	}
 
-	long long ans = 0;
-	while (left <= right)
-	{
-		long long mid = (left + right) / 2;
+	long long l = 1, r = (long long) 1000000 * 1000000, answer = LLONG_MAX;
+	while (l <= r) {
+		long long mid = (l + r) / 2;
+
 		long long cnt = 0;
-		for (int i = 0; i < n; i++)
-		{
+		for (int i = 0; i < n; i++) {
 			cnt += mid / a[i];
 		}
 
-		if (cnt >= m)
-		{
-			right = mid - 1;
-			ans = mid;
+		if (cnt >= m) {
+			r = mid - 1;
+			answer = mid;
 		}
-		else
-		{
-			left = mid + 1;
+		else {
+			l = mid + 1;
 		}
 	}
 
-	cout << ans;
+	cout << answer;
 }
