@@ -20,16 +20,14 @@ void go(int idx, int cnt) {
 		return;
 	}
 
-	if (vis[a[idx][0]] || vis[a[idx][1]]) {
-		go(idx + 1, cnt);
-	}
-	else {
+	go(idx + 1, cnt);
+
+	if (!vis[a[idx][0]] && !vis[a[idx][1]]) {
 		vis[a[idx][0]] = 1;
 		vis[a[idx][1]] = 1;
 		go(idx + 1, cnt + 1);
 		vis[a[idx][0]] = 0;
 		vis[a[idx][1]] = 0;
-		go(idx + 1, cnt);
 	}
 }
 
