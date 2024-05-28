@@ -1,11 +1,18 @@
-#include <cstring>
 #include <iostream>
+#include <queue>
+#include <algorithm>
 #include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <set>
+#include <cmath>
+#include <string>
 using namespace std;
 
 int map[50][50], n, m;
-int dx[5] = {0, -1, 1, 0, 0};
-int dy[5] = {0, 0, 0, -1, 1};
+int dx[5] = { 0, -1, 1, 0, 0 };
+int dy[5] = { 0, 0, 0, -1, 1 };
 int ans = 0;
 
 // 파괴
@@ -107,8 +114,9 @@ void boom() {
                 }
                 if (last == map[x][y]) {
                     lastCnt++;
-                    temp.push_back({x, y});
-                } else {                 // 이전과 다른 구슬이라면
+                    temp.push_back({ x, y });
+                }
+                else {                 // 이전과 다른 구슬이라면
                     if (lastCnt >= 4) {  // 연속된 구슬이 4개 이상이라면
                         while (!temp.empty()) {
                             v.push_back(temp.back());
@@ -120,7 +128,7 @@ void boom() {
                     temp.clear();
                     last = map[x][y];
                     lastCnt = 1;
-                    temp.push_back({x, y});
+                    temp.push_back({ x, y });
                 }
             }
             cnt++;
@@ -166,8 +174,9 @@ void change() {
             }
             if (last == map[x][y]) {
                 lastCnt++;
-            } else {
-                v.push_back({last, lastCnt});
+            }
+            else {
+                v.push_back({ last, lastCnt });
                 last = map[x][y];
                 lastCnt = 1;
             }
@@ -179,7 +188,7 @@ void change() {
             cnt = 0;
         }
     }
-    v.push_back({last, lastCnt});
+    v.push_back({ last, lastCnt });
 
     memset(map, 0, sizeof(map));
 
@@ -196,7 +205,8 @@ void change() {
             if (t == 0) {
                 map[x][y] = v[idx].second;
                 t = 1;
-            } else {
+            }
+            else {
                 map[x][y] = v[idx].first;
                 t = 0;
                 idx++;
