@@ -1,44 +1,53 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
+#include <set>
+#include <cmath>
+#include <string>
 using namespace std;
 
-int map[51][51], n, m, vis[51], ans;
+int n, m, ma;
+int a[50][2], vis[50];
 
-void go(int idx, int cnt)
-{
-	ans = max(ans, cnt);
-	if (idx > n)
+void go(int idx, int cnt) {
+	if (idx >= m) {
+		ma = max(ma, cnt);
 		return;
-	go(idx + 1, cnt);
+	}
 
-	for (int i = idx; i <= n; i++)
-	{
-		if (!vis[idx] && !vis[i] && map[idx][i])
-		{
-			vis[idx] = 1;
-			vis[i] = 1;
-			go(idx + 1, cnt + 2);
-			vis[idx] = 0;
-			vis[i] = 0;
-		}
+	if (vis[a[idx][0]] || vis[a[idx][1]]) {
+		go(idx + 1, cnt);
+	}
+	else {
+		vis[a[idx][0]] = 1;
+		vis[a[idx][1]] = 1;
+		go(idx + 1, cnt + 1);
+		vis[a[idx][0]] = 0;
+		vis[a[idx][1]] = 0;
+		go(idx + 1, cnt);
 	}
 }
 
-int main()
-{
-	cin >> n >> m;
-	for (int i = 0; i < m; i++)
-	{
-		int a, b;
-		cin >> a >> b;
-		map[a][b] = 1;
-		map[b][a] = 1;
-	}
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
 
+	cin >> n >> m;
+	for (int i = 0; i < m; i++) {
+		cin >> a[i][0] >> a[i][1];
+	}
 	go(0, 0);
 
-	if (ans < n)
-	{
-		ans++;
+	ma *= 2;
+	if (ma < n) {
+		ma++;
 	}
-	cout << ans;
+
+	cout << ma;
 }

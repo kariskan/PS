@@ -1,14 +1,18 @@
-# [Silver II] 친구 팰린드롬 - 15270 
+# [Silver I] 친구 팰린드롬 - 15270 
 
 [문제 링크](https://www.acmicpc.net/problem/15270) 
 
 ### 성능 요약
 
-메모리: 2032 KB, 시간: 0 ms
+메모리: 2020 KB, 시간: 0 ms
 
 ### 분류
 
-백트래킹(backtracking), 브루트포스 알고리즘(bruteforcing), 깊이 우선 탐색(dfs), 그래프 이론(graphs), 그래프 탐색(graph_traversal), 재귀(recursion)
+백트래킹, 브루트포스 알고리즘, 깊이 우선 탐색, 그래프 이론, 그래프 탐색
+
+### 제출 일자
+
+2024년 5월 28일 10:41:10
 
 ### 문제 설명
 
