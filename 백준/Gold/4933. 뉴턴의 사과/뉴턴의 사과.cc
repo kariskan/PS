@@ -1,59 +1,74 @@
 #include <iostream>
+#include <queue>
 #include <algorithm>
 #include <vector>
+#include <stack>
+#include <climits>
 #include <cstring>
+#include <set>
+#include <cmath>
+#include <string>
+
 using namespace std;
 
-int parent[2][30];
+vector<int> p;
+stack<char> st;
 
-int go(int i, int idx,  vector<string>& inp, int pre) {
-	if (idx >= inp.size()) return 0;
-	if (inp[idx] == "nil") return 1;
+void go(char pre) {
+    if (st.empty()) {
+        return;
+    }
+    char now = st.top();
+    st.pop();
+    if (now == '.') {
+        return;
+    }
 
-	parent[i][inp[idx][0] - 'A' + 1] = pre;
+    p[now - 'A'] = pre - 'A';
+    go(now);
+    go(now);
+}
 
-	int sub = go(i, idx + 1, inp, inp[idx][0] - 'A' + 1);
-	sub += go(i, sub + idx + 1, inp, inp[idx][0] - 'A' + 1);
-
-	return sub + 1;
+vector<int> makeTree() {
+    p.clear();
+    p.resize(26);
+    string s;
+    while (1) {
+        cin >> s;
+        if (s == "end") {
+            break;
+        }
+        if (s == "nil") {
+            st.push('.');
+        } else {
+            st.push(s[0]);
+        }
+    }
+    go(-1);
+    return p;
 }
 
 int main() {
-	int n; cin >> n;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-	while (n--) {
+    int t;
+    cin >> t;
+    while (t--) {
+        vector<int> v1 = makeTree();
+        vector<int> v2 = makeTree();
 
-		string s;
-		vector<string> inp1, inp2;
-		memset(parent, 0, sizeof(parent));
-
-		while (1) {
-			cin >> s;
-			if (s == "end")break;
-			inp1.push_back(s);
-		}
-		reverse(inp1.begin(), inp1.end());
-
-		while (1) {
-			cin >> s;
-			if (s == "end")break;
-			inp2.push_back(s);
-		}
-		reverse(inp2.begin(), inp2.end());
-
-		go(0, 0, inp1, -1);
-		go(1, 0, inp2, -1);
-
-		bool ok = true;
-
-		for (int i = 1; i < 27; i++) {
-			if (parent[0][i] != parent[1][i]) {
-				ok = false;
-				break;
-			}
-		}
-
-		if (ok)cout << "true\n";
-		else cout << "false\n";
-	}
+        bool flag = true;
+        for (int i = 0; i < 26; i++) {
+            if (v1[i] != v2[i]) {
+                flag = false;
+            }
+        }
+        if (flag) {
+            cout << "true\n";
+        } else {
+            cout << "false\n";
+        }
+    }
 }
