@@ -1,26 +1,39 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
+#include <set>
+#include <cmath>
+#include <string>
 using namespace std;
 
-string s;
-
-int getP(int l, int r) {
-
-	int left = l, right = r;
-	while (left <= right) {
-		if (s[left] != s[right]) return 0;
-		left++;
-		right--;
-	}
-
-	return r - l + 1;
+bool isPal(string s) {
+	string s2 = s;
+	reverse(s2.begin(), s2.end());
+	return s == s2;
 }
 
 int main() {
-	cin >> s;
-	int ans = s.length() * 2;
-		for (int i = 0; i < s.length(); i++) {
-		ans = min(ans, (int)s.length() * 2 - getP(i, s.length() - 1));
-	}
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
 
-	cout << ans;
+	string s;
+	cin >> s;
+
+	for (int len = (int)s.length();; len++) {
+		string n = s;
+		int idx = len - (int)s.length() - 1;
+		while (n.length() != len) {
+			n += s[idx--];
+		}
+		if (isPal(n)) {
+			cout << len;
+			return 0;
+		}
+	}
 }
