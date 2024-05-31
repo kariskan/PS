@@ -1,44 +1,61 @@
 #include <iostream>
 #include <queue>
+#include <algorithm>
 #include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <map>
+#include <set>
+#include <cmath>
+#include <string>
 using namespace std;
 
-int n, m;
-vector<vector<int>> v;
-int visit[20001];
-
 int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n, m;
 	cin >> n >> m;
-	v.resize(n + 1);
+
+	vector<vector<int>> v(n + 1);
 	for (int i = 0; i < m; i++) {
-		int a, b; cin >> a >> b;
+		int a, b;
+		cin >> a >> b;
 		v[a].push_back(b);
 		v[b].push_back(a);
 	}
-	queue<int> q;
-	q.push(1);
-	visit[1] = 1;
-	int maxLen = 0;
-	while (!q.empty()) {
-		int a = q.front();
-		q.pop();
 
-		maxLen = max(maxLen, visit[a]);
+	vector<int> dis(n + 1, 1e9);
+	priority_queue<pair<int, int>> pq;
 
-		for (auto& i : v[a]) {
-			if (!visit[i]) {
-				visit[i] = visit[a] + 1;
-				q.push(i);
+	dis[1] = 0;
+	pq.push({ 0,1 });
+
+	int ma = 0;
+	while (!pq.empty()) {
+		int cost = -pq.top().first;
+		int node = pq.top().second;
+		pq.pop();
+
+		ma = max(ma, cost);
+
+		for (auto& i : v[node]) {
+			if (dis[i] > cost + 1) {
+				dis[i] = cost + 1;
+				pq.push({ -(cost + 1),i });
 			}
 		}
 	}
-	int ans = -1;
-	int cnt = 0;
+
+	int f = n + 1, cnt = 0;
 	for (int i = 1; i <= n; i++) {
-		if (visit[i] == maxLen) {
-			if (ans == -1)	ans = i;
+		if (dis[i] == ma) {
 			cnt++;
+			f = min(f, i);
 		}
 	}
-	cout << ans << ' ' << maxLen - 1 << ' ' << cnt;
+
+	cout << f << ' ' << ma << ' ' << cnt;
 }
