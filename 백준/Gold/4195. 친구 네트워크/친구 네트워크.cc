@@ -1,51 +1,60 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
 #include <map>
+#include <set>
+#include <cmath>
+#include <string>
 using namespace std;
-int parent[200001];
-int Size[200001];
-int id = 1;
-map<string, int> m;
-int f(int x) {
-	if (parent[x] == x)return x;
-	else return f(parent[x]);
+
+int p[200002], g[200002];
+int Find(int x) {
+	if (p[x] == -1) {
+		return x;
+	}
+	return p[x] = Find(p[x]);
 }
 void Union(int a, int b) {
-	a = f(a);
-	b = f(b);
-	if (Size[a] < Size[b]) {
-		swap(a, b);
-	}
-	Size[a] += Size[b];
-	Size[b] = Size[a];
-	parent[b] = a;
+	p[b] = a;
+	g[a] += g[b];
 }
+
 int main() {
 	ios_base::sync_with_stdio(0);
-	cin.tie(0); cout.tie(0);
+	cin.tie(0);
+	cout.tie(0);
+
 	int t;
 	cin >> t;
 	while (t--) {
 		int n;
 		cin >> n;
-		for (int i = 1; i <= 200000; i++) {
-			parent[i] = i;
-			Size[i] = 1;
+
+		map<string, int> idx;
+		int num = 0;
+		memset(p, -1, sizeof(p));
+		memset(g, 0, sizeof(g));
+		for (int i = 0; i < n; i++) {
+			string s1, s2;
+			cin >> s1 >> s2;
+			if (idx.find(s1) == idx.end()) {
+				g[num] = 1;
+				idx[s1] = num++;
+			}
+			if (idx.find(s2) == idx.end()) {
+				g[num] = 1;
+				idx[s2] = num++;
+			}
+			int p1 = Find(idx[s1]);
+			int p2 = Find(idx[s2]);
+			if (p1 == -1 || p1 != p2) {
+				Union(p1, p2);
+			}
+			cout << g[p1] << '\n';
 		}
-		for (int i = 1; i <= n; i++) {
-			string a, b;
-			cin >> a >> b;
-			if (m.count(a) == 0) {
-				m[a] = id++;
-			}
-			if (m.count(b) == 0) {
-				m[b] = id++;
-			}
-			if (f(m[a]) != f(m[b])) {
-				Union(m[a], m[b]);
-			}
-			cout << Size[f(m[a])] << '\n';
-		}
-		m.clear();
-		id = 1;
 	}
 }
