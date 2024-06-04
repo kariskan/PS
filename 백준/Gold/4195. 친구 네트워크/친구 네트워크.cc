@@ -9,6 +9,7 @@
 #include <set>
 #include <cmath>
 #include <string>
+#include <unordered_map>
 using namespace std;
 
 int p[200002], g[200002];
@@ -34,7 +35,7 @@ int main() {
 		int n;
 		cin >> n;
 
-		map<string, int> idx;
+		unordered_map<string, int> idx;
 		int num = 0;
 		memset(p, -1, sizeof(p));
 		memset(g, 0, sizeof(g));
