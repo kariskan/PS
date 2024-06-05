@@ -1,50 +1,106 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <set>
+#include <cmath>
 #include <string>
+#include <sstream>
+
 using namespace std;
+//
+//int vis[26];
+//
+//vector<string> split(string s){
+//    stringstream ss(s);
+//    vector<string> v;
+//    string temp;
+//    while(getline(ss,temp,' ')){
+//        v.push_back(temp);
+//    }
+//    return v;
+//}
+//int toIdx(char c){
+//    if(c>='a'&&c<='z'){
+//        return c-'a';
+//    }
+//    return c-'A';
+//}
+//void shortOutput(string s){
+//    vector<string> v=split(s);
+//    for(string t:v){
+//        if(!vis[toIdx(t[0])]){
+//            vis[toIdx(t[0])]=1;
+//            break;
+//        }
+//    }
+//
+//}
+//int main() {
+//    ios_base::sync_with_stdio(0);
+//    cin.tie(0);
+//    cout.tie(0);
+//
+//    int n;
+//    cin>>n;
+//    for(int i=0;i<n;i++){
+//        string s;
+//        getline(cin, s);
+//
+//    }
+//}
 
-int a[11], n, m;
-string dp[11][51];
+string dp[51];
+int a[10];
 
-string eraseZero(string s) {
-    for (int i = 0; i < s.length(); i++) {
-        if (s[i] != '0') {
-            return s.substr(i);
-        }
+string stringMax(string s1, string s2) {
+    if (s1.empty()) {
+        return s2;
     }
-    return "0";
-}
-
-string maxS(string s1, string s2) {
-    string t1 = eraseZero(s1);
-    string t2 = eraseZero(s2);
-
-    if (t1.length() > t2.length()) {
+    if (s2.empty()) {
         return s1;
-    } else if (t1.length() < t2.length()) {
-        return s2;
-    } else {
-        if (t1 > t2) return s1;
+    }
+    if (s1.length() > s2.length()) {
+        return s1;
+    }
+    if (s1.length() < s2.length()) {
         return s2;
     }
+    return max(s1, s2);
 }
 
 int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int n, m;
     cin >> n;
-    for (int i = 1; i <= n; i++) {
+    for (int i = 0; i < n; i++) {
         cin >> a[i];
+        dp[a[i]] = stringMax(dp[a[i]], to_string(i));
     }
     cin >> m;
-
-    for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= m; j++) {
-            dp[i][j] = dp[i - 1][j];
-            if (j >= a[i]) {
-                for (int k = 1; k <= i; k++) {
-                    dp[i][j] = maxS(dp[i][j], maxS(to_string(i - 1) + dp[k][j - a[i]], dp[k][j - a[i]] + to_string(i - 1)));
-                }
+    string ans = "";
+    for (int i = 0; i < n; i++) {
+        if (a[i] > m) {
+            continue;
+        }
+        for (int j = 0; j < m; j++) {
+            if (j + a[i] > m || dp[j].empty() || (dp[j] == "0" && i == 0)) {
+                continue;
+            }
+            for (int k = 0; k <= dp[j].length(); k++) {
+                string newString = dp[j].substr(0, k) + to_string(i) + dp[j].substr(k);
+                dp[j + a[i]] = stringMax(dp[j + a[i]], newString);
             }
         }
     }
-
-    cout << eraseZero(dp[n][m]);
+    for (int i = 0; i <= m; i++) {
+        ans = stringMax(ans, dp[i]);
+    }
+    cout << ans;
 }
