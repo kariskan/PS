@@ -4,11 +4,15 @@
 
 ### 성능 요약
 
-메모리: 2104 KB, 시간: 0 ms
+메모리: 2196 KB, 시간: 0 ms
 
 ### 분류
 
-너비 우선 탐색(bfs), 깊이 우선 탐색(dfs), 그래프 이론(graphs), 그래프 탐색(graph_traversal), 구현(implementation), 시뮬레이션(simulation)
+너비 우선 탐색, 그래프 이론, 그래프 탐색, 구현, 시뮬레이션
+
+### 제출 일자
+
+2024년 6월 6일 10:22:34
 
 ### 문제 설명
 
@@ -16,17 +20,17 @@
 
 <p>이 치즈를 공기 중에 놓으면 녹게 되는데 공기와 접촉된 칸은 한 시간이 지나면 녹아 없어진다. 치즈의 구멍 속에는 공기가 없지만 구멍을 둘러싼 치즈가 녹아서 구멍이 열리면 구멍 속으로 공기가 들어가게 된다. <그림 1>의 경우, 치즈의 구멍을 둘러싼 치즈는 녹지 않고 ‘c’로 표시된 부분만 한 시간 후에 녹아 없어져서 <그림 2>와 같이 된다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/9b0f0cfb-007d-4ea8-8e6f-e397728b5c8e/-/preview/" style="width: 234px; height: 232px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 234px; height: 232px;"></p>
 
 <p style="text-align: center;"><그림 1> 원래 치즈 모양</p>
 
 <p>다시 한 시간 후에는 <그림 2>에서 ‘c’로 표시된 부분이 녹아 없어져서 <그림 3>과 같이 된다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/b099f661-9788-4183-bd62-1e98e6f184e7/-/preview/" style="width: 234px; height: 232px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 234px; height: 232px;"></p>
 
 <p style="text-align: center;"><그림 2> 한 시간 후의 치즈 모양</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/58fc0743-794b-4e27-84e8-fe491ec7bf3d/-/preview/" style="width: 234px; height: 232px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 234px; height: 232px;"></p>
 
 <p style="text-align: center;"><그림 3> 두 시간 후의 치즈 모양</p>
 
