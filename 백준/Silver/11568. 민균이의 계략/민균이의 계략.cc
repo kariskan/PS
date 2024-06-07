@@ -1,30 +1,38 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <set>
+#include <cmath>
+#include <string>
+#include <sstream>
+
 using namespace std;
 
-int dp[1000], a[1000];
+int a[1001], n, dp[1001];
 
-int main()
-{
-    int n;
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
     cin >> n;
-
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 1; i <= n; i++) {
         cin >> a[i];
     }
+
     int ans = 0;
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 1; i <= n; i++) {
         dp[i] = 1;
-        for (int j = 0; j < i; j++)
-        {
-            if (a[i] > a[j])
-            {
+        for (int j = 1; j < i; j++) {
+            if (a[j] < a[i]) {
                 dp[i] = max(dp[i], dp[j] + 1);
             }
         }
         ans = max(ans, dp[i]);
     }
-
     cout << ans;
 }
