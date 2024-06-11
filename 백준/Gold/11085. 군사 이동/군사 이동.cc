@@ -47,7 +47,7 @@ int main() {
     for (int i = 0; i < w; i++) {
         int a, b, ed;
         cin >> a >> b >> ed;
-        inp.push_back({{a, b}, ed});
+        inp.push_back({ {a, b}, ed });
     }
 
     sort(inp.begin(), inp.end(), [](pair<pair<int, int>, int>& p1, pair<pair<int, int>, int>& p2) -> bool { return p1.second > p2.second; });
@@ -57,8 +57,8 @@ int main() {
         int b = inp[i].first.second;
         if (Find(a) != Find(b)) {
             Union(a, b);
-            ve[a].push_back({b, inp[i].second});
-            ve[b].push_back({a, inp[i].second});
+            ve[a].push_back({ b, inp[i].second });
+            ve[b].push_back({ a, inp[i].second });
         }
     }
 
