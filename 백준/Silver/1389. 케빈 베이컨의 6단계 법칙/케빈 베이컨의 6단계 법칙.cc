@@ -1,50 +1,56 @@
 #include <iostream>
-#include <vector>
-#include <cstring>
 #include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <set>
+#include <cmath>
+#include <string>
+#include <sstream>
+#include <map>
+
 using namespace std;
 
+int a[101][101];
 
-vector<vector<int>> v;
-int n, m, s;
-void run(int idx) {
-	queue<int> q;
-	q.push(idx);
-	int visit[101] = { 0, };
-	visit[idx] = 1;
-	while (!q.empty()) {
-		int a = q.front();
-		q.pop();
-		s += visit[a];
-		for (int i = 0; i < v[a].size(); i++) {
-			if (!visit[v[a][i]]) {
-				visit[v[a][i]] = visit[a] + 1;
-				q.push(v[a][i]);
-			}
-		}
-	}
-}
 int main() {
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-	cin >> n >> m;
-	v.resize(n + 1);
-	for (int i = 0; i < m; i++) {
-		int a, b;
-		cin >> a >> b;
-		v[a].push_back(b);
-		v[b].push_back(a);
-	}
-	int ans = 1000000000, ansi = -1;
-	for (int i = 1; i <= n; i++) {
-		s = 0;
-		run(i);
-		if (ans > s) {
-			ans = s;
-			ansi = i;
-		}
-	}
-	cout << ansi;
+    int n, m;
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        int x, y;
+        cin >> x >> y;
+        a[x][y] = a[y][x] = 1;
+    }
+
+    for (int k = 1; k <= n; k++) {
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (i == j) {
+                    continue;
+                }
+                if (a[i][k] && a[k][j] && (a[i][j] == 0 || a[i][j] > a[i][k] + a[k][j])) {
+                    a[i][j] = a[i][k] + a[k][j];
+                }
+            }
+        }
+    }
+
+    int ans = 0, ansSum = INT_MAX;
+    for (int i = 1; i <= n; i++) {
+        int s = 0;
+        for (int j = 1; j <= n; j++) {
+            s += a[i][j];
+        }
+        if (s < ansSum) {
+            ans = i;
+            ansSum = s;
+        }
+    }
+    cout << ans;
 }
