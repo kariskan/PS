@@ -1,111 +1,88 @@
-// #include <iostream>
-// #include <set>
-// using namespace std;
-
-// int main()
-// {
-// 	string s = "";
-// 	while (cin >> s, s != "*")
-// 	{
-// 		int ok = 1;
-// 		for (int i = 0; i <= s.length() - 2; i++)
-// 		{
-// 			set<string> se;
-// 			for (int j = 0; j < s.length() - i - 1; j++)
-// 			{
-// 				string t = "";
-// 				t = t + s[j] + s[j + i + 1];
-// 				if (se.count(t))
-// 				{
-// 					ok = 0;
-// 					break;
-// 				}
-// 				se.insert(t);
-// 			}
-// 			if (!ok)
-// 			{
-// 				break;
-// 			}
-// 		}
-// 		if (ok)
-// 		{
-// 			cout << s << " is surprising.\n";
-// 		}
-// 		else
-// 		{
-// 			cout << s << " is NOT surprising.\n";
-// 		}
-// 	}
-// }
-
 #include <iostream>
+#include <queue>
 #include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <set>
+#include <cmath>
+#include <string>
+#include <sstream>
+#include <map>
+
 using namespace std;
 
-int main()
-{
-	int a[26] = {
-		0,
-	},
-		n;
-	string s;
+int getIdx(char a) {
+    if (a >= 'a' && a <= 'z') {
+        return a - 'a';
+    }
+    return a - 'A';
+}
 
-	getline(cin, s);
-	cin >> n;
-	for (int i = 0; i < 26; i++)
-	{
-		cin >> a[i];
-	}
-	s.erase(unique(s.begin(), s.end()), s.end());
-	for (int i = 0; i < s.length(); i++)
-	{
-		if (s[i] == ' ' && n)
-		{
-			n--;
-			continue;
-		}
-		if (s[i] == ' ' && !n)
-		{
-			cout << -1;
-			return 0;
-		}
-		if (a[tolower(s[i]) - 'a'])
-		{
-			a[tolower(s[i]) - 'a']--;
-		}
-		else
-		{
-			cout << -1;
-			return 0;
-		}
-	}
-	string ans = "";
-	ans += (char)toupper(s[0]);
-	for (int i = 1; i < s.length(); i++)
-	{
-		if (s[i] == ' ')
-		{
-			ans += (char)toupper(s[i + 1]);
-		}
-	}
-	string ans2 = ans;
-	ans.erase(unique(ans.begin(), ans.end()), ans.end());
-	for (int i = 0; i < ans.length(); i++)
-	{
-		if (ans[i] == ' ')
-		{
-			continue;
-		}
-		if (a[tolower(ans[i]) - 'a'])
-		{
-			a[tolower(ans[i]) - 'a']--;
-		}
-		else
-		{
-			cout << -1;
-			return 0;
-		}
-	}
+char toUpper(int idx) {
+    return char(idx + 'A');
+}
 
-	cout << ans2;
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    string s;
+    getline(cin, s);
+    int n;
+    cin >> n;
+    int a[26];
+    for (int i = 0; i < 26; i++) {
+        cin >> a[i];
+    }
+    string ans = "";
+    string temp = "";
+    for (int i = 0; i < s.length(); i++) {
+        if (temp.back() == s[i]) {
+            continue;
+        }
+        temp += s[i];
+        if (s[i] == ' ') {
+            n--;
+        }
+    }
+
+    s = temp;
+    stringstream ss(s);
+    vector<string> v;
+    while (getline(ss, temp, ' ')) {
+        if (!temp.empty()) {
+            v.push_back(temp);
+        }
+    }
+    for (int i = 0; i < v.size(); i++) {
+        string t = v[i];
+        for (int j = 0; j < t.length(); j++) {
+            int idx = getIdx(t[j]);
+            a[idx]--;
+            if (j == 0) {
+                a[idx]--;
+                ans += toUpper(idx);
+            }
+        }
+    }
+//
+//    cout << n << '\n';
+//    for (int i = 0; i < 26; i++) {
+//        cout << a[i] << ' ';
+//    }
+//    cout << '\n';
+    if (n < 0) {
+        cout << -1;
+        return 0;
+    }
+    for (int i = 0; i < 26; i++) {
+        if (a[i] < 0) {
+            cout << -1;
+            return 0;
+        }
+    }
+    cout << ans;
 }
