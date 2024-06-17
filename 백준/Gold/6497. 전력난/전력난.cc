@@ -1,43 +1,64 @@
 #include <iostream>
+#include <queue>
 #include <algorithm>
-#include <cstring>
 #include <vector>
-using namespace std;
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <set>
+#include <cmath>
+#include <string>
+#include <sstream>
+#include <map>
 
-int parent[200000];
-int n, m;
-int find(int x) {
-	if (parent[x] == x)return x;
-	else return(find(parent[x]));
+using namespace std;
+vector<int> p;
+
+int Find(int x) {
+    if (p[x] == x) {
+        return x;
+    }
+    return p[x] = Find(p[x]);
 }
+
 void Union(int a, int b) {
-	a = find(a);
-	b = find(b);
-	if (a > b)parent[a] = b;
-	else parent[b] = a;
+    a = Find(a);
+    b = Find(b);
+    p[b] = a;
 }
+
 int main() {
-	while (1) {
-		cin >> n >> m;
-		if (n == 0 && m == 0)break;
-		vector<pair<int, pair<int, int>>> v;
-		int sum = 0;
-		for (int i = 0; i < m; i++) {
-			int a, b, c;
-			cin >> a >> b >> c;
-			v.push_back({ c,{a,b} });
-			sum += c;
-		}
-		for (int i = 0; i < n; i++) {
-			parent[i] = i;
-		}
-		sort(v.begin(), v.end());
-		for (auto& i : v) {
-			if (find(i.second.first) != find(i.second.second)) {
-				Union(i.second.first, i.second.second);
-				sum -= i.first;
-			}
-		}
-		cout << sum << '\n';
-	}
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    while (1) {
+        vector<pair<int, pair<int, int>>> v;
+
+        int n, m;
+        cin >> n >> m;
+        if (n == 0) {
+            return 0;
+        }
+        p.clear();
+        p.resize(n);
+        for (int i = 0; i < n; i++) {
+            p[i] = i;
+        }
+        int ans = 0;
+        for (int i = 0; i < m; i++) {
+            int a, b, c;
+            cin >> a >> b >> c;
+            ans += c;
+            v.push_back({c, {a, b}});
+        }
+        sort(v.begin(), v.end());
+        for (int i = 0; i < m; i++) {
+            if (Find(v[i].second.first) != Find(v[i].second.second)) {
+                Union(v[i].second.first, v[i].second.second);
+                ans -= v[i].first;
+            }
+        }
+        cout << ans << '\n';
+    }
 }
