@@ -1,49 +1,53 @@
 #include <iostream>
 #include <queue>
+#include <algorithm>
 #include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <set>
+#include <cmath>
+#include <string>
+#include <sstream>
+#include <map>
+
 using namespace std;
 
-int visit[300001], n;
-vector<vector<int>> v;
+int p[300001];
+
+int Find(int x) {
+    if (p[x] == x) {
+        return x;
+    }
+    return p[x] = Find(p[x]);
+}
+
+void Union(int a, int b) {
+    a = Find(a);
+    b = Find(b);
+    p[b] = a;
+}
 
 int main() {
-	cin >> n;
-	v.resize(n + 1);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-	for (int i = 0; i < n - 2; i++) {
-		int a, b; cin >> a >> b;
-		v[a].push_back(b);
-		v[b].push_back(a);
-	}
-
-	int cnt = 0;
-	for (int i = 1; i <= n; i++) {
-		if (!visit[i]) {
-			cnt++;
-
-			queue<int> q;
-			visit[i] = cnt;
-			q.push(i);
-
-			while (!q.empty()) {
-				int a = q.front();
-				q.pop();
-
-				for (auto& i : v[a]) {
-					if (!visit[i]) {
-						visit[i] = cnt;
-						q.push(i);
-					}
-				}
-			}
-		}
-	}
-
-	int f, d;
-	for (int i = 1; i <= n; i++) {
-		if (visit[i] == 1)f = i;
-		if (visit[i] == 2)d = i;
-	}
-
-	cout << f << ' ' << d;
+    int n;
+    cin >> n;
+    for (int i = 1; i <= n; i++) {
+        p[i] = i;
+    }
+    for (int i = 0; i < n - 2; i++) {
+        int a, b;
+        cin >> a >> b;
+        if (Find(a) != Find(b)) {
+            Union(a, b);
+        }
+    }
+    for (int i = 1; i <= n; i++) {
+        if (p[i] == i) {
+            cout << i << ' ';
+        }
+    }
 }
