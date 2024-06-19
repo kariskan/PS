@@ -1,29 +1,39 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <set>
+#include <cmath>
+#include <string>
+#include <sstream>
+#include <map>
+
 using namespace std;
 
-long long dp[1001][1001], t;
+int dp[1001][1001] = {1,};
 
-int main()
-{
-    cin >> t;
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-    dp[1][1] = 1;
-    dp[2][1] = 1;
-    dp[2][2] = 1;
-    dp[3][1] = 1;
-    dp[3][2] = 2;
-    dp[3][3] = 1;
-    int mod = 1000000009;
-    for (int i = 4; i <= 1000; i++)
-    {
-        for (int j = 2; j <= 1000; j++)
-        {
-            dp[i][j] = (dp[i - 1][j - 1] % mod + dp[i - 2][j - 1] % mod + dp[i - 3][j - 1] % mod) % mod;
+    for (int i = 1; i <= 1000; i++) {
+        for (int j = 1; j <= 1000; j++) {
+            for (int k = 1; k <= 3; k++) {
+                if (i - k >= 0) {
+                    dp[i][j] += dp[i - k][j - 1];
+                    dp[i][j] %= 1000000009;
+                }
+            }
         }
     }
 
-    while (t--)
-    {
+    int t;
+    cin >> t;
+    while (t--) {
         int n, m;
         cin >> n >> m;
         cout << dp[n][m] << '\n';
