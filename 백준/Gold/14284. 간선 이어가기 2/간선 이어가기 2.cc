@@ -1,46 +1,46 @@
 #include <iostream>
-#include <queue>
 #include <vector>
-#include <cstring>
+#include <queue>
+#include <climits>
 using namespace std;
 
-int n, m, dis[100001];
-vector<vector<pair<int, int>>> v;
-
 int main() {
-	cin >> n >> m;
-	v.resize(n + 1);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-	for (int i = 1; i <= n; i++) {
-		dis[i] = 987654321;
-	}
+    int n, m;
+    cin >> n >> m;
+    vector<vector<pair<int, int> > > v(n + 1);
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        v[a].push_back({b, c});
+        v[b].push_back({a, c});
+    }
 
-	for (int i = 0; i < m; i++) {
-		int a, b, c; cin >> a >> b >> c;
-		v[a].push_back({ b,c });
-		v[b].push_back({ a,c });
-	}
+    int x, y;
+    cin >> x >> y;
 
-	int s, t; cin >> s >> t;
+    vector<int> dis(n + 1,INT_MAX);
+    priority_queue<pair<int, int> > pq;
 
-	priority_queue<pair<int, int>> pq;
-	pq.push({ 0,s });
-	dis[s] = 0;
+    pq.push({0, x});
+    dis[x] = 0;
 
-	while (!pq.empty()) {
-		long long cost = -pq.top().first;
-		int node = pq.top().second;
-		pq.pop();
+    while (!pq.empty()) {
+        int node = pq.top().second;
+        int cost = -pq.top().first;
+        pq.pop();
 
-		if (cost > dis[node]) continue;
+        for (auto &i: v[node]) {
+            int nxCost = cost + i.second;
+            if (dis[i.first] > nxCost) {
+                dis[i.first] = nxCost;
+                pq.push({-nxCost, i.first});
+            }
+        }
+    }
 
-		for (auto& i : v[node]) {
-			if (dis[i.first] > cost + i.second) {
-				dis[i.first] = cost + i.second;
-				pq.push({ -cost - i.second,i.first });
-			}
-		}
-	}
-
-	cout << dis[t];
+    cout << dis[y];
 }
