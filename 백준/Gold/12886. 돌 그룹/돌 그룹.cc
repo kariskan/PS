@@ -1,65 +1,56 @@
 #include <iostream>
+#include <vector>
 #include <queue>
-#include <tuple>
-#include <map>
+#include <climits>
 #include <algorithm>
 using namespace std;
-int visit[501][501][501];
-tuple<int, int, int> s(tuple<int, int, int>t) {
-    int f1 = get<0>(t);
-    int f2 = get<1>(t);
-    int f3 = get<2>(t);
-    if (f1 > f2) {
-        if (f3 > f1) return { f2,f1,f3 };
-        else {
-            if (f2 > f3) return { f3,f2,f1 };
-            else return { f2,f3,f1 };
-        }
-    }
-    else {
-        if (f3 > f2) return { f1,f2,f3 };
-        else {
-            if (f1 > f3)return{ f3,f1,f2 };
-            else return{ f1,f3,f2 };
-        }
-    }
-}
+
+int vis[1501][1501];
+
 int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
     int a, b, c;
     cin >> a >> b >> c;
-    queue<tuple<int, int, int>> q;
-    q.push(s({ a,b,c }));
+    int sum = a + b + c;
+
+    queue<pair<int, int> > q;
+    vis[a][b] = 1;
+    q.push({a, b});
+
+    // 20 15 25 , 20 30 10 , 20 20 20
+
     while (!q.empty()) {
-        tuple<int, int, int> t = q.front();
+        int first = q.front().first;
+        int second = q.front().second;
+        int third = sum - first - second;
         q.pop();
-        int f0 = get<0>(t);
-        int f1 = get<1>(t);
-        int f2 = get<2>(t);
-        if (f0 == f1 && f1 == f2) {
+
+        if (first == second && second == third) {
             cout << 1;
             return 0;
         }
-        tuple<int, int, int> temp;
-        if (f0 != f1) {
-            temp = s({ f0 * 2,f1 - f0,f2 });
-            if (!visit[get<0>(temp)][get<1>(temp)][get<2>(temp)]) {
-                q.push(temp);
-                visit[get<0>(temp)][get<1>(temp)][get<2>(temp)] = 1;
-            }
+
+        vector<int> v = {first, second, third};
+        sort(v.begin(), v.end());
+
+        first = v[0];
+        second = v[1];
+        third = v[2];
+
+        if (first != second && !vis[first + first][second - first]) {
+            q.push({first + first, second - first});
+            vis[first + first][second - first] = 1;
         }
-        if (f0 != f2) {
-            temp = s({ f0 * 2,f1,f2 - f0 });
-            if (!visit[get<0>(temp)][get<1>(temp)][get<2>(temp)]) {
-                q.push(temp);
-                visit[get<0>(temp)][get<1>(temp)][get<2>(temp)] = 1;
-            }
+        if (first != third && !vis[first + first][third - first]) {
+            q.push({first + first, third - first});
+            vis[first + first][third - first] = 1;
         }
-        if (f1 != f2) {
-            temp = s({ f0,f1 * 2,f2 - f1 });
-            if (!visit[get<0>(temp)][get<1>(temp)][get<2>(temp)]) {
-                q.push(temp);
-                visit[get<0>(temp)][get<1>(temp)][get<2>(temp)] = 1;
-            }
+        if (second != third && !vis[second + second][third - second]) {
+            q.push({second + second, third - second});
+            vis[second + second][third - second] = 1;
         }
     }
     cout << 0;
