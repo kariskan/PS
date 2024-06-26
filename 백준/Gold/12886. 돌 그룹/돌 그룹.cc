@@ -5,7 +5,7 @@
 #include <algorithm>
 using namespace std;
 
-int vis[1501][1501];
+bool vis[1501][1501];
 
 int main() {
     ios_base::sync_with_stdio(0);
