@@ -21,9 +21,6 @@ int main() {
     for (int i = 1; i <= n; i++) {
         cin >> a[i].first >> a[i].second;
     }
-    for (int i = n + 1; i <= 10000; i++) {
-        a[i].first = a[i].second = INT_MAX;
-    }
 
     int day = 1;
     int ans = 0;
