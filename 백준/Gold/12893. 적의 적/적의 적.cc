@@ -1,67 +1,55 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
 #include <vector>
+#include <stack>
+#include <climits>
+#include <cstring>
+#include <set>
+#include <cmath>
+#include <string>
+#include <sstream>
+#include <map>
+
 using namespace std;
 
 vector<vector<int>> v;
-int n, m, p[2001];
-int e[2001];
+int n, m, vis[2001];
 
-int Find(int x)
-{
-	if (p[x] == x)
-	{
-		return x;
-	}
-	return p[x] = Find(p[x]);
+void go(int node, int pre, int c) {
+    vis[node] = c;
+    for (auto &i: v[node]) {
+        if (i == pre) {
+            continue;
+        }
+        if (vis[i] == c * -1) {
+            continue;
+        }
+        if (vis[i] != 0 && vis[i] != c * -1) {
+            cout << 0;
+            exit(0);
+        }
+        go(i, node, c * -1);
+    }
 }
 
-void Union(int a, int b)
-{
-	a = Find(a);
-	b = Find(b);
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-	p[a] = b;
-}
-
-int main()
-{
-	cin >> n >> m;
-
-	for (int i = 1; i <= n; i++)
-	{
-		p[i] = i;
-	}
-
-	for (int i = 0; i < m; i++)
-	{
-		int a, b;
-		cin >> a >> b;
-
-		int pa = Find(a);
-		int pb = Find(b);
-
-		if (pa == pb)
-		{
-			cout << 0;
-			return 0;
-		}
-
-		if (e[a] != 0)
-		{
-			Union(e[a], b);
-		}
-		else {
-			e[a] = b;
-		}
-		
-		if (e[b] != 0)
-		{
-			Union(e[b], a);
-		}
-		else {
-			e[b] = a;
-		}
-	}
-
-	cout << 1;
+    cin >> n >> m;
+    v.resize(n + 1);
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        cin >> a >> b;
+        v[a].push_back(b);
+        v[b].push_back(a);
+    }
+    for (int i = 1; i <= n; i++) {
+        if (!vis[i]) {
+            go(i, 0, 1);
+        }
+    }
+    cout << 1;
 }
