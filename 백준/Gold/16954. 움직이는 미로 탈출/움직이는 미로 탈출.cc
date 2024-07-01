@@ -1,40 +1,68 @@
 #include <iostream>
+#include <vector>
 #include <queue>
-#include <tuple>
+#include <climits>
+#include <algorithm>
 using namespace std;
-char board[9][9];
-int x[9] = { 0,0,0,1,1,1,-1,-1,-1 };
-int y[9] = { 0,1,-1,1,0,-1,1,0,-1 };
-int visit[8][8][9];
+
+char board[9][8][8];
+int vis[100][8][8];
+int dx[9] = {0, 0, -1, -1, -1, 0, 1, 1, 1};
+int dy[9] = {0, 1, 1, 0, -1, -1, -1, 0, 1};
+
+bool isRange(int x, int y) {
+    return x >= 0 && x < 8 && y >= 0 && y < 8;
+}
 
 int main() {
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			cin >> board[i][j];
-		}
-	}
-	queue<tuple<int, int, int>> q;
-	q.push({ 7,0,0 });
-	visit[0][0][0] = 1;
-	while (!q.empty()) {
-		int a = get<0>(q.front());
-		int b = get<1>(q.front());
-		int c = get<2>(q.front());
-		if ((a == 0 && b == 7) || c >= 8) {
-			cout << 1;
-			return 0;
-		}
-		q.pop();
-		for (int i = 0; i < 9; i++) {
-			int nx = a + x[i];
-			int ny = b + y[i];
-			if (nx - c >= 0 && board[nx - c][ny] == '#')continue;
-			if (nx - c - 1 >= 0 && board[nx - c - 1][ny] == '#')continue;
-			if (!(nx >= 0 && nx < 8 && ny >= 0 && ny < 8)) continue;
-			if (visit[nx][ny][c])continue;
-			q.push({ nx,ny,c + 1 });
-			visit[nx][ny][c] = 1;
-		}
-	}
-	cout << 0;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    for (int i = 0; i <= 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            for (int k = 0; k < 8; k++) {
+                board[i][j][k] = '.';
+            }
+        }
+    }
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            cin >> board[0][i][j];
+        }
+    }
+    for (int k = 1; k <= 8; k++) {
+        for (int i = k; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                board[k][i][j] = board[k - 1][i - 1][j];
+            }
+        }
+    }
+
+    queue<pair<int, pair<int, int> > > q;
+    q.push({0, {7, 0}});
+    vis[0][7][0] = 1;
+
+    while (!q.empty()) {
+        int time = q.front().first;
+        int x = q.front().second.first;
+        int y = q.front().second.second;
+        q.pop();
+
+        if (x == 0 && y == 7) {
+            cout << 1;
+            return 0;
+        }
+
+        for (int i = 0; i < 9; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            int nt = min(time + 1, 8);
+            if (isRange(nx, ny) && board[time][nx][ny] == '.' && board[nt][nx][ny] == '.' && !vis[nt][nx][ny]) {
+                q.push({nt, {nx, ny}});
+                vis[nt][nx][ny] = vis[time][x][y] + 1;
+            }
+        }
+    }
+    cout << 0;
 }
