@@ -1,44 +1,65 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <tuple>
+#include <climits>
+#include <algorithm>
+#include <map>
+#include <cmath>
+#include <mutex>
 using namespace std;
 
 int n, m, a, b, c;
-vector<vector<pair<int, int>>> v;
+vector<vector<pair<int, int> > > v;
 
 int main() {
-	cin >> n >> m >> a >> b >> c;
-	v.resize(n + 1);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-	for (int i = 0; i < m; i++) {
-		int v1, v2, money;
-		cin >> v1 >> v2 >> money;
-		v[v1].push_back({ v2,money });
-		v[v2].push_back({ v1,money });
-	}
+    cin >> n >> m >> a >> b >> c;
+    v.resize(n + 1);
+    int l = 20, r = 1;
+    for (int i = 0; i < m; i++) {
+        int v1, v2, w;
+        cin >> v1 >> v2 >> w;
+        v[v1].push_back({v2, w});
+        v[v2].push_back({v1, w});
+        l = min(l, w);
+        r = max(r, w);
+    }
 
-	priority_queue<tuple<int, int, int>> q;
-	vector<int> dis(n + 1, 987654321);
-	q.push({ 0,0,a });
-	dis[a] = 0;
+    int ans = -1;
+    while (l <= r) {
+        int mid = (l + r) / 2;
 
-	while (!q.empty()) {
-		int node, cost, shame;
-		tie(cost, shame, node) = q.top();
-		q.pop();
+        priority_queue<pair<int, int> > pq;
+        vector<int> dis(n + 1, 1e9);
 
-		for (auto& i : v[node]) {
-			int nxNode = i.first;
-			int nxCost = i.second + cost;
-			int nxShame = max(i.second, shame);
-			if (nxShame < dis[nxNode] && nxCost <= c) {
-				dis[nxNode] = nxShame;
-				q.push({ nxCost,nxShame,nxNode });
-			}
-		}
-	}
+        pq.push({0, a});
+        dis[a] = 0;
 
-	if (dis[b] == 987654321) cout << -1;
-	else cout << dis[b];
+        while (!pq.empty()) {
+            int cost = -pq.top().first;
+            int node = pq.top().second;
+            pq.pop();
+
+            for (auto &i: v[node]) {
+                int nxCost = cost + i.second;
+                int nxNode = i.first;
+                if (dis[nxNode] > nxCost && i.second <= mid) {
+                    dis[nxNode] = nxCost;
+                    pq.push({-nxCost, nxNode});
+                }
+            }
+        }
+
+        if (dis[b] <= c) {
+            r = mid - 1;
+            ans = mid;
+        } else {
+            l = mid + 1;
+        }
+    }
+
+    cout << ans;
 }
