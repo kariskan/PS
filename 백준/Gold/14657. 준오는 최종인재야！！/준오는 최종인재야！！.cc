@@ -11,12 +11,10 @@ int n, t, root, maxVC, ans = -1;
 vector<vector<pair<int, int> > > v;
 
 void dfs(int node, int pre, int count, int weight) {
-    if (count >= maxVC) {
-        if (count > maxVC || (count == maxVC && ans > (weight + t - 1) / t)) {
-            ans = (weight + t - 1) / t;
-            root = node;
-            maxVC = count;
-        }
+    if (count > maxVC || (count == maxVC && ans > (weight + t - 1) / t)) {
+        ans = (weight + t - 1) / t;
+        root = node;
+        maxVC = count;
     }
     for (auto &i: v[node]) {
         if (i.first != pre) {
