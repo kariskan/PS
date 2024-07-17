@@ -19,11 +19,12 @@ int go(int l, int r) {
     if (dp[l][r] != -1) {
         return dp[l][r];
     }
-    int res = INT_MAX;
+    int res;
     if (a[l] == a[r]) {
-        res = min(res, go(l + 1, r - 1));
+        res = go(l + 1, r - 1);
+    } else {
+        res = min(1 + go(l, r - 1), 1 + go(l + 1, r));
     }
-    res = min(res, min(1 + go(l, r - 1), 1 + go(l + 1, r)));
     return dp[l][r] = res;
 }
 
