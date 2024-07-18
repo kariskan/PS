@@ -1,35 +1,38 @@
-#include <cstring>
 #include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+#include <algorithm>
+#include <map>
+#include <cmath>
+#include <sstream>
+#include <stack>
 using namespace std;
-
-long long c, a[50001], s[1000001], mod[1000001];
 
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
+    cout.tie(0);
 
-    cin >> c;
-
-    while (c--) {
-        memset(s, 0, sizeof(s));
-        memset(mod, 0, sizeof(mod));
-
+    int t;
+    cin >> t;
+    while (t--) {
         long long d, n;
         cin >> d >> n;
-
-        for (int i = 1; i <= n; i++) {
-            cin >> a[i];
-            s[i] = s[i - 1] + a[i];
-            s[i] %= d;
-            mod[s[i]]++;
+        vector<long long> v(n);
+        map<long long, long long> m;
+        int ans = 0;
+        m[0] = 1;
+        for (int i = 0; i < n; i++) {
+            cin >> v[i];
+            if (i > 0) {
+                v[i] += v[i - 1];
+            }
+            if (m.find(v[i] % d) != m.end()) {
+                ans += m[v[i] % d];
+            }
+            m[v[i] % d]++;
         }
-
-        long long ans = 0;
-
-        for (int i = 0; i < d; i++) {
-            ans += mod[i] * (mod[i] - 1) / 2;
-        }
-
-        cout << mod[0] + ans << '\n';
+        cout << ans << '\n';
     }
 }
