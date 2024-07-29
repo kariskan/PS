@@ -1,87 +1,70 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <cstring>
+#include <queue>
+#include <climits>
+#include <algorithm>
+#include <map>
+#include <cmath>
+#include <sstream>
+#include <stack>
 using namespace std;
 
-bool compare(pair<pair<int, int>, int> &p1, pair<pair<int, int>, int> &p2)
-{
-	return p1.second < p2.second;
-}
-int parent[250001];
+int p[250001];
 
-int Find(int a)
-{
-	if (parent[a] == a)
-		return a;
-	return parent[a] = Find(parent[a]);
+int Find(int x) {
+    if (p[x] == x) {
+        return x;
+    }
+    return Find(p[x]);
 }
 
-void Union(int a, int b)
-{
-	a = Find(a);
-	b = Find(b);
+void Union(int a, int b) {
+    a = Find(a);
+    b = Find(b);
 
-	if (a > b)
-	{
-		parent[a] = b;
-	}
-	else
-	{
-		parent[b] = a;
-	}
+    p[b] = a;
 }
-int main()
-{
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	int t;
-	cin >> t;
-	while (t--)
-	{
-		int r, c;
-		cin >> r >> c;
-		for (int i = 1; i <= r * c; i++)
-		{
-			parent[i] = i;
-		}
-		vector<pair<pair<int, int>, int>> v;
-		for (int i = 0; i < r; i++)
-		{
-			for (int j = 1; j <= c - 1; j++)
-			{
-				int cost;
-				cin >> cost;
-				v.push_back({{i * c + j, i * c + j + 1}, cost});
-			}
-		}
-		for (int i = 0; i < r - 1; i++)
-		{
-			for (int j = 1; j <= c; j++)
-			{
-				int cost;
-				cin >> cost;
-				v.push_back({{i * c + j, (i + 1) * c + j}, cost});
-			}
-		}
 
-		sort(v.begin(), v.end(), compare);
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-		int ans = 0;
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, m;
+        cin >> n >> m;
+        vector<pair<int, pair<int, int> > > v;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                p[(i - 1) * m + j] = (i - 1) * m + j;
+            }
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j < m; j++) {
+                int c;
+                cin >> c;
+                v.push_back({c, {(i - 1) * m + j, (i - 1) * m + j + 1}});
+            }
+        }
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j <= m; j++) {
+                int c;
+                cin >> c;
+                v.push_back({c, {(i - 1) * m + j, i * m + j}});
+            }
+        }
+        sort(v.begin(), v.end());
 
-		for (int i = 0; i < v.size(); i++)
-		{
-			int node1 = v[i].first.first;
-			int node2 = v[i].first.second;
-			int cost = v[i].second;
+        int ans = 0;
 
-			if (Find(node1) != Find(node2))
-			{
-				Union(node1, node2);
-				ans += cost;
-			}
-		}
-
-		cout << ans << '\n';
-	}
+        for (auto & i : v) {
+            if (Find(i.second.first) != Find(i.second.second)) {
+                Union(i.second.first, i.second.second);
+                ans += i.first;
+            }
+        }
+        cout << ans << '\n';
+    }
 }
