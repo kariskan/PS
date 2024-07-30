@@ -1,95 +1,263 @@
 #include <iostream>
+#include <vector>
 #include <queue>
+#include <climits>
+#include <algorithm>
+#include <map>
+#include <cmath>
+#include <sstream>
+#include <stack>
 using namespace std;
 
-char map[10][10];
-int vis[10][10][10][10];
-pair<int, int> red, blue;
+int n, m;
 int dx[4] = {-1, 1, 0, 0};
 int dy[4] = {0, 0, -1, 1};
+char board[10][10], cBoard[10][10];
+int desX, desY;
 
-int main() {
-    int n, m;
-    cin >> n >> m;
+struct coor {
+    int rx;
+    int ry;
+    int bx;
+    int by;
+};
+
+void copyBoard() {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            cin >> map[i][j];
+            cBoard[i][j] = board[i][j];
+        }
+    }
+}
 
-            if (map[i][j] == 'R') {
-                red = {i, j};
-                map[i][j] = '.';
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    cin >> n >> m;
+    coor c;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cin >> board[i][j];
+            if (board[i][j] == 'R') {
+                c.rx = i;
+                c.ry = j;
+                board[i][j] = '.';
             }
-            if (map[i][j] == 'B') {
-                blue = {i, j};
-                map[i][j] = '.';
+            if (board[i][j] == 'B') {
+                c.bx = i;
+                c.by = j;
+                board[i][j] = '.';
+            }
+            if (board[i][j] == 'O') {
+                desX = i;
+                desY = j;
             }
         }
     }
 
-    queue<pair<pair<int, int>, pair<int, int>>> q;
+    int vis[10][10][10][10] = {0,};
+    queue<coor> q;
 
-    q.push({red, blue});
-    vis[red.first][red.second][blue.first][blue.second] = 1;
+    q.push(c);
+    vis[c.rx][c.ry][c.bx][c.by] = 1;
 
-    for (int i = 1;; i++) {
-        int siz = q.size();
-        for (int j = 0; j < siz; j++) {
-            pair<int, int> nowRed = q.front().first;
-            pair<int, int> nowBlue = q.front().second;
-            q.pop();
+    while (!q.empty()) {
+        int rx = q.front().rx;
+        int ry = q.front().ry;
+        int bx = q.front().bx;
+        int by = q.front().by;
+        q.pop();
 
-            for (int k = 0; k < 4; k++) {
-                pair<int, int> next[2] = {nowRed, nowBlue};
-                int end[2] = {
-                    0,
-                };
-                int idx = 1;
-
-                if ((k == 0 && nowRed.first < nowBlue.first) || (k == 1 && nowRed.first > nowBlue.first) || (k == 2 && nowRed.second < nowBlue.second) || (k == 3 && nowRed.second > nowBlue.second)) {
-                    idx = 0;
-                }
-
-                for (int l = 0; l < 2; l++) {
-                    while (1) {
-                        if (map[next[idx].first][next[idx].second] != '.') {
-                            break;
-                        }
-
-                        next[idx].first += dx[k];
-                        next[idx].second += dy[k];
-                    }
-
-                    if (map[next[idx].first][next[idx].second] == 'O') {
-                        end[idx] = 1;
-                    } else {
-                        next[idx].first -= dx[k];
-                        next[idx].second -= dy[k];
-                        map[next[idx].first][next[idx].second] = 'X';
-                    }
-
-                    idx = 1 - idx;
-                }
-
-                if (end[0] && !end[1]) {
-                    cout << i;
-                    return 0;
-                }
-
-                for (int l = 0; l < 2; l++) {
-                    if (!end[l]) map[next[l].first][next[l].second] = '.';
-                }
-
-                if (!end[1]) {
-                    if (!vis[next[0].first][next[0].second][next[1].first][next[1].second]) {
-                        q.push({next[0], next[1]});
-                        vis[next[0].first][next[0].second][next[1].first][next[1].second] = 1;
-                    }
-                }
-            }
+        if (board[bx][by] == 'O') {
+            continue;
+        }
+        if (board[rx][ry] == 'O') {
+            cout << vis[rx][ry][bx][by] - 1;
+            return 0;
         }
 
-        if (i > 300) {
-            break;
+        // right
+        copyBoard();
+        if (ry >= by) {
+            int rj = ry;
+            while (cBoard[rx][rj] != 'O') {
+                rj++;
+                if (cBoard[rx][rj] == '#') {
+                    rj--;
+                    break;
+                }
+            }
+            int bj = by;
+            while (cBoard[bx][bj] != 'O') {
+                bj++;
+                if (cBoard[bx][bj] == '#' || (bx == rx && bj == rj && board[bx][bj] != 'O')) {
+                    bj--;
+                    break;
+                }
+            }
+            if (!vis[rx][rj][bx][bj]) {
+                vis[rx][rj][bx][bj] = vis[rx][ry][bx][by] + 1;
+                q.push(coor{rx, rj, bx, bj});
+            }
+        } else {
+            int bj = by;
+            while (cBoard[bx][bj] != 'O') {
+                bj++;
+                if (cBoard[bx][bj] == '#') {
+                    bj--;
+                    break;
+                }
+            }
+            int rj = ry;
+            while (cBoard[rx][rj] != 'O') {
+                rj++;
+                if (cBoard[rx][rj] == '#' || (bx == rx && bj == rj && board[bx][bj] != 'O')) {
+                    rj--;
+                    break;
+                }
+            }
+            if (!vis[rx][rj][bx][bj]) {
+                vis[rx][rj][bx][bj] = vis[rx][ry][bx][by] + 1;
+                q.push(coor{rx, rj, bx, bj});
+            }
+        }
+        // left
+        copyBoard();
+        if (ry >= by) {
+            int bj = by;
+            while (cBoard[bx][bj] != 'O') {
+                bj--;
+                if (cBoard[bx][bj] == '#') {
+                    bj++;
+                    break;
+                }
+            }
+            int rj = ry;
+            while (cBoard[rx][rj] != 'O') {
+                rj--;
+                if (cBoard[rx][rj] == '#' || (bx == rx && bj == rj && board[bx][bj] != 'O')) {
+                    rj++;
+                    break;
+                }
+            }
+            if (!vis[rx][rj][bx][bj]) {
+                vis[rx][rj][bx][bj] = vis[rx][ry][bx][by] + 1;
+                q.push(coor{rx, rj, bx, bj});
+            }
+        } else {
+            int rj = ry;
+            while (cBoard[rx][rj] != 'O') {
+                rj--;
+                if (cBoard[rx][rj] == '#') {
+                    rj++;
+                    break;
+                }
+            }
+            int bj = by;
+            while (cBoard[bx][bj] != 'O') {
+                bj--;
+                if (cBoard[bx][bj] == '#' || (bx == rx && bj == rj && board[bx][bj] != 'O')) {
+                    bj++;
+                    break;
+                }
+            }
+            if (!vis[rx][rj][bx][bj]) {
+                vis[rx][rj][bx][bj] = vis[rx][ry][bx][by] + 1;
+                q.push(coor{rx, rj, bx, bj});
+            }
+        }
+        // up
+        copyBoard();
+        if (rx >= bx) {
+            int bi = bx;
+            while (cBoard[bi][by] != 'O') {
+                bi--;
+                if (cBoard[bi][by] == '#') {
+                    bi++;
+                    break;
+                }
+            }
+            int ri = rx;
+            while (cBoard[ri][ry] != 'O') {
+                ri--;
+                if (cBoard[ri][ry] == '#' || (ri == bi && ry == by && board[ri][ry] != 'O')) {
+                    ri++;
+                    break;
+                }
+            }
+            if (!vis[ri][ry][bi][by]) {
+                vis[ri][ry][bi][by] = vis[rx][ry][bx][by] + 1;
+                q.push(coor{ri, ry, bi, by});
+            }
+        } else {
+            int ri = rx;
+            while (cBoard[ri][ry] != 'O') {
+                ri--;
+                if (cBoard[ri][ry] == '#') {
+                    ri++;
+                    break;
+                }
+            }
+            int bi = bx;
+            while (cBoard[bi][by] != 'O') {
+                bi--;
+                if (cBoard[bi][by] == '#' || (ri == bi && ry == by && board[ri][ry] != 'O')) {
+                    bi++;
+                    break;
+                }
+            }
+            if (!vis[ri][ry][bi][by]) {
+                vis[ri][ry][bi][by] = vis[rx][ry][bx][by] + 1;
+                q.push(coor{ri, ry, bi, by});
+            }
+        }
+        // down
+        copyBoard();
+        if (rx >= bx) {
+            int ri = rx;
+            while (cBoard[ri][ry] != 'O') {
+                ri++;
+                if (cBoard[ri][ry] == '#') {
+                    ri--;
+                    break;
+                }
+            }
+            int bi = bx;
+            while (cBoard[bi][by] != 'O') {
+                bi++;
+                if (cBoard[bi][by] == '#' || (ri == bi && ry == by && board[ri][ry] != 'O')) {
+                    bi--;
+                    break;
+                }
+            }
+            if (!vis[ri][ry][bi][by]) {
+                vis[ri][ry][bi][by] = vis[rx][ry][bx][by] + 1;
+                q.push(coor{ri, ry, bi, by});
+            }
+        } else {
+            int bi = bx;
+            while (cBoard[bi][by] != 'O') {
+                bi++;
+                if (cBoard[bi][by] == '#') {
+                    bi--;
+                    break;
+                }
+            }
+            int ri = rx;
+            while (cBoard[ri][ry] != 'O') {
+                ri++;
+                if (cBoard[ri][ry] == '#' || (ri == bi && ry == by && board[ri][ry] != 'O')) {
+                    ri--;
+                    break;
+                }
+            }
+            if (!vis[ri][ry][bi][by]) {
+                vis[ri][ry][bi][by] = vis[rx][ry][bx][by] + 1;
+                q.push(coor{ri, ry, bi, by});
+            }
         }
     }
 
