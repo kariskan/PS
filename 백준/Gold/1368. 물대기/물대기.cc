@@ -1,58 +1,59 @@
 #include <iostream>
-#include <algorithm>
+#include <vector>
 #include <queue>
+#include <climits>
+#include <algorithm>
+#include <map>
+#include <cmath>
+#include <sstream>
+#include <stack>
 using namespace std;
 
-int n, parent[301];
-vector<pair<int, pair<int, int>>> v;
+int n, p[301];
 
 int Find(int x) {
-	if (parent[x] == x) return x;
-	return parent[x] = Find(parent[x]);
+    if (x == p[x]) {
+        return x;
+    }
+    return p[x] = Find(p[x]);
 }
 
 void Union(int a, int b) {
-	a = Find(a);
-	b = Find(b);
-
-	parent[a] = b;
+    p[b] = a;
 }
 
 int main() {
-	cin >> n;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-	for (int i = 1; i <= n; i++) {
-		int a;
-		cin >> a;
-		v.push_back({ a,{0,i} });
-		parent[i] = i;
-	}
-
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			int a;
-			cin >> a;
-			if (i != j) {
-				v.push_back({ a, {i,j} });
-			}
-		}
-	}
-
-	int ans = 0;
-
-	sort(v.begin(), v.end());
-
-	for (int i = 0; i < v.size(); i++) {
-		int cost = v[i].first;
-		int p1 = Find(v[i].second.first);
-		int p2 = Find(v[i].second.second);
-
-		if (p1 != p2) {
-			Union(p1, p2);
-			ans += cost;
-		}
-	}
-
-	cout << ans;
-
+    cin >> n;
+    vector<pair<int, pair<int, int> > > v;
+    for (int i = 1; i <= n; i++) {
+        p[i] = i;
+        int w;
+        cin >> w;
+        v.push_back({w, {0, i}});
+    }
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            int b;
+            cin >> b;
+            if (i > j) {
+                v.push_back({b, {i, j}});
+            }
+        }
+    }
+    sort(v.begin(), v.end());
+    int ans = 0;
+    for (auto &i: v) {
+        int n1 = Find(i.second.first);
+        int n2 = Find(i.second.second);
+        int cost = i.first;
+        if (n1 != n2) {
+            Union(n1, n2);
+            ans += cost;
+        }
+    }
+    cout << ans;
 }
