@@ -46,7 +46,7 @@ public class Main {
 			int ans = 0;
 			for (int i = 0; i < n; i++) {
 				boolean flag = true;
-				for (int j = 0; j < v[i].length(); j++) {
+				for (int j = 4; j < v[i].length() - 3; j++) {
 					if (vis[v[i].charAt(j) - 'a'] != 1) {
 						flag = false;
 						break;
