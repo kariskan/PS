@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 2684 KB, 시간: 12 ms
+메모리: 30328 KB, 시간: 424 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2022년 7월 1일 01:58:17
+2024년 8월 23일 19:40:58
 
 ### 문제 설명
 
@@ -24,15 +24,15 @@
 
 <p>예를 들어 다음과 같이 3x3 크기의 시험관이 있다고 하자. 서로 다른 1번, 2번, 3번 바이러스가 각각 (1,1), (1,3), (3,1)에 위치해 있다. 이 때 2초가 지난 뒤에 (3,2)에 존재하는 바이러스의 종류를 계산해보자.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="height: 148px; width: 250px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/02958527-debb-46e3-a56d-79b87ad46d03/-/preview/" style="height: 148px; width: 250px;"></p>
 
 <p style="text-align: justify;">1초가 지난 후에 시험관의 상태는 다음과 같다.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="height: 148px; width: 250px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/9ab631e7-1f1d-42fe-b8b8-95ded9bce52d/-/preview/" style="height: 148px; width: 250px;"></p>
 
 <p>2초가 지난 후에 시험관의 상태는 다음과 같다.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="height: 148px; width: 250px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/35ea13c6-9ee3-40e1-8b21-c37beaf46c59/-/preview/" style="height: 148px; width: 250px;"></p>
 
 <p style="text-align: justify;">결과적으로 2초가 지난 뒤에 (3,2)에 존재하는 바이러스의 종류는 3번 바이러스다. 따라서 3을 출력하면 정답이다.</p>
 
