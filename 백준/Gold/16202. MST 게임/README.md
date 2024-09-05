@@ -1,14 +1,18 @@
-# [Gold IV] MST 게임 - 16202 
+# [Gold III] MST 게임 - 16202 
 
 [문제 링크](https://www.acmicpc.net/problem/16202) 
 
 ### 성능 요약
 
-메모리: 2420 KB, 시간: 16 ms
+메모리: 22828 KB, 시간: 336 ms
 
 ### 분류
 
-그래프 이론(graphs), 구현(implementation), 최소 스패닝 트리(mst), 시뮬레이션(simulation)
+그래프 이론, 최소 스패닝 트리
+
+### 제출 일자
+
+2024년 9월 5일 10:34:28
 
 ### 문제 설명
 
