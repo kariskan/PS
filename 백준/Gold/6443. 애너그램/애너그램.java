@@ -1,13 +1,11 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Main {
 
 	static int n;
 	static String s;
+	static int[] cnt;
 
 	public static void main(String[] args) throws Exception {
 		var br = new BufferedReader(new InputStreamReader(System.in));
@@ -15,30 +13,26 @@ public class Main {
 		n = Integer.parseInt(br.readLine());
 		for (int i = 0; i < n; i++) {
 			s = br.readLine();
-			char[] a = s.toCharArray();
-			Arrays.sort(a);
-			s = new String(a);
-			go(new StringBuilder(), new HashSet<>(), new boolean[s.length()]);
+			cnt = new int[26];
+			for (int j = 0; j < s.length(); j++) {
+				cnt[s.charAt(j) - 'a']++;
+			}
+			go(new StringBuilder());
 		}
 	}
 
-	static void go(StringBuilder sb, Set<String> set, boolean[] vis) {
+	static void go(StringBuilder sb) {
 		if (sb.length() == s.length()) {
 			System.out.println(sb);
 			return;
 		}
 
-		for (int i = 0; i < s.length(); i++) {
-			if (!vis[i]) {
-				sb.append(s.charAt(i));
-				if (set.contains(sb.toString())) {
-					sb.deleteCharAt(sb.length() - 1);
-					continue;
-				}
-				vis[i] = true;
-				set.add(sb.toString());
-				go(sb, set, vis);
-				vis[i] = false;
+		for (int i = 0; i < 26; i++) {
+			if (cnt[i] > 0) {
+				cnt[i]--;
+				sb.append((char) (i + 'a'));
+				go(sb);
+				cnt[i]++;
 				sb.deleteCharAt(sb.length() - 1);
 			}
 		}
