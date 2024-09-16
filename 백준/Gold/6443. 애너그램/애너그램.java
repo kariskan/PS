@@ -6,6 +6,7 @@ public class Main {
 	static int n;
 	static String s;
 	static int[] cnt;
+	static StringBuilder ans = new StringBuilder();
 
 	public static void main(String[] args) throws Exception {
 		var br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,11 +20,12 @@ public class Main {
 			}
 			go(new StringBuilder());
 		}
+		System.out.println(ans);
 	}
 
 	static void go(StringBuilder sb) {
 		if (sb.length() == s.length()) {
-			System.out.println(sb);
+			ans.append(sb).append("\n");
 			return;
 		}
 
