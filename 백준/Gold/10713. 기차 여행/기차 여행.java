@@ -13,8 +13,8 @@ public class Main {
 		m = Integer.parseInt(st.nextToken());
 
 		int[] path = new int[m + 1];
-		int[][] cost = new int[n + 1][3];
-		int[] sum = new int[n + 1];
+		long[][] cost = new long[n + 1][3];
+		long[] sum = new long[n + 1];
 		st = new StringTokenizer(br.readLine());
 		for (int i = 1; i <= m; i++) {
 			path[i] = Integer.parseInt(st.nextToken());
@@ -30,9 +30,9 @@ public class Main {
 		}
 		for (int i = 1; i < n; i++) {
 			st = new StringTokenizer(br.readLine());
-			cost[i][0] = Integer.parseInt(st.nextToken());
-			cost[i][1] = Integer.parseInt(st.nextToken());
-			cost[i][2] = Integer.parseInt(st.nextToken());
+			cost[i][0] = Long.parseLong(st.nextToken());
+			cost[i][1] = Long.parseLong(st.nextToken());
+			cost[i][2] = Long.parseLong(st.nextToken());
 		}
 		long ans = 0;
 		for (int i = 1; i <= n; i++) {
