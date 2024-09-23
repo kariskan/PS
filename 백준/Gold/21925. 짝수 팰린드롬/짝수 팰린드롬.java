@@ -1,51 +1,47 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
-public class Main {
+class Main {
+	public void solve() throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-	static int n;
-	static int[] a = new int[5000];
-	static int[] dp = new int[5000];
-	static boolean[][] pal = new boolean[5000][5000];
+		int N = Integer.parseInt(st.nextToken());
+		List<Integer> arr = new ArrayList<>();
 
-	public static void main(String[] args) throws Exception {
-		var br = new BufferedReader(new InputStreamReader(System.in));
-		n = Integer.parseInt(br.readLine());
-		var st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < n; i++) {
-			a[i] = Integer.parseInt(st.nextToken());
-		}
-		for (int i = 0; i < n; i++) {
-			int l = i, r = i + 1;
-			while (l >= 0 && r < n && a[l] == a[r]) {
-				pal[l][r] = true;
-				l--;
-				r++;
+		st = new StringTokenizer(br.readLine());
+		int answer = 0;
+		int head = 0;
+		for(int i = 0; i < N; i++) {
+			arr.add(Integer.parseInt(st.nextToken()));
+			if (isPalindrome(arr)) {
+				head = i + 1;
+				answer++;
+				arr.clear();
 			}
-			dp[i] = -1;
 		}
-		int ans = go(n - 1);
-		if (ans == 0) {
-			ans = -1;
+		if (answer == 0) System.out.println("-1");
+		else {
+			if (head == N)
+				System.out.println(answer);
+			else
+				System.out.println("-1");
 		}
-		System.out.println(ans);
 	}
 
-	static int go(int idx) {
-		if (dp[idx] != -1) {
-			return dp[idx];
-		}
-		int res = pal[0][idx] ? 1 : 0;
-		for (int i = 1; i < idx; i += 2) {
-			if (pal[i + 1][idx]) {
-				int in = go(i);
-				if (in == 0) {
-					continue;
-				}
-				res = Math.max(res, in + 1);
+	private boolean isPalindrome(List<Integer> arr) {
+		int N = arr.size();
+		if (N != 0 && N % 2 == 0) {
+			for(int i = 0; i < N / 2; i++) {
+				if (!Objects.equals(arr.get(i), arr.get(N - i - 1))) return false;
 			}
+			return true;
+		} else {
+			return false;
 		}
-		return dp[idx] = res;
+	}
+
+	public static void main(String[] args) throws Exception {
+		new Main().solve();
 	}
 }
