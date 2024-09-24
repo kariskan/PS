@@ -11,8 +11,10 @@ public class Main {
 
 		int t = Integer.parseInt(br.readLine());
 		int n, k, m;
+		var sb = new StringBuilder();
+
 		for (int cnt = 1; cnt <= t; cnt++) {
-			System.out.println("Scenario " + cnt + ":");
+			sb.append("Scenario ").append(cnt).append(":").append("\n");
 			n = Integer.parseInt(br.readLine());
 			k = Integer.parseInt(br.readLine());
 			p = new int[n + 1];
@@ -33,13 +35,14 @@ public class Main {
 				int a = find(Integer.parseInt(st.nextToken()));
 				int b = find(Integer.parseInt(st.nextToken()));
 				if (a == b) {
-					System.out.println(1);
+					sb.append("1\n");
 				} else {
-					System.out.println(0);
+					sb.append("0\n");
 				}
 			}
-			System.out.println();
+			sb.append("\n");
 		}
+		System.out.println(sb);
 	}
 
 	static int find(int x) {
