@@ -29,23 +29,6 @@ public class Main {
 			}
 		}
 
-		List<List<int[]>> v = new ArrayList<>();
-		for (int i = 0; i < n * m; i++) {
-			v.add(new ArrayList<>());
-		}
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				for (int k = 0; k < 4; k++) {
-					int nx = i + dx[k];
-					int ny = j + dy[k];
-					if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
-						int cost = map[nx][ny] == 1 ? 1 : 0;
-						v.get(i * m + j).add(new int[]{nx * m + ny, cost});
-					}
-				}
-			}
-		}
-
 		int[][][] vis = new int[n][m][k + 1];
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
