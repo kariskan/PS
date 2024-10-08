@@ -4,11 +4,15 @@
 
 ### 성능 요약
 
-메모리: 2028 KB, 시간: 0 ms
+메모리: 14400 KB, 시간: 108 ms
 
 ### 분류
 
-너비 우선 탐색(bfs), 브루트포스 알고리즘(bruteforcing), 깊이 우선 탐색(dfs), 그래프 이론(graphs), 그래프 탐색(graph_traversal), 구현(implementation), 최소 스패닝 트리(mst)
+너비 우선 탐색, 브루트포스 알고리즘, 깊이 우선 탐색, 그래프 이론, 그래프 탐색, 구현, 최소 스패닝 트리
+
+### 제출 일자
+
+2024년 10월 8일 11:14:00
 
 ### 문제 설명
 
@@ -16,7 +20,7 @@
 
 <p>섬은 연결된 땅이 상하좌우로 붙어있는 덩어리를 말하고, 아래 그림은 네 개의 섬으로 이루어진 나라이다. 색칠되어있는 칸은 땅이다.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="width: 200px; height: 178px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/38cb578e-b289-4b72-841e-422a1458d617/-/preview/" style="width: 200px; height: 178px;"></p>
 
 <p>다리는 바다에만 건설할 수 있고, 다리의 길이는 다리가 격자에서 차지하는 칸의 수이다. 다리를 연결해서 모든 섬을 연결하려고 한다. 섬 A에서 다리를 통해 섬 B로 갈 수 있을 때, 섬 A와 B를 연결되었다고 한다. 다리의 양 끝은 섬과 인접한 바다 위에 있어야 하고, 한 다리의 방향이 중간에 바뀌면 안된다. 또, 다리의 길이는 2 이상이어야 한다.</p>
 
@@ -29,8 +33,8 @@
 <table class="table table-bordered" style="width: 100%;">
 	<tbody>
 		<tr>
-			<td style="width: 50%; text-align: center;"><img alt="" src="" style="width: 220px; height: 195px;"></td>
-			<td style="width: 50%; text-align: center;"><img alt="" src="" style="width: 220px; height: 195px;"></td>
+			<td style="width: 50%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/41f71ecc-97b4-4351-b741-4b8336576246/-/preview/" style="width: 220px; height: 195px;"></td>
+			<td style="width: 50%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/3b158fdf-74ba-47d7-a224-9e5b753b8453/-/preview/" style="width: 220px; height: 195px;"></td>
 		</tr>
 		<tr>
 			<td style="width: 50%; text-align: center;">
@@ -50,9 +54,9 @@
 <table class="table table-bordered" style="width: 100%;">
 	<tbody>
 		<tr>
-			<td style="width: 33%; text-align: center;"><img alt="" src="" style="width: 220px; height: 194px;"></td>
-			<td style="width: 34%; text-align: center;"><img alt="" src="" style="width: 220px; height: 195px;"></td>
-			<td style="width: 33%; text-align: center;"><img alt="" src="" style="width: 220px; height: 196px;"></td>
+			<td style="width: 33%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/c7c663a1-4ebb-4c89-9a6a-4157513c1a30/-/preview/" style="width: 220px; height: 194px;"></td>
+			<td style="width: 34%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/390361f9-0647-4ff8-9709-7c1de26c0929/-/preview/" style="width: 220px; height: 195px;"></td>
+			<td style="width: 33%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/2a1d4415-0a0d-4508-8a14-1956fdf650ec/-/preview/" style="width: 220px; height: 196px;"></td>
 		</tr>
 		<tr>
 			<td style="width: 33%; text-align: center;">C의 방향이 중간에 바뀌었다</td>
@@ -67,8 +71,8 @@
 <table class="table table-bordered" style="width: 100%;">
 	<tbody>
 		<tr>
-			<td style="width: 50%; text-align: center;"><img alt="" src="" style="width: 220px; height: 195px;"></td>
-			<td style="width: 50%; text-align: center;"><img alt="" src="" style="width: 220px; height: 195px;"></td>
+			<td style="width: 50%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/b6f340e2-8248-4385-9a6a-546e7a2648e4/-/preview/" style="width: 220px; height: 195px;"></td>
+			<td style="width: 50%; text-align: center;"><img alt="" src="https://upload.acmicpc.net/dd98ec33-6796-455d-a612-8db31a9806f0/-/preview/" style="width: 220px; height: 195px;"></td>
 		</tr>
 		<tr>
 			<td style="width: 50%; text-align: center;vertical-align: middle;">
