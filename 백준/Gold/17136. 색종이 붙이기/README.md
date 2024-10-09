@@ -4,17 +4,21 @@
 
 ### 성능 요약
 
-메모리: 2020 KB, 시간: 12 ms
+메모리: 24296 KB, 시간: 200 ms
 
 ### 분류
 
-백트래킹(backtracking), 브루트포스 알고리즘(bruteforcing)
+백트래킹, 브루트포스 알고리즘
+
+### 제출 일자
+
+2024년 10월 9일 10:50:29
 
 ### 문제 설명
 
 <p><그림 1>과 같이 정사각형 모양을 한 다섯 종류의 색종이가 있다. 색종이의 크기는 1×1, 2×2, 3×3, 4×4, 5×5로 총 다섯 종류가 있으며, 각 종류의 색종이는 5개씩 가지고 있다.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="width: 972px; height: 302px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/496452ae-ce36-4d77-93f7-19d7f3f9ce28/-/preview/" style="width: 972px; height: 302px;"></p>
 
 <p style="text-align: center;"><그림 1></p>
 
